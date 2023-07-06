@@ -1,14 +1,26 @@
 from django.shortcuts import render
-from rest_framework import generics
+from django.forms import model_to_dict
+from rest_framework import generics, viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .serializers import *
 from .models import *
 
 
-class UserAPIView(generics.ListAPIView):
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
+""" class UserAPIList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class UserAPIUpdate(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-class SubtestAPIView(generics.ListAPIView):
-    queryset = Subtest.objects.all()
-    serializer_class = SubtestSerializer
+class UserAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+ """
