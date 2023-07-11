@@ -8,3 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = "__all__"
 
+class TestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
+        fields = "__all__"
