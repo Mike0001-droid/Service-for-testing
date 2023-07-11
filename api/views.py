@@ -4,7 +4,7 @@ from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import *
 from .serializers import *
 from .models import *
 from .permissions import *
@@ -83,7 +83,7 @@ class TestAPIUpdate(generics.RetrieveUpdateAPIView):
 class UserAPIList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminUser)# Список пользователей может просматривать ТОЛЬКО администратор
+    permission_classes = (AllowAny, )# Список пользователей может просматривать ТОЛЬКО администратор
 
 class UserAPIUpdate(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
