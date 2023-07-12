@@ -1,52 +1,54 @@
 from django.db import models
-    
+
+
 class User(models.Model):
     login = models.CharField(
-        'Логин', 
+        'Логин',
         max_length=255
     )
     password = models.CharField(
-        'Пароль', 
+        'Пароль',
         max_length=255
     )
     first_name = models.CharField(
-        'Имя', 
+        'Имя',
         max_length=255
     )
     last_name = models.CharField(
-        'Фамилия', 
+        'Фамилия',
         max_length=255
     )
     gender = models.CharField(
-        'Пол', 
+        'Пол',
         max_length=7
     )
     age = models.IntegerField(
         'Возраст'
     )
     post = models.CharField(
-        'Должность', 
+        'Должность',
         max_length=255
     )
 
     def __str__(self):
         return f"{self.id}) {self.login}"
 
+
 class Test (models.Model):
     name = models.CharField(
-        'Название теста', 
+        'Название теста',
         max_length=255
     )
     description_1 = models.CharField(
-        'Описание до', 
+        'Описание до',
         max_length=255
     )
     description_2 = models.CharField(
-        'Описание после', 
+        'Описание после',
         max_length=255
     )
     comment = models.CharField(
-        'Комментарий для преподавателя', 
+        'Комментарий для преподавателя',
         max_length=255
     )
     time_for_solution = models.BooleanField(
@@ -59,31 +61,32 @@ class Test (models.Model):
         'Перемешивать вопросы?'
     )
     status = models.CharField(
-        'Статус теста', 
+        'Статус теста',
         max_length=255
     )
 
     def __str__(self):
         return f"{self.id}) {self.name}"
-    
+
+
 class Subtest (models.Model):
     name = models.CharField(
-        'Название субтеста', 
+        'Название субтеста',
         max_length=255
     )
     queue = models.IntegerField(
         'Порядок следования субтеста'
     )
     description_1 = models.CharField(
-        'Описание до', 
+        'Описание до',
         max_length=255
     )
     description_2 = models.CharField(
-        'Описание после', 
+        'Описание после',
         max_length=255
     )
     comment = models.CharField(
-        'Комментарий для преподавателя', 
+        'Комментарий для преподавателя',
         max_length=255
     )
     time_for_solution = models.BooleanField(
@@ -96,27 +99,28 @@ class Subtest (models.Model):
         'Перемешивать вопросы?'
     )
     status = models.CharField(
-        'Статус теста', 
+        'Статус теста',
         max_length=255
     )
     test = models.ForeignKey(
-        Test, 
+        Test,
         on_delete=models.CASCADE
     )
 
     def __str__(self):
         return f"{self.id}) {self.name}"
 
+
 class Questions (models.Model):
     name = models.CharField(
-        'Название вопроса', 
+        'Название вопроса',
         max_length=255
     )
     queue = models.IntegerField(
         'Порядок следования вопроса'
     )
     type_question = models.CharField(
-        'Тип вопроса', 
+        'Тип вопроса',
         max_length=255
     )
     obligatory = models.BooleanField(
@@ -126,27 +130,28 @@ class Questions (models.Model):
         'Перемешивать вопросы?'
     )
     status = models.CharField(
-        'Статус вопроса', 
+        'Статус вопроса',
         max_length=255
     )
     subtest = models.ForeignKey(
-        Subtest, 
+        Subtest,
         on_delete=models.CASCADE
     )
 
     def __str__(self):
         return f"{self.id}) {self.name}"
 
+
 class Answers (models.Model):
     name = models.CharField(
-        'Название ответа', 
+        'Название ответа',
         max_length=255
     )
     queue = models.IntegerField(
         'Порядок следования ответа'
     )
     description = models.CharField(
-        'Описание ответа', 
+        'Описание ответа',
         max_length=255
     )
     score = models.IntegerField(
@@ -156,51 +161,53 @@ class Answers (models.Model):
         'Ответ верный?'
     )
     status = models.CharField(
-        'Статус ответа', 
+        'Статус ответа',
         max_length=255
     )
     question = models.ForeignKey(
-        Questions, 
+        Questions,
         on_delete=models.CASCADE
     )
 
     def __str__(self):
         return f"{self.id}) {self.name}"
 
+
 class Scales (models.Model):
     name = models.CharField(
-        'Название шкалы', 
+        'Название шкалы',
         max_length=255
     )
     queue = models.IntegerField(
         'Порядок следования шкалы'
     )
     description = models.CharField(
-        'Описание шкалы', 
+        'Описание шкалы',
         max_length=255
     )
     status = models.CharField(
-        'Статус шкалы', 
+        'Статус шкалы',
         max_length=255
     )
     answers = models.ForeignKey(
-        Answers, 
+        Answers,
         on_delete=models.CASCADE
     )
 
     def __str__(self):
         return f"{self.id}) {self.name}"
-    
+
+
 class Interpretations (models.Model):
     name = models.CharField(
-        'Название интерпретации', 
+        'Название интерпретации',
         max_length=255
     )
     queue = models.IntegerField(
         'Порядок следования интерпретации'
     )
     text = models.CharField(
-        'Текст', 
+        'Текст',
         max_length=255
     )
     start_score = models.IntegerField(
@@ -214,19 +221,20 @@ class Interpretations (models.Model):
     def __str__(self):
         return f"{self.id}) {self.name}"
 
+
 class Attemption (models.Model):
     number = models.IntegerField(
         'Номер попытки'
     )
     date = models.DateTimeField(
-        'Дата и время прохождения', 
+        'Дата и время прохождения',
         auto_now=True
     )
-    time_spent = models.IntegerField (
+    time_spent = models.IntegerField(
         'Затраченное время'
     )
     user = models.OneToOneField(
-        User, 
+        User,
         on_delete=models.CASCADE
     )
     test = models.OneToOneField(
@@ -234,19 +242,18 @@ class Attemption (models.Model):
         on_delete=models.CASCADE
     )
     question = models.OneToOneField(
-        Questions, 
+        Questions,
         on_delete=models.CASCADE
     )
     answer = models.OneToOneField(
-        Answers, 
+        Answers,
         on_delete=models.CASCADE
     )
     scale = models.OneToOneField(
-        Scales, 
+        Scales,
         on_delete=models.CASCADE
     )
     interpretation = models.OneToOneField(
-        Interpretations, 
+        Interpretations,
         on_delete=models.CASCADE
     )
-    
