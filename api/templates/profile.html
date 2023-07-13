@@ -1,0 +1,125 @@
+{% load static %}
+<html lang="ru" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>ProTest - Фигач тесты, как не в себя!</title>
+        <link href="{% static 'drf/style.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="sidebar">
+            <div class="menu">
+              <div><div class="avatar">
+                  <img src="{% static 'img/avatar.png' %}" alt="">
+              </div>
+              <div class="menubtns">
+                  <div><img src="{% static 'img/home.png' %}"><p class="menu_name choosen">Главная</p></div>
+                  <div><img src="{% static 'img/profile.png' %}"><p class="menu_name">Кабинет</p></div>
+                  <div><img src="{% static 'img/settings.png' %}"><p class="menu_name">Настройки</p></div>
+              </div></div>
+              <div class="menubtns">
+                  <div><img src="{% static 'img/logout.png' %}"><p>Выйти</p></div>
+              </div>
+            </div>
+        </div>
+        <div class="mainpage">
+            <header>
+              <h3>ProTest</h3>
+              <div id="search">
+                <input type="text" name="" value="" placeholder="Поиск">
+                <img src="{% static 'img/search.png' %}" alt="">
+              </div>
+            </header>
+            <div class="content">
+              <div class="profile-left">
+                <div class="mainbox">
+                  <div class="">
+                    <h2>Здравствуйте, Имя!</h2>
+                    <p>Рады видеть Вас снова!</p>
+                  </div>
+                  <img src="{% static 'img/illustration.png' %}" alt="">
+                </div>
+                <div class="undermain">
+                  <div class="lasttests">
+                    <div class="lasttest">
+                        <div class="lasttest-content">
+                          <img class="test-logo" src="{% static 'img/test-logo.jpg' %}" alt="">
+                          <div class="card-horizontal-align">
+                              <div class="">
+                                <h4>Название теста</h4>
+                                <h4 class="purple">7/15 баллов</h4>
+                              </div>
+                              <div class="purple-btn">Пройти заново</div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="lasttest">
+                      <div class="lasttest-content">
+                        <img class="test-logo" src="{% static 'img/test-logo.jpg' %}" alt="">
+                        <div class="card-horizontal-align">
+                            <div class="">
+                              <h4>Название теста</h4>
+                              <h4 class="purple">7/15 баллов</h4>
+                            </div>
+                            <div class="purple-btn">Пройти заново</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="vertical">
+                    <h4>Прогресс</h4>
+                    <div class="progress">
+                      <h2 class="purple">100%</h2>
+                      <h4>пройдено</h4>
+                    </div>
+                  </div>
+                  <div class="vertical">
+                    <h4>Прогресс</h4>
+                    <div class="progress">
+                      <h2 class="purple">100%</h2>
+                      <h4>пройдено</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="profile-right">
+                <div class="profile-settings">
+                  <h2 class="purple">Фамилия Имя Отчество</h2>
+                  <h4 class="undertext">lastname.name@gmail.com</h4>
+                  <h4 class="undertext">Мои данные</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+function appearText() {
+  var text = document.getElementById('text').innerHTML;
+  var i = 0;
+  document.getElementById('text').innerHTML = '';
+
+  function addLetter() {
+    if (i < text.length) {
+      document.getElementById('text').innerHTML += text.charAt(i);
+      i++;
+      setTimeout(addLetter, 100); // задержка в 100 миллисекунд между каждым символом
+    }
+  }
+
+  addLetter();
+}
+
+window.onload = function () {
+  appearText();
+};
+
+const image = document.getElementById('wheel');
+let angle = 0;
+
+setInterval(function() {
+  angle += 5;
+  image.style.transform = `rotate(${angle}deg)`;
+}, 50);
+
+</script>

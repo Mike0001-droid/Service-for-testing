@@ -3,15 +3,22 @@ from django.urls import path, include
 from api.views import *
 from rest_framework import routers
 from rest_framework_simplejwt.views import *
+from api import views
 router = routers.DefaultRouter()
 router.register(r'user', TestViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # http://127.0.0.1:8000/api/v1/user/1/test/
+    # http://127.0.0.1:8000/api/v1/user/1/test/?format=json
     path('api/v1/', include(router.urls)),
     path('api/v1/test/', TestAPIListForUsers.as_view()),
     path('api/v1/testupdate/<int:pk>/', TestAPIUpdate.as_view()),
     path('api/v1/listusers/', UserAPIList.as_view()),
-    path('api/v1/')
+    path('', index, name = 'index'),
+    path('signup', signup, name = 'singup'),
+    path('login', login, name = 'login'),
+    path('profile', profile, name = 'profile'),
+    path('user-create/', views.UserCreate, name="user_create"),
+    path('tests/', views.test_list),
 ]
+

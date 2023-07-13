@@ -1,0 +1,47 @@
+{% load static %}
+<html lang="ru" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>ProTest - Фигач тесты, как не в себя!</title>
+        <link href="{% static 'api/style.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="sidebar">
+            <div class="menu">
+              <div><div class="avatar">
+                  <img src="{% static 'img/avatar.png' %}" alt="">
+              </div>
+              <div class="menubtns">
+                  <div><img src="{% static 'img/home.png' %}"><p class="menu_name choosen"><a href="index">Главная</a></p></div>
+                  <div><img src="{% static 'img/profile.png' %}"><p class="menu_name">Кабинет</p></div>
+                  <div><img src="{% static 'img/settings.png' %}"><p class="menu_name">Настройки</p></div>
+              </div></div>
+              <div class="menubtns">
+                  <div><img src="{% static 'img/logout.png' %}"><p>Выйти</p></div>
+              </div>
+            </div>
+        </div>
+        <div class="mainpage">
+            <header>
+              <h3>ProTest</h3>
+              <div id="search">
+                <input type="text" name="" value="" placeholder="Поиск">
+                <img src="{% static 'img/search.png' %}" alt="">
+              </div>
+            </header>
+            <div class="content-vertical">
+              <h4>Войдите в свой профиль</h4>
+              <div class="block">
+                <h4>Вход</h4>
+                <form class="" action="index.html" method="post" placeholder="Email">
+                  <input type="email" name="" value=""placeholder="Email">
+                  <input type="password" name="" value="" placeholder="*********">
+                  <button type="submit" name="button">Войти</button>
+                  <a href="signup.html"><h5>РЕГИСТРАЦИЯ</h5></a>
+                  <h6 class="acception">Регистрируясь, вы соглашаетесь с пользовательским соглашением и даете согласине на обработку персональных данных.</h6>
+                </form>
+              </div>
+            </div>
+        </div>
+    </body>
+</html>

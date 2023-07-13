@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import *
+from rest_framework.decorators import api_view
 from .serializers import *
 from .models import *
 from .permissions import *
@@ -105,3 +106,34 @@ class UserAPIDestroy(generics.RetrieveDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAdminUser)
+
+
+@api_view(['POST'])
+def UserCreate(request):
+    serializers = UserSerializer(data=request.data)
+    if serializers.is_valid():
+        serializers.save()
+    return Response(serializers.data)
+
+def test_list(request):
+    tests = Test.objects.all()
+    context = {'tests': tests}
+    return render(request, 'tests.html', context)
+
+def first_test(request):
+    return render(request, 'firsttest.html')
+
+def listests(request):
+    return render(request, 'listests.html')
+
+def index(request):
+    return render(request, 'index.html')
+
+def login(request):
+    return render(request, 'login.html')
+
+def signup(request):
+    return render(request, 'signup.html')
+
+def profile(request):
+    return render(request, 'profile.html') 
