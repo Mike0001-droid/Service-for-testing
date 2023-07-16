@@ -1,77 +1,69 @@
 {% load static %}
 <html lang="ru" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <title>ProTest - Фигач тесты, как не в себя!</title>
-        <link href="{% static 'api/style.css' %}" rel="stylesheet">
-    </head>
-    <body>
-        <div class="sidebar">
-            <div class="menu">
-              <div><div class="avatar">
-                  <img src="{% static 'img/avatar.png' %}" alt="">
-              </div>
-              <div class="menubtns">
-                  <div><img src="{% static 'img/home.png' %}"><p class="menu_name choosen">Главная</p></div>
-                  <div><img src="{% static 'img/profile.png' %}"><p class="menu_name">Кабинет</p></div>
-                  <div><img src="{% static 'img/settings.png' %}"><p class="menu_name">Настройки</p></div>
-              </div></div>
-              <div class="menubtns">
-                  <div><img src="{% static 'img/logout.png' %}"><p>Выйти</p></div>
-              </div>
-            </div>
+
+<head>
+  <meta charset="utf-8">
+  <title>ProTest - Фигач тесты, как не в себя!</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link href="{% static 'api/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+  <div class="mainpage">
+    <nav class="navbar">
+      <div class="poisk">
+        <h6>ProTest</h6>
+      </div>
+
+      <form class="form">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      </form>
+
+    </nav>
+    <div class="content">
+      <div class="leftside">
+        <h1 id="text" style="color: #9933ff;">Выбери и пройди тестирование</h1>
+        <div class="auth">
+          <h4>Авторизируйтесь на платформе, <br> чтобы проходить тесты</h4>
         </div>
-        <div class="mainpage">
-            <header>
-              <h3>ProTest</h3>
-              <div id="search">
-                <a href="tests">Перейти к тестам</a>
-              </div>
-            </header>
-            <div class="content">
-              <div class="leftside">
-                  <h1 id="text">Выбери и пройди тестирование</h1>
-                  <h3>Авторизируйтесь на платформе, чтобы проходить тесты</h3>
-                <div class="loginbtns">
-                  <a href="login"><div class="btn">Войти</div></a>
-                  <a href="signup">ЗАРЕГИСТРИРОВАТЬСЯ</a>
-                </div>
-              </div>
-              <div class="rightside">
-                <img src="{% static 'img/main_image.png' %}" alt="">
-                <img src="{% static 'img/wheel.png' %}" id="wheel">
-              </div>
+        <div class="loginbtns">
+          <a href="login">
+            <div class="btn">ВОЙТИ</div>
+          </a>
+          <a href="signup">
+            <div class="regis">
+              <h5>Зарегистрироваться</h5>
             </div>
+          </a>
         </div>
-    </body>
+      </div>
+      <div class="rightside">
+        <img src="{% static 'img/main.png' %}" alt="">
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>
 <script>
-function appearText() {
-  var text = document.getElementById('text').innerHTML;
-  var i = 0;
-  document.getElementById('text').innerHTML = '';
+  function appearText() {
+    var text = document.getElementById('text').innerHTML;
+    var i = 0;
+    document.getElementById('text').innerHTML = '';
 
-  function addLetter() {
-    if (i < text.length) {
-      document.getElementById('text').innerHTML += text.charAt(i);
-      i++;
-      setTimeout(addLetter, 100); // задержка в 100 миллисекунд между каждым символом
+    function addLetter() {
+      if (i < text.length) {
+        document.getElementById('text').innerHTML += text.charAt(i);
+        i++;
+        setTimeout(addLetter, 50); // задержка в 100 миллисекунд между каждым символом
+      }
     }
+
+    addLetter();
   }
 
-  addLetter();
-}
-
-window.onload = function () {
-  appearText();
-};
-
-const image = document.getElementById('wheel');
-let angle = 0;
-
-setInterval(function() {
-  angle += 5;
-  image.style.transform = `rotate(${angle}deg)`;
-}, 50);
-
+  window.onload = function () {
+    appearText();
+  };
 </script>
