@@ -46,11 +46,14 @@
       <div class="block">
         <h4>Регистрация</h4>
         <form action="http://127.0.0.1:8000/user-create/" method="POST" enctype="json">
-          <input type="text" id="first_name" name='"login"' placeholder="Имя">
-          <input type="text" id="last_name" name='"password"' placeholder="Фамилия">
-          <input type="text" id="gender" name='"first_name"' placeholder="Пол">
-          <input type="email" id="email" name='"number"' placeholder="Email">
-          <input type="password" id="password" name='"email"' placeholder="********">
+          {% csrf_token %}
+          <input type="text" id="login" name="login" placeholder="Логин">
+          <input type="password" id="password" name="password" placeholder="********">
+          <input type="text" id="first_name" name="first_name" placeholder="Имя">
+          <input type="text" id="last_name" name="last_name" placeholder="Фамилия">
+          <input type="text" id="gender" name="gender" placeholder="Пол">
+          <input type="text" id="age" name="age" placeholder="Возраст">
+          <input type="text" id="post" name="post" placeholder="Статус">
           <button type="submit">Зарегистрироваться</button>
           <a href="login">
             <h5>АВТОРИЗАЦИЯ</h5>

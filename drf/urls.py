@@ -20,5 +20,6 @@ urlpatterns = [
     path('profile', profile, name = 'profile'),
     path('user-create/', views.UserCreate, name="user_create"),
     path('tests/', views.test_list),
+    path('api/v1/drf-auth/', include('rest_framework.urls')),
 ]
 

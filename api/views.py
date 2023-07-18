@@ -1,15 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.forms import model_to_dict
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import *
 from rest_framework.decorators import api_view
+from django.contrib.auth.forms import UserCreationForm 
+from django.contrib.auth import login, authenticate
+from .forms import SignUpForm, SignInForm
+from rest_framework.permissions import *
 from .serializers import *
 from .models import *
 from .permissions import *
-
 
 class TestViewSet(viewsets.ModelViewSet):
     queryset = Test.objects.all()
@@ -108,12 +110,27 @@ class UserAPIDestroy(generics.RetrieveDestroyAPIView):
     permission_classes = (IsAdminUser)
 
 
-@api_view(['POST'])
+""" @api_view(['POST'])
 def UserCreate(request):
     serializers = UserSerializer(data=request.data)
     if serializers.is_valid():
         serializers.save()
-    return Response(serializers.data)
+    return Response(serializers.data) """
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('http://127.0.0.1:8000/')
+    else:
+        form = SignUpForm()
+    return render
+
 
 def test_list(request):
     tests = Test.objects.all()
