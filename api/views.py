@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.decorators import api_view
 from django.contrib.auth.forms import UserCreationForm 
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login as dj_login, authenticate
 from django.contrib import messages
 from .forms import *
 from rest_framework.permissions import *
@@ -79,7 +79,7 @@ class TestViewSet(viewsets.ModelViewSet):
 class TestAPIListForUsers(generics.ListCreateAPIView):
     queryset = Test.objects.all()
     serializer_class = TestSerializer
-    permission_classes = (ViewTestNonDraft, )
+    permission_classes = (IsAuthenticated, )
 
 
 class TestAPIUpdate(generics.RetrieveUpdateAPIView):
@@ -131,9 +131,9 @@ def register_user(request):
             age = form.cleaned_data['age']
             post = form.cleaned_data['post']
             user = authenticate(username = login, password = password)
-            login(request, user)
+            dj_login(request, user)
             messages.success(request, ("Registration Successful!"))
-            return redirect('index')
+            return redirect('tests')
     else:
         form = RegisterUserForm()
     

@@ -13,12 +13,13 @@
 	<div class="shadow p-4 mb-5 bg-body rounded">
 	<h1>Register</h1>
 <br/>
-
-
+	<div class="form-group">
 		<form action="{% url 'regis' %}" method=POST>
 			{% csrf_token %}
 
 			{{ form.as_p }}
+	</div>
+		
 
   
 
