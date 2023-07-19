@@ -15,10 +15,10 @@ urlpatterns = [
     path('api/v1/testupdate/<int:pk>/', TestAPIUpdate.as_view()),
     path('api/v1/listusers/', UserAPIList.as_view()),
     path('', index, name = 'index'),
-    path('signup', signup, name = 'singup'),
+    path('regis', views.register_user, name = 'regis'),
     path('login', login, name = 'login'),
     path('profile', profile, name = 'profile'),
-    path('user-create/', views.UserCreate, name="user_create"),
+    #path('user-create/', views.UserCreate, name="user_create"),
     path('tests/', views.test_list),
     path('api/v1/drf-auth/', include('rest_framework.urls')),
 ]

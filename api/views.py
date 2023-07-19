@@ -7,7 +7,8 @@ from rest_framework.decorators import action
 from rest_framework.decorators import api_view
 from django.contrib.auth.forms import UserCreationForm 
 from django.contrib.auth import login, authenticate
-from .forms import SignUpForm, SignInForm
+from django.contrib import messages
+from .forms import *
 from rest_framework.permissions import *
 from .serializers import *
 from .models import *
@@ -117,19 +118,27 @@ def UserCreate(request):
         serializers.save()
     return Response(serializers.data) """
 
-def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
+def register_user(request):
+    if request.method == "POST":
+        form = RegisterUserForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            gender = form.cleaned_data['gender']
+            age = form.cleaned_data['age']
+            post = form.cleaned_data['post']
+            user = authenticate(username = login, password = password)
             login(request, user)
-            return redirect('http://127.0.0.1:8000/')
+            messages.success(request, ("Registration Successful!"))
+            return redirect('index')
     else:
-        form = SignUpForm()
-    return render
+        form = RegisterUserForm()
+    
+    return render(request, 'regis.html', {'form': form,})
+
 
 
 def test_list(request):

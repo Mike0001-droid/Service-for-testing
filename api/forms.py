@@ -3,7 +3,92 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
 
-class SignUpForm(UserCreationForm):
+class RegisterUserForm(UserCreationForm):
+	first_name = forms.CharField(
+		widget = forms.TextInput(
+		    attrs={
+			    'class':'form-control',
+			    'placeholder':'Имя'
+            }
+	    )
+	)
+	
+	last_name = forms.CharField(
+		widget = forms.TextInput(
+		    attrs={
+			    'class':'form-control',
+			    'placeholder':'Фамилия'
+            }
+	    )
+	)
+	
+	gender = forms.CharField(
+		widget = forms.TextInput(
+		    attrs={
+			    'class':'form-control',
+			    'placeholder':'Пол'
+            }
+	    )
+	)
+	
+	age = forms.IntegerField(
+		widget = forms.TextInput(
+		    attrs={
+			    'class':'form-control',
+			    'placeholder':'Возраст'
+            }
+	    )
+	)
+	
+	post = forms.CharField(
+		widget = forms.TextInput(
+		    attrs={
+			    'class':'form-control',
+			    'placeholder':'Статус'
+            }
+	    )
+	)
+
+	class Meta():
+		model = User
+		fields = (
+			'username',  
+            'first_name', 
+            'last_name', 
+            'gender',
+            'age',
+            'post',
+            'password1',
+            'password2'
+	    )
+
+
+	def __init__(self, *args, **kwargs):
+		super(RegisterUserForm, self).__init__(*args, **kwargs)
+
+		self.fields['username'].widget.attrs['class'] = 'form-control'
+		self.fields['first_name'].widget.attrs['class'] = 'form-control'
+		self.fields['last_name'].widget.attrs['class'] = 'form-control'
+		self.fields['gender'].widget.attrs['class'] = 'form-control'
+		self.fields['age'].widget.attrs['class'] = 'form-control'
+		self.fields['post'].widget.attrs['class'] = 'form-control'
+		self.fields['password1'].widget.attrs['class'] = 'form-control'
+		self.fields['password2'].widget.attrs['class'] = 'form-control'
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+""" class SignUpForm(UserCreationForm):
     login = forms.CharField(
         forms.TextInput(
             attrs={
@@ -63,6 +148,5 @@ class SignUpForm(UserCreationForm):
             'gender',
             'age',
             'post'
-        )
-
+        ) """
 
