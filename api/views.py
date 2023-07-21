@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import *
+from users.models import CustomUser
 from .serializers import *
 from .models import *
 from .permissions import *
@@ -71,7 +72,7 @@ class TestViewSet(viewsets.ModelViewSet):
 
 
 class TestAPIListForUsers(generics.ListCreateAPIView):
-    queryset = Test.objects.all()
+    queryset = Test.objects.filter(status="Опубликован")
     serializer_class = TestSerializer
     permission_classes = (ViewTestNonDraft, )
 
@@ -82,15 +83,15 @@ class TestAPIUpdate(generics.RetrieveUpdateAPIView):
     # Изменять тесты может ТОЛЬКО администратор
     permission_classes = (IsAdminUser, )
 
-""" 
+
 class UserAPIList(generics.ListCreateAPIView):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     # Список пользователей может просматривать ТОЛЬКО администратор
     permission_classes = (IsAdminUser, )
 
 
-class UserAPIUpdate(generics.RetrieveUpdateAPIView):
+""" class UserAPIUpdate(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAdminUser)
@@ -101,7 +102,7 @@ class UserAPIUpdate(generics.RetrieveUpdateAPIView):
 class UserAPIDestroy(generics.RetrieveDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminUser) """
+    permission_classes = (IsAdminUser)  """
 
 def test_list(request):
     tests = Test.objects.all()
