@@ -1,14 +1,8 @@
-from django.shortcuts import render, redirect
-from django.forms import model_to_dict
+from django.shortcuts import render
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.decorators import api_view
-from django.contrib.auth.forms import UserCreationForm 
-from django.contrib.auth import login as dj_login, authenticate
-from django.contrib import messages
-from .forms import *
 from rest_framework.permissions import *
 from .serializers import *
 from .models import *
@@ -79,7 +73,7 @@ class TestViewSet(viewsets.ModelViewSet):
 class TestAPIListForUsers(generics.ListCreateAPIView):
     queryset = Test.objects.all()
     serializer_class = TestSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (ViewTestNonDraft, )
 
 
 class TestAPIUpdate(generics.RetrieveUpdateAPIView):
@@ -88,7 +82,7 @@ class TestAPIUpdate(generics.RetrieveUpdateAPIView):
     # Изменять тесты может ТОЛЬКО администратор
     permission_classes = (IsAdminUser, )
 
-
+""" 
 class UserAPIList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -104,42 +98,10 @@ class UserAPIUpdate(generics.RetrieveUpdateAPIView):
 #      только свои личные данные). Для начала оставим
 #      доступ только для администратора
 
-
 class UserAPIDestroy(generics.RetrieveDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminUser)
-
-
-""" @api_view(['POST'])
-def UserCreate(request):
-    serializers = UserSerializer(data=request.data)
-    if serializers.is_valid():
-        serializers.save()
-    return Response(serializers.data) """
-
-def register_user(request):
-    if request.method == "POST":
-        form = RegisterUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            gender = form.cleaned_data['gender']
-            age = form.cleaned_data['age']
-            post = form.cleaned_data['post']
-            user = authenticate(username = login, password = password)
-            dj_login(request, user)
-            messages.success(request, ("Registration Successful!"))
-            return redirect('tests')
-    else:
-        form = RegisterUserForm()
-    
-    return render(request, 'regis.html', {'form': form,})
-
-
+    permission_classes = (IsAdminUser) """
 
 def test_list(request):
     tests = Test.objects.all()

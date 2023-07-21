@@ -4,6 +4,7 @@ from api.views import *
 from rest_framework import routers
 from rest_framework_simplejwt.views import *
 from api import views
+from users import views as vyuha
 router = routers.DefaultRouter()
 router.register(r'user', TestViewSet)
 
@@ -13,10 +14,10 @@ urlpatterns = [
     path('api/v1/', include(router.urls)),
     path('api/v1/test/', TestAPIListForUsers.as_view()),
     path('api/v1/testupdate/<int:pk>/', TestAPIUpdate.as_view()),
-    path('api/v1/listusers/', UserAPIList.as_view()),
+    #path('api/v1/listusers/', UserAPIList.as_view()),
     path('', index, name = 'index'),
-    path('regis', views.register_user, name = 'regis'),
     path('login', login, name = 'login'),
+    path('signup/', vyuha.SignUpView.as_view(), name = 'signup'),
     path('profile', profile, name = 'profile'),
     #path('user-create/', views.UserCreate, name="user_create"),
     path('tests/', views.test_list),
