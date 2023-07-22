@@ -1,38 +1,6 @@
 from django.db import models
 
 
-class User(models.Model):
-    login = models.CharField(
-        'Логин',
-        max_length=255
-    )
-    password = models.CharField(
-        'Пароль',
-        max_length=255
-    )
-    first_name = models.CharField(
-        'Имя',
-        max_length=255
-    )
-    last_name = models.CharField(
-        'Фамилия',
-        max_length=255
-    )
-    gender = models.CharField(
-        'Пол',
-        max_length=7
-    )
-    age = models.IntegerField(
-        'Возраст'
-    )
-    post = models.CharField(
-        'Должность',
-        max_length=255
-    )
-
-    def __str__(self):
-        return f"{self.id}) {self.login}"
-
 
 class Test (models.Model):
     name = models.CharField(
@@ -233,10 +201,10 @@ class Attemption (models.Model):
     time_spent = models.IntegerField(
         'Затраченное время'
     )
-    user = models.OneToOneField(
+    """ user = models.OneToOneField(
         User,
         on_delete=models.CASCADE
-    )
+    ) """
     test = models.OneToOneField(
         Test,
         on_delete=models.CASCADE
