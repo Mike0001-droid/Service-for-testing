@@ -15,15 +15,18 @@
             <div>
                 <div class="avatar">
                     <img src="{% static 'img/avatar.png' %}" alt="">
-                    
+
                 </div>
                 <div class="menubtns">
-                    {% if request.user.is_authenticated %}
-                    <p class="menu_name choosen">{{user.username}}</p>
-                    {% endif %}
+                    <div>
+                        {% if request.user.is_authenticated %}
+                        <p class="menu_name choosen">Добро пожаловать, {{user.username}} </p>
+                        {% endif %}
+                    </div>
                     <div><img src="{% static 'img/home.png' %}">
                         <p class="menu_name choosen"><a href="http://127.0.0.1:8000">Главная</a></p>
                     </div>
+
                     <div><img src="{% static 'img/profile.png' %}">
                         <p class="menu_name">Кабинет</p>
                     </div>
@@ -34,7 +37,9 @@
             </div>
             <div class="menubtns">
                 <div><img src="{% static 'img/logout.png' %}">
-                    <a href="http://127.0.0.1:8000/api/v1/drf-auth/logout/"><p>Выйти</p></a>
+                    <a href="http://127.0.0.1:8000/api/v1/drf-auth/logout/">
+                        <p>Выйти</p>
+                    </a>
                 </div>
             </div>
         </div>
