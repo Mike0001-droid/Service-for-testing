@@ -1,6 +1,12 @@
 from django.db import models
 
 
+class Category (models.Model):
+    name = models.CharField(
+        'Название категории',
+        max_length=255
+    )
+
 
 class Test (models.Model):
     name = models.CharField(
@@ -31,6 +37,10 @@ class Test (models.Model):
     status = models.CharField(
         'Статус теста',
         max_length=255
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE
     )
 
     def __str__(self):

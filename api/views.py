@@ -9,6 +9,7 @@ from .serializers import *
 from .models import *
 from .permissions import *
 
+
 class TestViewSet(viewsets.ModelViewSet):
     queryset = Test.objects.all()
     serializer_class = TestSerializer
@@ -104,25 +105,32 @@ class UserAPIDestroy(generics.RetrieveDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = (IsAdminUser)  """
 
+
 def test_list(request):
     tests = Test.objects.all()
     context = {'tests': tests}
     return render(request, 'tests.html', context)
 
+
 def first_test(request):
     return render(request, 'firsttest.html')
+
 
 def listests(request):
     return render(request, 'listests.html')
 
+
 def index(request):
     return render(request, 'index.html')
+
 
 def login(request):
     return render(request, 'login.html')
 
+
 def signup(request):
     return render(request, 'signup.html')
 
+
 def profile(request):
-    return render(request, 'profile.html') 
+    return render(request, 'profile.html')

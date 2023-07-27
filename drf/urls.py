@@ -15,12 +15,11 @@ urlpatterns = [
     path('api/v1/test/', TestAPIListForUsers.as_view()),
     path('api/v1/testupdate/<int:pk>/', TestAPIUpdate.as_view()),
     path('api/v1/listusers/', UserAPIList.as_view()),
-    path('', index, name = 'index'),
-    path('login', login, name = 'login'),
-    path('new_signup/', vyuha.SignUpView.as_view(), name = 'signup'),
-    path('profile', profile, name = 'profile'),
-    #path('user-create/', views.UserCreate, name="user_create"),
+    path('', index, name='index'),
+    path('login', login, name='login'),
+    path('new_signup/', vyuha.SignUpView.as_view(), name='signup'),
+    path('profile', profile, name='profile'),
+    # path('user-create/', views.UserCreate, name="user_create"),
     path('tests/', views.test_list),
     path('api/v1/drf-auth/', include('rest_framework.urls')),
 ]
-
