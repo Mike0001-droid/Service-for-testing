@@ -13,3 +13,8 @@ class TestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = "__all__"
+
+class SubTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subtest
+        fields = "__all__"

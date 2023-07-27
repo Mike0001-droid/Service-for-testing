@@ -1,0 +1,30 @@
+{% block content %}
+    <form action="{% url 'pass_the_test' test.pk%}" method="post">
+    {% csrf_token %}
+    <div class="container">
+        <ul class="list-group">
+        {% for subtest in test.subtests.all %}
+          <h1 class="list-group-item text-center">{{ forloop.counter  }}. {{ subtest }} </h1>
+          <h3>Вопросы</h3>
+            <div class="jumbotron">
+                {% for question in subtest.questions.all %}
+                    <div class="alert alert-dark text-center" role="alert">
+                        <h3>{{ forloop.counter }}) {{ question }}  </h3>
+                        {% for answer in question.answers.all %}
+                            <div class="form-check form-check-inline">
+                            <input class="form-check-input" required type="radio" > {{answer}}
+                            <label class="form-check-label" for="{{ answer.pk }}">{{ forloop.counter }}</label>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                {% endfor %}
+            <hr class="my-4">
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Далее</button>
+        </ul>
+    </div>
+    </form>
+<a href="http://127.0.0.1:8000/tests/"><h1>Вернуться к тестам</h1></a>
+{% endblock %}

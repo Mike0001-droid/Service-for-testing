@@ -149,9 +149,11 @@ header h3 {
 
 
 h1 {
-  font-size: 4vw;
-  font-weight: bold;
-
+  font-family: Inter;
+  font-size: 54px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
 }
 
 h3 {
@@ -188,7 +190,7 @@ h6 {
 }
 
 .btn {
-  background: #9933ff;
+  background: #8D6EEF;
   border-radius: 25px;
   width: 230px;
   height: 50px;

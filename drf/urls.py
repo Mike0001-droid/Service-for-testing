@@ -3,10 +3,11 @@ from django.urls import path, include
 from api.views import *
 from rest_framework import routers
 from rest_framework_simplejwt.views import *
+from django.contrib.auth.decorators import login_required
 from api import views
 from users import views as vyuha
 router = routers.DefaultRouter()
-router.register(r'user', TestViewSet)
+# router.register(r'user', TestViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -22,4 +23,6 @@ urlpatterns = [
     # path('user-create/', views.UserCreate, name="user_create"),
     path('tests/', views.test_list),
     path('api/v1/drf-auth/', include('rest_framework.urls')),
+    path('passing/<int:pk>', pass_the_test, name='pass_the_test'),
+
 ]

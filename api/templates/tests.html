@@ -15,8 +15,12 @@
             <div>
                 <div class="avatar">
                     <img src="{% static 'img/avatar.png' %}" alt="">
+                    
                 </div>
                 <div class="menubtns">
+                    {% if request.user.is_authenticated %}
+                    <p class="menu_name choosen">{{user.username}}</p>
+                    {% endif %}
                     <div><img src="{% static 'img/home.png' %}">
                         <p class="menu_name choosen"><a href="http://127.0.0.1:8000">Главная</a></p>
                     </div>
@@ -30,7 +34,7 @@
             </div>
             <div class="menubtns">
                 <div><img src="{% static 'img/logout.png' %}">
-                    <p>Выйти</p>
+                    <a href="http://127.0.0.1:8000/api/v1/drf-auth/logout/"><p>Выйти</p></a>
                 </div>
             </div>
         </div>
@@ -58,16 +62,14 @@
             data.forEach(test => {
                 const markup =
                     `<li>
-                    <div class="card" style="width: 80rem;">
-                        <div class="card-header">
-                            ${test.id}
+                        <div class="card" style="width: 80rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">${test.name}</h5>
+                                
+                                <p class="card-text">${test.description_1}</p>
+                                <a href="http://127.0.0.1:8000/passing/${test.id}" class="btn btn-primary">Начать прохождение</a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${test.name}</h5>
-                            <p class="card-text">${test.description_1}</p>
-                            <a href="#" class="btn btn-primary">Начать прохождение</a>
-                        </div>
-                    </div>
                     </li>`;
                 document.querySelector('ul').insertAdjacentHTML('beforeend', markup);
             });

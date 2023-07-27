@@ -3,6 +3,7 @@ from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
 from rest_framework.permissions import *
 from users.models import CustomUser
 from .serializers import *
@@ -73,37 +74,15 @@ class TestViewSet(viewsets.ModelViewSet):
 
 
 class TestAPIListForUsers(generics.ListCreateAPIView):
-    queryset = Test.objects.filter(status="Опубликован")
+    queryset = Test.objects.filter(status="Опубликовано")
     serializer_class = TestSerializer
     permission_classes = (ViewTestNonDraft, )
 
 
-class TestAPIUpdate(generics.RetrieveUpdateAPIView):
-    queryset = Test.objects.all()
-    serializer_class = TestSerializer
-    # Изменять тесты может ТОЛЬКО администратор
-    permission_classes = (IsAdminUser, )
-
-
-class UserAPIList(generics.ListCreateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    # Список пользователей может просматривать ТОЛЬКО администратор
-    permission_classes = (IsAdminUser, )
-
-
-""" class UserAPIUpdate(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (IsAdminUser)
-# TODO:проверка на юзера (пользователь может менять
-#      только свои личные данные). Для начала оставим
-#      доступ только для администратора
-
-class UserAPIDestroy(generics.RetrieveDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (IsAdminUser)  """
+class SubtestAPIListForUsers(generics.ListCreateAPIView):
+    queryset = Subtest.objects.filter(test=1)
+    serializer_class = SubTestSerializer
+    permission_classes = (ViewTestNonDraft, )
 
 
 def test_list(request):
