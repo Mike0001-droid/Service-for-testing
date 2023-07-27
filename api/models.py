@@ -1,5 +1,5 @@
 from django.db import models
-
+from users.models import CustomUser
 
 
 class Test (models.Model):
@@ -67,16 +67,18 @@ class Subtest (models.Model):
         'Перемешивать вопросы?'
     )
     status = models.CharField(
-        'Статус теста',
+        'Статус субтеста',
         max_length=255
     )
     test = models.ForeignKey(
         Test,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='subtests',
+        verbose_name='Субтест'
     )
 
     def __str__(self):
-        return f"{self.id}) {self.name}"
+        return f" {self.name}"
 
 
 class Questions (models.Model):
@@ -103,7 +105,29 @@ class Questions (models.Model):
     )
     subtest = models.ForeignKey(
         Subtest,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='questions',
+        verbose_name='Вопрос'
+    )
+
+    def __str__(self):
+        return f" {self.name} "
+
+class Scales (models.Model):
+    name = models.CharField(
+        'Название шкалы',
+        max_length=255
+    )
+    queue = models.IntegerField(
+        'Порядок следования шкалы'
+    )
+    description = models.CharField(
+        'Описание шкалы',
+        max_length=255
+    )
+    status = models.CharField(
+        'Статус шкалы',
+        max_length=255
     )
 
     def __str__(self):
@@ -134,36 +158,17 @@ class Answers (models.Model):
     )
     question = models.ForeignKey(
         Questions,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='answers',
+        verbose_name='Вопрос'
+    )
+    scales = models.ForeignKey(
+        Scales,
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
-        return f"{self.id}) {self.name}"
-
-
-class Scales (models.Model):
-    name = models.CharField(
-        'Название шкалы',
-        max_length=255
-    )
-    queue = models.IntegerField(
-        'Порядок следования шкалы'
-    )
-    description = models.CharField(
-        'Описание шкалы',
-        max_length=255
-    )
-    status = models.CharField(
-        'Статус шкалы',
-        max_length=255
-    )
-    answers = models.ForeignKey(
-        Answers,
-        on_delete=models.CASCADE
-    )
-
-    def __str__(self):
-        return f"{self.id}) {self.name}"
+        return f" {self.name}"
 
 
 class Interpretations (models.Model):
@@ -201,27 +206,12 @@ class Attemption (models.Model):
     time_spent = models.IntegerField(
         'Затраченное время'
     )
-    """ user = models.OneToOneField(
-        User,
+    user = models.OneToOneField(
+        CustomUser,
         on_delete=models.CASCADE
-    ) """
+    ) 
     test = models.OneToOneField(
         Test,
         on_delete=models.CASCADE
     )
-    question = models.OneToOneField(
-        Questions,
-        on_delete=models.CASCADE
-    )
-    answer = models.OneToOneField(
-        Answers,
-        on_delete=models.CASCADE
-    )
-    scale = models.OneToOneField(
-        Scales,
-        on_delete=models.CASCADE
-    )
-    interpretation = models.OneToOneField(
-        Interpretations,
-        on_delete=models.CASCADE
-    )
+    

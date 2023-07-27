@@ -1,0 +1,21 @@
+{% block content %}
+    <form action="{% url 'pass_the_test' test.pk%}" method="post">
+    {% csrf_token %}
+    <div class="container">
+        <ul class="list-group">
+        {% for subtest in test.subtests.all %}
+          <h1 class="list-group-item text-center">{{ forloop.counter  }}. {{ subtest }} </h1>
+            <div class="jumbotron">
+                {% for question in subtest.questions.all %}
+                    <div class="alert alert-dark text-center" role="alert">
+                        <input class="form-check-input" required type="radio" name="{{ question.pk }}"> {{ question }} 
+                    </div>
+                {% endfor %}
+            <hr class="my-4">
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Далее</button>
+        </ul>
+    </div>
+    </form>
+{% endblock %}
