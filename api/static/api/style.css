@@ -85,6 +85,10 @@ body {
   font-weight: bold;
 }
 
+li {
+  list-style-type: none;
+}
+
 .menu:hover {
   width: 16vw;
 }
@@ -189,8 +193,14 @@ h6 {
   animation: ani 4s forwards;
 }
 
+.card {
+  text-align: center;
+}
+
+
 .btn {
-  background: #8D6EEF;
+  background: #816CC1;
+  left: 17%;
   border-radius: 25px;
   width: 230px;
   height: 50px;
@@ -204,7 +214,27 @@ h6 {
   box-shadow: 0px 4px 7px -2px #808080;
   margin-top: 4rem;
   opacity: 0;
-  animation: ani 4s forwards;
+  animation: ani 3s forwards;
+}
+
+.batn {
+  background: #816CC1;
+  left: 17%;
+  position: relative;
+  border-radius: 25px;
+  width: 230px;
+  height: 50px;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 7px -2px #808080;
+  margin-top: 4rem;
+  opacity: 0;
+  animation: ani 3s forwards;
 }
 
 .loginbtns {
@@ -217,7 +247,7 @@ h6 {
 }
 
 a {
-  color: #9933ff;
+  color: #816CC1;
   font-size: 16px;
   font-weight: bold;
   text-decoration: none;

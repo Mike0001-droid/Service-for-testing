@@ -88,7 +88,7 @@ class Subtest (models.Model):
     )
 
     def __str__(self):
-        return f" {self.name}"
+        return f" {self.name} "
 
 
 class Questions (models.Model):

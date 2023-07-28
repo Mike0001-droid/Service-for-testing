@@ -13,7 +13,7 @@
                         {% for answer in question.answers.all %}
                             <div class="form-check form-check-inline">
                             <input class="form-check-input" required type="radio" > {{answer}}
-                            <label class="form-check-label" for="{{ answer.pk }}">{{ forloop.counter }}</label>
+                            <label class="form-check-label" for="{{ answer.pk }}"></label>
                             </div>
                         {% endfor %}
 
