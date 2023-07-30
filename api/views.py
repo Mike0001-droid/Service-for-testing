@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import *
 from users.models import CustomUser
+from django.core.handlers.wsgi import WSGIRequest
+from .func import *
+from rest_framework.permissions import *
 from .serializers import *
 from .models import *
 from .permissions import *
@@ -47,9 +49,13 @@ def profile(request):
 
 def pass_the_test(request, pk):
     test = get_object_or_404(Test, pk=pk)
+    attemption = Attemption.objects.filter(
+        test_id=test.pk, user_id=request.user)
     if request.method == 'GET':
         return render(
             request,
             'test_passing.html',
-            {'test': test}
-        )
+            {'test': test})
+    else:
+        percentage = get_test_result(request, test, attemption)
+        return render(request, 'test_result.html', {'percentage': percentage})

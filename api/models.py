@@ -1,5 +1,7 @@
 from django.db import models
 from users.models import CustomUser
+from django.db.models import F
+
 
 class Category (models.Model):
     name = models.CharField(
@@ -13,6 +15,7 @@ class Test (models.Model):
         'Название теста',
         max_length=255
     )
+
     description_1 = models.CharField(
         'Описание до',
         max_length=255
@@ -117,11 +120,12 @@ class Questions (models.Model):
         Subtest,
         on_delete=models.CASCADE,
         related_name='questions',
-        verbose_name='Вопрос'
+        verbose_name='Субтест'
     )
 
     def __str__(self):
         return f" {self.name} "
+
 
 class Scales (models.Model):
     name = models.CharField(
@@ -207,21 +211,25 @@ class Interpretations (models.Model):
 
 class Attemption (models.Model):
     number = models.IntegerField(
-        'Номер попытки'
+        'Номер попытки',
+        default=0
     )
-    date = models.DateTimeField(
+
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+    )
+
+    test = models.OneToOneField(
+        Test,
+        unique=False,
+        on_delete=models.CASCADE
+    )
+
+    """ date = models.DateTimeField(
         'Дата и время прохождения',
         auto_now=True
     )
     time_spent = models.IntegerField(
         'Затраченное время'
-    )
-    user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE
-    ) 
-    test = models.OneToOneField(
-        Test,
-        on_delete=models.CASCADE
-    )
-    
+    ) """

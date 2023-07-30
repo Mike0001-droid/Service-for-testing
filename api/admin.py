@@ -33,7 +33,7 @@ class SubTestAdmin(admin.ModelAdmin):
 
 
 @admin.register(Test)
-class TastsAdmin(admin.ModelAdmin):
+class TestsAdmin(admin.ModelAdmin):
     pass
 
 
