@@ -8,26 +8,13 @@
             <h3>Вопросы</h3>
             <div class="jumbotron">
                 {% for question in subtest.questions.all %}
-<<<<<<< HEAD
                 <div class="alert alert-dark text-center" role="alert">
-                    <h3>{{ forloop.counter }}) {{ question }} </h3>
+                    <h3>{{ forloop.counter }}) {{ question }}  </h3>
                     {% for answer in question.answers.all %}
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" required type="radio" name="{{ question.pk }}"
-                            id="{{ answer.pk }}" value="{{ answer.pk }}">
-                        <label class="form-check-label" for="{{ answer.pk }}">{{ answer }}</label>
-=======
-                    <div class="alert alert-dark text-center" role="alert">
-                        <h3>{{ forloop.counter }}) {{ question }}  </h3>
-                        {% for answer in question.answers.all %}
-                            <div class="form-check form-check-inline">
-                            <input class="form-check-input" required type="radio" name="{{ question.pk }}" id="{{ answer.pk }}" value="{{ answer.pk }}">
-                            <label class="form-check-label" for="{{ answer.pk }}">{{answer}}</label>
-                            </div>
-                        {% endfor %}
-
->>>>>>> e91b07a2f85c04454c16be110441494089eb9711
-                    </div>
+                        <div class="form-check form-check-inline">
+                        <input class="form-check-input" required type="radio" name="{{ question.pk }}" id="{{ answer.pk }}" value="{{ answer.pk }}">
+                        <label class="form-check-label" for="{{ answer.pk }}">{{answer}}</label>
+                        </div>
                     {% endfor %}
                 </div>
                 {% endfor %}
