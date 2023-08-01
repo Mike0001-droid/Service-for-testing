@@ -4,6 +4,9 @@ from .models import *
 
 
 def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
+    def interp_obj(list):
+        return Interpretations.objects.filter(scale_id__in=list)
+
     # Процесс получения и обработки ответов пользователя #
     questions = [subtest.questions.all()
                  for subtest in test.subtests.all()]
@@ -31,19 +34,18 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
             non_similar_scales_pk.append(i)
 
     response = []
+    scores =[]
     inter_name = []
     if len(non_similar_scales_pk) != 0:
-        scores = [
+        
+        scores += [
             i.score for i in Answers.objects.filter
             (id__in=true_user_answers_pk,
              scales_id__in=non_similar_scales_pk)]
         fin_scores = [
-            i.finish_score for i in
-            Interpretations.objects.filter(
-                scale_id__in=non_similar_scales_pk)]
-        inter_name += [i.name for i in
-                       Interpretations.objects.filter(
-                           scale_id__in=non_similar_scales_pk)]
+            i.finish_score for i in interp_obj(non_similar_scales_pk)]
+        inter_name += [
+            i.name for i in interp_obj(non_similar_scales_pk)]
         for i in range(len(non_similar_scales_pk)):
             response.append(round(scores[i] / fin_scores[i], 3) * 100)
 
@@ -53,7 +55,6 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
             sum_score.append(sum([i.score for i in Answers.objects.filter
                                   (id__in=true_user_answers_pk,
                                    scales_id=x)]))
-
         fin_scores = [i.finish_score for i in
                       Interpretations.objects.filter(
                           scale_id__in=similar_scales_pk)]
@@ -66,7 +67,7 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
             for i in range(len(sum_score)):
                 response.append(round(sum_score[i] / fin_scores[i], 3) * 100)
 
-    if list(attemption) == []:
+    """ if list(attemption) == []:
         Attemption.objects.create(
             number=1,
             user=request.user,
@@ -75,6 +76,6 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
     else:
         for at in attemption:
             at.number += 1
-            at.save(update_fields=['number'])
+            at.save(update_fields=['number']) """
 
-    return response
+    return scores, sum_score, fin_scores, inter_name, response
