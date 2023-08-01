@@ -4,39 +4,67 @@ from .models import *
 
 
 def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
-    all_obj = [subtest.questions.all()
-               for subtest in test.subtests.all()]
-    answ = []
-    for x in all_obj: 
-        for b in x: answ += [ans for ans in b.answers.all()]
-    all_rights_pk = [str(i.pk) for i in answ if i.right == True]
-    true_user_answers = set(request.POST.values()) & set(all_rights_pk)
+    # Процесс получения и обработки ответов пользователя #
+    questions = [subtest.questions.all()
+                 for subtest in test.subtests.all()]
+    answers = []
+    for x in questions:
+        for b in x:
+            answers += [ans for ans in b.answers.all()]
+    rights_answers_pk = [str(i.pk) for i in answers if i.right == True]
+    true_user_answers = set(request.POST.values()) & set(rights_answers_pk)
     true_user_answers_pk = [int(i) for i in true_user_answers]
-    ans_obj = [i.scales_id for i in Answers.objects.filter(id__in=true_user_answers_pk)]
-    num_rep = []
-    num = []
-    for i in ans_obj:
-        if ans_obj.count(i)>1:
-            num_rep.append(i)
-        if ans_obj.count(i) == 1:
-            num.append(i)
-    
-    resp = sum(
-        [i.score for i in Answers.objects.filter
-            (id__in=true_user_answers_pk, scales_id__in=num_rep)]
-    )
-    resp_1 = [i.score for i in Answers.objects.filter
-            (id__in=true_user_answers_pk, scales_id__in=num)]
-    
-    interp = Interpretations.objects.filter(scale_id__in = num_rep)
-    percentage = round(
-            resp / interp.finish_score, 3
-        ) * 100
+    scales_pk = [i.scales_id for i in Answers.objects.filter(
+        id__in=true_user_answers_pk)]
+    # Формирование двух списков, которые позволяют        #
+    # работать с ответами, у которых одинаковые шкалы, а  #
+    # так же, с ответами, у которых шкала встречается еди #
+    # Формирование двух списков, которые позволяют работа #
+    # Формирование двух списков, которые позволяют работа #
+    # Формирование двух списков, которые позволяют работа #
+    similar_scales_pk = set()
+    non_similar_scales_pk = []
+    for i in scales_pk:
+        if scales_pk.count(i) > 1:
+            similar_scales_pk.add(i)
+        if scales_pk.count(i) == 1:
+            non_similar_scales_pk.append(i)
 
-    percentage_1 = 0
-    if len(num) != 0:
-        interp_1 = Interpretations.objects.filter(scale_id__in = num)
-        
+    response = []
+    inter_name = []
+    if len(non_similar_scales_pk) != 0:
+        scores = [
+            i.score for i in Answers.objects.filter
+            (id__in=true_user_answers_pk,
+             scales_id__in=non_similar_scales_pk)]
+        fin_scores = [
+            i.finish_score for i in
+            Interpretations.objects.filter(
+                scale_id__in=non_similar_scales_pk)]
+        inter_name += [i.name for i in
+                       Interpretations.objects.filter(
+                           scale_id__in=non_similar_scales_pk)]
+        for i in range(len(non_similar_scales_pk)):
+            response.append(round(scores[i] / fin_scores[i], 3) * 100)
+
+    if len(similar_scales_pk) != 0:
+        sum_score = []
+        for x in similar_scales_pk:
+            sum_score.append(sum([i.score for i in Answers.objects.filter
+                                  (id__in=true_user_answers_pk,
+                                   scales_id=x)]))
+
+        fin_scores = [i.finish_score for i in
+                      Interpretations.objects.filter(
+                          scale_id__in=similar_scales_pk)]
+        inter_name += [i.name for i in
+                       Interpretations.objects.filter(
+                           scale_id__in=similar_scales_pk)]
+        if len(fin_scores) == 1:
+            response.append(round(sum(sum_score) / fin_scores[0], 3) * 100)
+        else:
+            for i in range(len(sum_score)):
+                response.append(round(sum_score[i] / fin_scores[i], 3) * 100)
 
     if list(attemption) == []:
         Attemption.objects.create(
@@ -48,5 +76,5 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
         for at in attemption:
             at.number += 1
             at.save(update_fields=['number'])
-  
-    return 
+
+    return response
