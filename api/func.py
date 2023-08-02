@@ -4,8 +4,19 @@ from .models import *
 
 
 def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
-    def interp_obj(list):
-        return Interpretations.objects.filter(scale_id__in=list)
+
+    # Фильтрация интерпретаций относительно шкалы        #
+    def interp_obj(lst):
+        return Interpretations.objects.filter(scale_id__in=lst)
+    
+    def answer_obj(lst):
+        if isinstance(lst, list):
+            return Answers.objects.filter(
+                id__in=true_user_answers_pk,scales_id__in=list)
+        else:
+            return Answers.objects.filter(
+                id__in=true_user_answers_pk,scales_id=lst)
+
 
     # Процесс получения и обработки ответов пользователя #
     questions = [subtest.questions.all()
@@ -18,13 +29,13 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
     true_user_answers = set(request.POST.values()) & set(rights_answers_pk)
     true_user_answers_pk = [int(i) for i in true_user_answers]
     scales_pk = [i.scales_id for i in Answers.objects.filter(
-        id__in=true_user_answers_pk)]
+                    id__in=true_user_answers_pk)]
+    
+
     # Формирование двух списков, которые позволяют        #
     # работать с ответами, у которых одинаковые шкалы, а  #
-    # так же, с ответами, у которых шкала встречается еди #
-    # Формирование двух списков, которые позволяют работа #
-    # Формирование двух списков, которые позволяют работа #
-    # Формирование двух списков, которые позволяют работа #
+    # так же, с ответами, у которых шкала встречается     #
+    # лишь один раз во всём тесте                         #
     similar_scales_pk = set()
     non_similar_scales_pk = []
     for i in scales_pk:
@@ -33,39 +44,39 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
         if scales_pk.count(i) == 1:
             non_similar_scales_pk.append(i)
 
-    response = []
+
+    # Работа с распределением баллов, нахождение одинаков #
+    # ых шкал и суммирование соответственных баллов. Рабо #
+    # та с соответствующими интерпретациями и нахождение  #
+    # процентного соотношения                             #
+    percentage = []
     scores =[]
+    sum_score = []
     inter_name = []
+    
     if len(non_similar_scales_pk) != 0:
-        
         scores += [
-            i.score for i in Answers.objects.filter
-            (id__in=true_user_answers_pk,
-             scales_id__in=non_similar_scales_pk)]
+            i.score for i in answer_obj(non_similar_scales_pk)]
         fin_scores = [
             i.finish_score for i in interp_obj(non_similar_scales_pk)]
         inter_name += [
             i.name for i in interp_obj(non_similar_scales_pk)]
         for i in range(len(non_similar_scales_pk)):
-            response.append(round(scores[i] / fin_scores[i], 3) * 100)
+            percentage.append(round(scores[i] / fin_scores[i], 3) * 100)
 
     if len(similar_scales_pk) != 0:
-        sum_score = []
         for x in similar_scales_pk:
-            sum_score.append(sum([i.score for i in Answers.objects.filter
-                                  (id__in=true_user_answers_pk,
-                                   scales_id=x)]))
-        fin_scores = [i.finish_score for i in
-                      Interpretations.objects.filter(
-                          scale_id__in=similar_scales_pk)]
-        inter_name += [i.name for i in
-                       Interpretations.objects.filter(
-                           scale_id__in=similar_scales_pk)]
+            sum_score.append(sum([
+                i.score for i in answer_obj(x)]))
+        fin_scores = [
+            i.finish_score for i in interp_obj(similar_scales_pk)]
+        inter_name += [
+            i.name for i in interp_obj(similar_scales_pk)]
         if len(fin_scores) == 1:
-            response.append(round(sum(sum_score) / fin_scores[0], 3) * 100)
+            percentage.append(round(sum(sum_score) / fin_scores[0], 3) * 100)
         else:
             for i in range(len(sum_score)):
-                response.append(round(sum_score[i] / fin_scores[i], 3) * 100)
+                percentage.append(round(sum_score[i] / fin_scores[i], 3) * 100)
 
     """ if list(attemption) == []:
         Attemption.objects.create(
@@ -78,4 +89,4 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
             at.number += 1
             at.save(update_fields=['number']) """
 
-    return scores, sum_score, fin_scores, inter_name, response
+    return  scores, sum_score, fin_scores, inter_name, percentage

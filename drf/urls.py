@@ -21,6 +21,6 @@ urlpatterns = [
     path('profile', profile, name='profile'),
     path('tests/', login_required(views.test_list)),
     path('api/v1/drf-auth/', include('rest_framework.urls')),
-    path('passing/<int:pk>', pass_the_test, name='pass_the_test'),
+    path('passing/<int:pk>', login_required(views.pass_the_test), name='pass_the_test'),
 
 ]

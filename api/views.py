@@ -57,16 +57,10 @@ def pass_the_test(request, pk):
             'test_passing.html',
             {'test': test}
         )
+    
     else:
         percentage = get_test_result(request, test, attemption)
         return render(
             request, 'test_result.html',
-                {   'score_1': percentage[1][0],
-                    'fin_1': percentage[2][0],
-                    'int_1': percentage[3][0],
-                    'perc_1': percentage[4][0],
-                    'score_2': percentage[1][1],
-                    'fin_2':percentage[2][1],
-                    'int_2': percentage[3][1],
-                    'perc_2': percentage[4][1],
+                { 'percentage':percentage
                 })
