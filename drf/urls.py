@@ -16,11 +16,9 @@ urlpatterns = [
     path('api/v1/test/', TestAPIListForUsers.as_view()),
     path('api/v1/subtests/', SubtestAPIListForUsers.as_view()),
     path('', index, name='index'),
-    path('login', login, name='login'),
     path('new_signup/', vyuha.SignUpView.as_view(), name='signup'),
     path('profile', profile, name='profile'),
     path('tests/', login_required(views.test_list)),
     path('api/v1/drf-auth/', include('rest_framework.urls')),
     path('passing/<int:pk>', login_required(views.pass_the_test), name='pass_the_test'),
-
 ]

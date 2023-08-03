@@ -1,5 +1,4 @@
 from django.core.handlers.wsgi import WSGIRequest
-from django.shortcuts import get_object_or_404
 from .models import *
 
 
@@ -12,7 +11,7 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
     def answer_obj(lst):
         if isinstance(lst, list):
             return Answers.objects.filter(
-                id__in=true_user_answers_pk,scales_id__in=list)
+                id__in=true_user_answers_pk,scales_id__in=lst)
         else:
             return Answers.objects.filter(
                 id__in=true_user_answers_pk,scales_id=lst)
@@ -53,11 +52,13 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
     scores =[]
     sum_score = []
     inter_name = []
+    fin_scores = []
+    fin_sum_scores = []
     
     if len(non_similar_scales_pk) != 0:
         scores += [
             i.score for i in answer_obj(non_similar_scales_pk)]
-        fin_scores = [
+        fin_scores += [
             i.finish_score for i in interp_obj(non_similar_scales_pk)]
         inter_name += [
             i.name for i in interp_obj(non_similar_scales_pk)]
@@ -68,16 +69,16 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
         for x in similar_scales_pk:
             sum_score.append(sum([
                 i.score for i in answer_obj(x)]))
-        fin_scores = [
+        fin_sum_scores += [
             i.finish_score for i in interp_obj(similar_scales_pk)]
         inter_name += [
             i.name for i in interp_obj(similar_scales_pk)]
-        if len(fin_scores) == 1:
-            percentage.append(round(sum(sum_score) / fin_scores[0], 3) * 100)
+        if len(fin_sum_scores) == 1:
+            percentage.append(round(sum(sum_score) / fin_sum_scores[0], 3) * 100)
         else:
             for i in range(len(sum_score)):
-                percentage.append(round(sum_score[i] / fin_scores[i], 3) * 100)
-
+                percentage.append(round(sum_score[i] / fin_sum_scores[i], 3) * 100)
+ 
     """ if list(attemption) == []:
         Attemption.objects.create(
             number=1,
@@ -89,4 +90,4 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
             at.number += 1
             at.save(update_fields=['number']) """
 
-    return  scores, sum_score, fin_scores, inter_name, percentage
+    return sum_score, fin_sum_scores, scores, fin_scores,  percentage, inter_name

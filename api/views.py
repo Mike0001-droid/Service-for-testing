@@ -22,13 +22,11 @@ class TestAPIListForUsers(generics.ListCreateAPIView):
 class SubtestAPIListForUsers(generics.ListCreateAPIView):
     queryset = Subtest.objects.filter(test=1)
     serializer_class = SubTestSerializer
-    permission_classes = (ViewTestNonDraft, )
+    permission_classes = (ViewTestNonDraft)
 
 
 def test_list(request):
-    tests = Test.objects.all()
-    context = {'tests': tests}
-    return render(request, 'tests.html', context)
+    return render(request, 'tests.html')
 
 
 def index(request):
@@ -57,10 +55,8 @@ def pass_the_test(request, pk):
             'test_passing.html',
             {'test': test}
         )
-    
     else:
         percentage = get_test_result(request, test, attemption)
         return render(
             request, 'test_result.html',
-                { 'percentage':percentage
-                })
+                { 'percentage':percentage})
