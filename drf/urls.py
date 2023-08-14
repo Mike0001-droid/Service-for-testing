@@ -6,6 +6,8 @@ from rest_framework_simplejwt.views import *
 from django.contrib.auth.decorators import login_required
 from api import views
 from users import views as vyuha
+from django.conf.urls.static import static
+from drf import settings
 router = routers.DefaultRouter()
 # router.register(r'user', TestViewSet)
 
@@ -22,5 +24,6 @@ urlpatterns = [
     path('tests/', login_required(views.test_list)),
     path('api/v1/drf-auth/', include('rest_framework.urls')),
     path('passing/<int:pk>', login_required(views.pass_the_test), name='pass_the_test'),
-
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
