@@ -25,4 +25,4 @@ urlpatterns = [
     path('passing/<int:pk>', login_required(views.pass_the_test), name='pass_the_test'),
 ]
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_DIR)
