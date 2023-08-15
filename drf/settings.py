@@ -36,7 +36,7 @@ if DEBUG:
     STATIC_DIR = os.path.join(BASE_DIR, 'static')
     STATICFILES_DIRS = [
         STATIC_DIR,
-        '/var/www/Service-for-testing/static/',
+        #'/var/www/Service-for-testing/static/',
     ]
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
@@ -45,8 +45,8 @@ else:
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     )
 
-LOGIN_REDIRECT_URL = 'http://92.53.115.82:8000/tests/'
-LOGOUT_REDIRECT_URL = 'http://92.53.115.82:8000/'
+LOGIN_REDIRECT_URL = '/tests/'
+LOGOUT_REDIRECT_URL = '/'
 # Application definition
 
 INSTALLED_APPS = [
@@ -106,7 +106,7 @@ DATABASES = {
         'NAME': 'sft',
         'USER': 'adm',
         'PASSWORD': 'admadm',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '',
     }
 }

@@ -5,11 +5,7 @@
             There was an error with your form...
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
-
-
-
 {% endif %}	
-
 	<div class="shadow p-4 mb-5 bg-body rounded">
 	<h1>Register</h1>
 <br/>
@@ -18,16 +14,9 @@
 			{% csrf_token %}
 
 			{{ form.as_p }}
-	</div>
-		
-
-  
-
-
-			
+	</div>	
 <br/><br/>
-			<input type="submit" value="Submit" class="btn btn-secondary">
-
+		<input type="submit" value="Submit" class="btn btn-secondary">
 		</form>
 		
 </div>

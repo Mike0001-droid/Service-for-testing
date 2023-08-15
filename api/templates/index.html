@@ -14,7 +14,6 @@
     <nav class="navbar">
       <div class="poisk">
         <h6>ProTest</h6>
-
       </div>
     </nav>
     <div class="content">
@@ -25,10 +24,10 @@
         </div>
         <div class="loginbtns">
           {% if request.user.is_authenticated %}
-          <a href="http://92.53.115.82:8000/tests/">
+          <a href="/tests/">
             <p>Перейти к тестам</p>
           </a>
-          <a href="http://92.53.115.82:8000/api/v1/drf-auth/logout/">
+          <a href="/api/v1/drf-auth/logout/">
             <p>Выйти</p>
           </a>
           {% endif %}
