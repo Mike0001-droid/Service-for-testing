@@ -36,7 +36,7 @@ if DEBUG:
     STATIC_DIR = os.path.join(BASE_DIR, 'static')
     STATICFILES_DIRS = [
         STATIC_DIR,
-        #'/var/www/Service-for-testing/static/',
+        '/var/www/Service-for-testing/static/',
     ]
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
@@ -47,11 +47,8 @@ else:
 
 LOGIN_REDIRECT_URL = '/tests/'
 LOGOUT_REDIRECT_URL = '/'
-<<<<<<< HEAD
 SESSION_COOKIE_SECURE=False
 SECURE_CROSS_ORIGIN_OPENER_POLICY=None
-=======
->>>>>>> 415707a5457ed7b9a19f1c30b289e84b4c9a7fc9
 # Application definition
 
 INSTALLED_APPS = [
