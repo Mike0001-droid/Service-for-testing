@@ -7,22 +7,22 @@ class CategoryAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Interpretations)
+@admin.register(Interpretation)
 class InterpretationsAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Scales)
+@admin.register(Scale)
 class ScalesAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Answers)
+@admin.register(Answer)
 class AnswersAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Questions)
+@admin.register(Question)
 class QuestionssAdmin(admin.ModelAdmin):
     pass
 
