@@ -6,6 +6,12 @@ STATUS_CHOICES = (
     ('Черновик', 'Черновик'),
     ('Опубликовано', 'Опубликовано'),
 )
+
+TYPE_CHOICES = (
+    ('Единственный выбор', 'Единственный выбор'),
+    ('Множественный выбор', 'Множественный выбор'),
+)
+
 class Category (models.Model):
     name = models.CharField(
         'Название категории',
@@ -14,24 +20,19 @@ class Category (models.Model):
     def __str__(self):
         return f"{self.id}) {self.name}"
 
-
 class Test (models.Model):
     name = models.CharField(
         'Название теста',
         max_length=255
     )
-
-    description_1 = models.CharField(
-        'Описание до',
-        max_length=255
+    description_1 = models.TextField(
+        'Описание до'
     )
-    description_2 = models.CharField(
-        'Описание после',
-        max_length=255
+    description_2 = models.TextField(
+        'Описание после'
     )
-    comment = models.CharField(
-        'Комментарий для преподавателя',
-        max_length=255
+    comment = models.TextField(
+        'Комментарий для преподавателя'
     )
     time_for_solution = models.BooleanField(
         'Записывать время прохождения?'
@@ -65,17 +66,14 @@ class Subtest (models.Model):
     queue = models.IntegerField(
         'Порядок следования субтеста'
     )
-    description_1 = models.CharField(
-        'Описание до',
-        max_length=255
+    description_1 = models.TextField(
+        'Описание до'
     )
-    description_2 = models.CharField(
-        'Описание после',
-        max_length=255
+    description_2 = models.TextField(
+        'Описание после'
     )
-    comment = models.CharField(
-        'Комментарий для преподавателя',
-        max_length=255
+    comment = models.TextField(
+        'Комментарий для преподавателя'
     )
     time_for_solution = models.BooleanField(
         'Записывать время прохождения?'
@@ -112,7 +110,9 @@ class Question (models.Model):
     )
     type_question = models.CharField(
         'Тип вопроса',
-        max_length=255
+        max_length=19, 
+        choices=TYPE_CHOICES, 
+        default='Единственный выбор'
     )
     obligatory = models.BooleanField(
         'Обязательный ?'
@@ -135,39 +135,12 @@ class Question (models.Model):
     def __str__(self):
         return f" {self.name} "
 
-
-class Scale (models.Model):
+class Answer(models.Model):
     name = models.CharField(
-        'Название шкалы',
-        max_length=255
-    )
-    queue = models.IntegerField(
-        'Порядок следования шкалы'
-    )
-    description = models.CharField(
-        'Описание шкалы',
-        max_length=255
-    )
-    status = models.CharField(
-        'Статус шкалы',
-        choices=STATUS_CHOICES, 
-        default='Черновик'
-    )
-
-    def __str__(self):
-        return f"{self.id}) {self.name}"
-
-
-class Answer (models.Model):
-    name = models.CharField(
-        'Название ответа',
-        max_length=255
+        'Название', max_length=255
     )
     queue = models.IntegerField(
         'Порядок следования ответа'
-    )
-    score = models.IntegerField(
-        'Количество баллов'
     )
     right = models.BooleanField(
         'Ответ верный?'
@@ -178,13 +151,48 @@ class Answer (models.Model):
         related_name='answers',
         verbose_name='Вопрос'
     )
-    scales = models.ForeignKey(
-        Scale,
-        on_delete=models.CASCADE,
+    def __str__(self):
+        return f'{self.name}'
+    class Meta:
+        verbose_name = 'Ответ'
+        verbose_name_plural = 'Ответы'
+
+class Scale(models.Model):
+    name = models.CharField(
+        'Название', max_length=255
     )
+    queue = models.IntegerField(
+        'Порядок следования шкалы'
+    )
+    score = models.IntegerField(
+        'Количество баллов'
+    )
+    status = models.CharField(
+        'Статус шкалы',
+        choices=STATUS_CHOICES, 
+        default='Черновик'
+    )
+    answer = models.ManyToManyField(
+        Answer, verbose_name='Ответ',
+        related_name='scale_answer', 
+        through='AnswerScale'
+    )
+    
+    def __str__(self):
+        return f'{self.name}'
+    class Meta:
+        verbose_name = 'Шкала'
+        verbose_name_plural = 'Шкалы'
+
+class AnswerScale(models.Model):
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    scale = models.ForeignKey(Scale, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f" {self.name}"
+        return f'{self.answer} : {self.scale}, Кол-во баллов - {self.scale.score}'
+
+    class Meta:
+        unique_together = ('answer', 'scale')
 
 
 class Interpretation (models.Model):
@@ -195,9 +203,8 @@ class Interpretation (models.Model):
     queue = models.IntegerField(
         'Порядок следования интерпретации'
     )
-    text = models.CharField(
-        'Текст',
-        max_length=255
+    text = models.TextField(
+        'Текст'
     )
     start_score = models.IntegerField(
         'Количество баллов от'
@@ -209,7 +216,9 @@ class Interpretation (models.Model):
         choices=STATUS_CHOICES, 
         default='Черновик'
     )
-    scale = models.ForeignKey(Scale, on_delete=models.CASCADE)
+    scale = models.ForeignKey(
+        Scale, on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return f"{self.id}) {self.name}"
@@ -220,18 +229,15 @@ class Attemption (models.Model):
         'Номер попытки',
         default=0
     )
-
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
     )
-
     test = models.OneToOneField(
         Test,
         unique=False,
         on_delete=models.CASCADE
     )
-
     """ date = models.DateTimeField(
         'Дата и время прохождения',
         auto_now=True
