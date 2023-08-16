@@ -1,5 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+GENDER_CHOICES = (
+    ('Men', 'Men'),
+    ('Women', 'Women'),
+    ('Мужчина', 'Мужчина'),
+    ('Женщина', 'Женщина'),
+)
 
 class CustomUser(AbstractUser):
     
@@ -13,7 +19,8 @@ class CustomUser(AbstractUser):
     )
     gender = models.CharField(
         'Пол',
-        max_length=7
+        max_length=7, 
+        choices=GENDER_CHOICES, default='MEN'
     )
     age = models.IntegerField(
         'Возраст',

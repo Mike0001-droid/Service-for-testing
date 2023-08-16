@@ -2,12 +2,17 @@ from django.db import models
 from users.models import CustomUser
 from django.db.models import F
 
-
+STATUS_CHOICES = (
+    ('Черновик', 'Черновик'),
+    ('Опубликовано', 'Опубликовано'),
+)
 class Category (models.Model):
     name = models.CharField(
         'Название категории',
         max_length=255
     )
+    def __str__(self):
+        return f"{self.id}) {self.name}"
 
 
 class Test (models.Model):
@@ -39,7 +44,9 @@ class Test (models.Model):
     )
     status = models.CharField(
         'Статус теста',
-        max_length=255
+        max_length=12, 
+        choices=STATUS_CHOICES, 
+        default='Черновик'
     )
     category = models.ForeignKey(
         Category,
@@ -81,20 +88,21 @@ class Subtest (models.Model):
     )
     status = models.CharField(
         'Статус субтеста',
-        max_length=255
+        choices=STATUS_CHOICES, 
+        default='Черновик'
     )
     test = models.ForeignKey(
         Test,
         on_delete=models.CASCADE,
         related_name='subtests',
-        verbose_name='Субтест'
+        verbose_name='Тест'
     )
 
     def __str__(self):
         return f" {self.name} "
 
 
-class Questions (models.Model):
+class Question (models.Model):
     name = models.CharField(
         'Название вопроса',
         max_length=255
@@ -114,7 +122,8 @@ class Questions (models.Model):
     )
     status = models.CharField(
         'Статус вопроса',
-        max_length=255
+        choices=STATUS_CHOICES, 
+        default='Черновик'
     )
     subtest = models.ForeignKey(
         Subtest,
@@ -127,7 +136,7 @@ class Questions (models.Model):
         return f" {self.name} "
 
 
-class Scales (models.Model):
+class Scale (models.Model):
     name = models.CharField(
         'Название шкалы',
         max_length=255
@@ -141,14 +150,15 @@ class Scales (models.Model):
     )
     status = models.CharField(
         'Статус шкалы',
-        max_length=255
+        choices=STATUS_CHOICES, 
+        default='Черновик'
     )
 
     def __str__(self):
         return f"{self.id}) {self.name}"
 
 
-class Answers (models.Model):
+class Answer (models.Model):
     name = models.CharField(
         'Название ответа',
         max_length=255
@@ -156,28 +166,20 @@ class Answers (models.Model):
     queue = models.IntegerField(
         'Порядок следования ответа'
     )
-    description = models.CharField(
-        'Описание ответа',
-        max_length=255
-    )
     score = models.IntegerField(
         'Количество баллов'
     )
     right = models.BooleanField(
         'Ответ верный?'
     )
-    status = models.CharField(
-        'Статус ответа',
-        max_length=255
-    )
     question = models.ForeignKey(
-        Questions,
+        Question,
         on_delete=models.CASCADE,
         related_name='answers',
         verbose_name='Вопрос'
     )
     scales = models.ForeignKey(
-        Scales,
+        Scale,
         on_delete=models.CASCADE,
     )
 
@@ -185,7 +187,7 @@ class Answers (models.Model):
         return f" {self.name}"
 
 
-class Interpretations (models.Model):
+class Interpretation (models.Model):
     name = models.CharField(
         'Название интерпретации',
         max_length=255
@@ -202,8 +204,12 @@ class Interpretations (models.Model):
     )
     finish_score = models.IntegerField(
         'Количество баллов до')
-    status = models.CharField('Статус интерпретации', max_length=255)
-    scale = models.ForeignKey(Scales, on_delete=models.CASCADE)
+    status = models.CharField(
+        'Статус интерпретации', 
+        choices=STATUS_CHOICES, 
+        default='Черновик'
+    )
+    scale = models.ForeignKey(Scale, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.id}) {self.name}"
