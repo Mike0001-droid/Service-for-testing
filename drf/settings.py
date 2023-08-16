@@ -29,7 +29,7 @@ DEBUG = True
 if DEBUG:
     ALLOWED_HOSTS = ['*']
 else:
-    ALLOWED_HOSTS = ['92.53.115.82', '127.0.0.1']
+    ALLOWED_HOSTS = ['92.53.115.82', '127.0.0.1', 'tests.flexidev.ru']
 
 STATIC_URL = '/static/'
 if DEBUG:
@@ -45,8 +45,10 @@ else:
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     )
 
-LOGIN_REDIRECT_URL = 'http://92.53.115.82:8000/tests/'
-LOGOUT_REDIRECT_URL = 'http://92.53.115.82:8000/'
+LOGIN_REDIRECT_URL = '/tests/'
+LOGOUT_REDIRECT_URL = '/'
+SESSION_COOKIE_SECURE=False
+SECURE_CROSS_ORIGIN_OPENER_POLICY=None
 # Application definition
 
 INSTALLED_APPS = [

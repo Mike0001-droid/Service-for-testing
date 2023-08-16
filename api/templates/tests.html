@@ -50,7 +50,7 @@
 
 </html>
 <script>
-    fetch('http://127.0.0.1:8000/api/v1/test/?format=json')
+    fetch('http://tests.flexidev.ru:8000/api/v1/test/?format=json')
         .then(res => {
             return res.json();
         })
@@ -63,7 +63,7 @@
                                 <h5 class="card-title">${test.name}</h5>
                                 
                                 <p class="card-text">${test.description_1}</p>
-                                <a href="http://127.0.0.1:8000/passing/${test.id}" class="batn btn-primary">Начать прохождение</a>
+                                <a href="http://tests.flexidev.ru:8000/passing/${test.id}" class="batn btn-primary">Начать прохождение</a>
                             </div>
                         </div>
                     </li>`;
