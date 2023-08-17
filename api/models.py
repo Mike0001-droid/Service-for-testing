@@ -19,6 +19,8 @@ class Category (models.Model):
     )
     def __str__(self):
         return f"{self.id}) {self.name}"
+    class Meta:
+        verbose_name_plural = 'Категории'
 
 class Test (models.Model):
     name = models.CharField(
@@ -56,6 +58,9 @@ class Test (models.Model):
 
     def __str__(self):
         return f"{self.id}) {self.name}"
+
+    class Meta:
+        verbose_name_plural = 'Тесты'
 
 
 class Subtest (models.Model):
@@ -98,6 +103,9 @@ class Subtest (models.Model):
 
     def __str__(self):
         return f" {self.name} "
+    
+    class Meta:
+        verbose_name_plural = 'Субтесты'
 
 
 class Question (models.Model):
@@ -134,6 +142,9 @@ class Question (models.Model):
 
     def __str__(self):
         return f" {self.name} "
+    
+    class Meta:
+        verbose_name_plural = 'Вопросы'
 
 class Answer(models.Model):
     name = models.CharField(
@@ -223,6 +234,8 @@ class Interpretation (models.Model):
     def __str__(self):
         return f"{self.id}) {self.name}"
 
+    class Meta:
+        verbose_name_plural = 'Интерпретации'
 
 class Attemption (models.Model):
     number = models.IntegerField(
@@ -238,6 +251,8 @@ class Attemption (models.Model):
         unique=False,
         on_delete=models.CASCADE
     )
+    class Meta:
+        verbose_name_plural = 'Попытки'
     """ date = models.DateTimeField(
         'Дата и время прохождения',
         auto_now=True
