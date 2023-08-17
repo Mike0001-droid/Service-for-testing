@@ -2,7 +2,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from .models import *
 
 
-def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
+""" def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
 
     # Фильтрация интерпретаций относительно шкалы        #
     def interp_obj(lst):
@@ -79,7 +79,7 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
             for i in range(len(sum_score)):
                 percentage.append(round(sum_score[i] / fin_sum_scores[i], 3) * 100)
  
-    """ if list(attemption) == []:
+    if list(attemption) == []:
         Attemption.objects.create(
             number=1,
             user=request.user,
@@ -88,6 +88,6 @@ def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
     else:
         for at in attemption:
             at.number += 1
-            at.save(update_fields=['number']) """
+            at.save(update_fields=['number']) 
 
-    return sum_score, fin_sum_scores, scores, fin_scores,  percentage, inter_name
+    return sum_score, fin_sum_scores, scores, fin_scores,  percentage, inter_name """
