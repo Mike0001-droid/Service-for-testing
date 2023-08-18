@@ -13,13 +13,12 @@ class CustomUserAdmin(UserAdmin):
             'Custom fields',
             {
                 'fields': (
-                    
-                    'first_name',
-                    'last_name',
-                    'gender',
-                    'age',
-                    
+                    "first_name",
+                    "last_name",
+                    "gender",
+                    "age",   
                 )
             }
          )
     )
+

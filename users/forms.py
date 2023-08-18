@@ -5,7 +5,6 @@ from django.contrib.auth.models import Group
 
 class CustomUserCreationForm(UserCreationForm):
     groups = forms.ModelChoiceField(queryset=Group.objects.all())
-    gender = forms.ModelChoiceField(queryset=Group.objects.all())
     class Meta:
         model = CustomUser
         fields = (

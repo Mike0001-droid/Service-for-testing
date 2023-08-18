@@ -47,8 +47,8 @@ def profile(request):
 
 def pass_the_test(request, pk):
     test = get_object_or_404(Test, pk=pk)
-    attemption = Attemption.objects.filter(
-        test_id=test.pk, user_id=request.user)
+    """ attemption = Attemption.objects.filter(
+        test_id=test.pk, user_id=request.user) """
     if request.method == 'GET':
         return render(
             request,
