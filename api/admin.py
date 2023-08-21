@@ -44,20 +44,22 @@ class CategoryAdmin(admin.ModelAdmin):
 class TestAdmin(admin.ModelAdmin):
     list_display = (
         'name',
+	'queue',
+	'category',
         'description_1',
         'description_2',
         'comment',
         'time_for_solution',
         'necessary_time',
         'mix_question',
-        'status',
-        'category'
+        'status'
     )
     search_fields = ('name', )
     list_filter = ('status', 'category__name' )
     fieldsets = (
         (None, {'fields': (
             'name',
+	    'queue',
             'description_1',
             'description_2',
             'comment',
@@ -65,7 +67,7 @@ class TestAdmin(admin.ModelAdmin):
             'necessary_time',
             'mix_question',
             'status',
-            'category',
+            'category'
         )}),  
     )
     inlines = (TestSubtestInline,)
@@ -75,14 +77,14 @@ class SubtestAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'queue',
+	'test',
         'description_1',
         'description_2',
         'comment',
         'time_for_solution',
         'necessary_time',
         'mix_question',
-        'status',
-        'test'
+        'status'
     )
     search_fields = ('name', 'test')
     list_filter = ('test__name', )
@@ -104,12 +106,13 @@ class SubtestAdmin(admin.ModelAdmin):
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'queue', 
+        'name',
+	'queue',
+	'subtest', 
         'type_question', 
         'obligatory', 
         'mix_question',
-        'status',
-        'subtest'
+        'status'
     )
     search_fields = ('name', )
     list_filter = ('subtest__name','status', )
@@ -131,9 +134,9 @@ class AnswerAdmin(admin.ModelAdmin):
     list_display = (
         'name', 
         'queue', 
+	'question',
         'right', 
-        'scales',
-        'question'
+        'scales'
     )
     search_fields = ('name', )
     list_filter = ('question__name', )
@@ -170,10 +173,14 @@ class ScaleAdmin(admin.ModelAdmin):
 
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):
-    list_display = ('score', )
-    search_fields = ('score', '')
+    list_display = (
+	     'score',
+    )
+    search_fields = ('score',)
     fieldsets = (
-        (None, {'fields': ('score',)}),
+        (None, {'fields': (
+	     'score',
+    )}),
     )
     inlines = (AnswerScaleInline,)
 
