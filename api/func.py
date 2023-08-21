@@ -1,19 +1,18 @@
-from django.core.handlers.wsgi import WSGIRequest
+""" from django.core.handlers.wsgi import WSGIRequest
 from .models import *
 
-
-""" def get_test_result(request: WSGIRequest, test: Test, attemption: Attemption):
+def get_test_result(request: WSGIRequest, test: Test):#attemption: Attemption):
 
     # Фильтрация интерпретаций относительно шкалы        #
     def interp_obj(lst):
-        return Interpretations.objects.filter(scale_id__in=lst)
+        return Interpretation.objects.filter(scale_id__in=lst)
     
     def answer_obj(lst):
         if isinstance(lst, list):
-            return Answers.objects.filter(
+            return Answer.objects.filter(
                 id__in=true_user_answers_pk,scales_id__in=lst)
         else:
-            return Answers.objects.filter(
+            return Answer.objects.filter(
                 id__in=true_user_answers_pk,scales_id=lst)
 
 
@@ -27,7 +26,7 @@ from .models import *
     rights_answers_pk = [str(i.pk) for i in answers if i.right == True]
     true_user_answers = set(request.POST.values()) & set(rights_answers_pk)
     true_user_answers_pk = [int(i) for i in true_user_answers]
-    scales_pk = [i.scales_id for i in Answers.objects.filter(
+    scales_pk = [i.scales_id for i in Answer.objects.filter(
                     id__in=true_user_answers_pk)]
     
 
@@ -88,6 +87,6 @@ from .models import *
     else:
         for at in attemption:
             at.number += 1
-            at.save(update_fields=['number']) 
+            at.save(update_fields=['number'])  
 
-    return sum_score, fin_sum_scores, scores, fin_scores,  percentage, inter_name """
+    return sum_score, fin_sum_scores, scores, fin_scores,  percentage, inter_name  """

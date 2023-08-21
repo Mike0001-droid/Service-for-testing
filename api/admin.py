@@ -124,7 +124,8 @@ class QuestionAdmin(admin.ModelAdmin):
             'obligatory',
             'mix_question',
             'status',
-            'subtest'
+            'subtest',
+            'question_img'
         )}),  
     )
     inlines = (QuestionAnswerInline,)
@@ -145,7 +146,8 @@ class AnswerAdmin(admin.ModelAdmin):
             'name',
             'queue',
             'right',
-            'question'
+            'question',
+            'answer_img'
     )}),  
     )
     inlines = (AnswerScaleInline,)

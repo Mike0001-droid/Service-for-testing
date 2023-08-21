@@ -136,6 +136,11 @@ class Question (models.Model):
     queue = models.IntegerField(
         'Порядок следования вопроса'
     )
+    question_img = models.ImageField(
+        null=True,
+        blank=True,
+        upload_to="images/"
+    )
     type_question = models.CharField(
         'Тип вопроса',
         max_length=19, 
@@ -180,6 +185,11 @@ class Answer(models.Model):
     )
     queue = models.IntegerField(
         'Порядок следования ответа'
+    )
+    answer_img = models.ImageField(
+        null=True,
+        blank=True,
+        upload_to="images/"
     )
     right = models.BooleanField(
         'Ответ верный?'
