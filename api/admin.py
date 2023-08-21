@@ -44,8 +44,8 @@ class CategoryAdmin(admin.ModelAdmin):
 class TestAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-	'queue',
-	'category',
+        'queue',
+        'category',
         'description_1',
         'description_2',
         'comment',
@@ -59,7 +59,7 @@ class TestAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': (
             'name',
-	    'queue',
+	        'queue',
             'description_1',
             'description_2',
             'comment',
@@ -77,7 +77,7 @@ class SubtestAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'queue',
-	'test',
+	    'test',
         'description_1',
         'description_2',
         'comment',
@@ -107,8 +107,8 @@ class SubtestAdmin(admin.ModelAdmin):
 class QuestionAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-	'queue',
-	'subtest', 
+        'queue',
+        'subtest', 
         'type_question', 
         'obligatory', 
         'mix_question',
@@ -134,7 +134,7 @@ class AnswerAdmin(admin.ModelAdmin):
     list_display = (
         'name', 
         'queue', 
-	'question',
+	    'question',
         'right', 
         'scales'
     )

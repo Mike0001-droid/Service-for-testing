@@ -76,7 +76,7 @@ class Test (models.Model):
         default='Черновик'
     )
     def __str__(self):
-        return f"{self.id}) {self.name}"
+        return f"{self.name}"
 
     class Meta:
         verbose_name_plural = 'Тесты'
@@ -121,7 +121,7 @@ class Subtest (models.Model):
     )
 
     def __str__(self):
-        return f" {self.name} "
+        return f"{self.name}"
     
     class Meta:
         verbose_name_plural = 'Субтесты'
@@ -167,7 +167,7 @@ class Question (models.Model):
     )
 
     def __str__(self):
-        return f" {self.name} "
+        return f"{self.name}"
     
     class Meta:
         verbose_name_plural = 'Вопросы'
@@ -238,6 +238,37 @@ class Score(models.Model):
         verbose_name = 'Балл'
         verbose_name_plural = 'Баллы'
 
+class Interpretation (models.Model):
+    name = models.CharField(
+        'Название интерпретации',
+        max_length=255
+    )
+    queue = models.IntegerField(
+        'Порядок следования интерпретации'
+    )
+    text = models.TextField(
+        'Текст'
+    )
+    start_score = models.IntegerField(
+        'Количество баллов от'
+    )
+    finish_score = models.IntegerField(
+        'Количество баллов до')
+    status = models.CharField(
+        'Статус интерпретации', 
+        choices=STATUS_CHOICES, 
+        default='Черновик'
+    )
+    scale = models.ForeignKey(
+        Scale, on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        verbose_name_plural = 'Интерпретации'
+
 class AnswerScale(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     scale = models.ForeignKey(Scale, on_delete=models.CASCADE)
@@ -270,38 +301,6 @@ class TestSubtest(models.Model):
         return f'{self.test} : {self.subtest}'
     class Meta:
         unique_together = ('test','subtest')
-
-
-class Interpretation (models.Model):
-    name = models.CharField(
-        'Название интерпретации',
-        max_length=255
-    )
-    queue = models.IntegerField(
-        'Порядок следования интерпретации'
-    )
-    text = models.TextField(
-        'Текст'
-    )
-    start_score = models.IntegerField(
-        'Количество баллов от'
-    )
-    finish_score = models.IntegerField(
-        'Количество баллов до')
-    status = models.CharField(
-        'Статус интерпретации', 
-        choices=STATUS_CHOICES, 
-        default='Черновик'
-    )
-    scale = models.ForeignKey(
-        Scale, on_delete=models.CASCADE
-    )
-
-    def __str__(self):
-        return f"{self.id}) {self.name}"
-
-    class Meta:
-        verbose_name_plural = 'Интерпретации'
 
 """ class Attemption (models.Model):
     number = models.IntegerField(
