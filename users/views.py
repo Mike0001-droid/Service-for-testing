@@ -17,9 +17,6 @@ class SignUpView(CreateView):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
-            user_group = Group.objects.get(name=form.cleaned_data['groups'])
-            user.groups.add(user_group)
-            
             return redirect('/api/v1/drf-auth/login/')
         else:
             return render(request, self.template_name, {'form' : form})

@@ -6,6 +6,11 @@ GENDER_CHOICES = (
     ('Мужчина', 'Мужчина'),
     ('Женщина', 'Женщина'),
 )
+GROUP_CHOICES = (
+    ('Студент', 'Студент'),
+    ('Преподаватель', 'Преподаватель'),
+)
+
 
 class CustomUser(AbstractUser):
     
@@ -22,7 +27,15 @@ class CustomUser(AbstractUser):
         max_length=7, 
         choices=GENDER_CHOICES, default='MEN'
     )
+    group = models.CharField(
+        'Группа',
+        max_length=13,
+        choices=GROUP_CHOICES, default='Студент'
+    )
     age = models.IntegerField(
         'Возраст',
         null=True
     )
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'

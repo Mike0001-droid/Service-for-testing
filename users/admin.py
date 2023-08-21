@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from users.models import CustomUser
-from users.forms import CustomUserCreationForm
+from django.contrib.auth.models import Group
+
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
@@ -16,7 +17,8 @@ class CustomUserAdmin(UserAdmin):
                     "first_name",
                     "last_name",
                     "gender",
-                    "age",   
+                    "age",
+                    "group"  
                 )
             }
          )
