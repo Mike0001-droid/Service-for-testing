@@ -113,6 +113,12 @@ class Subtest (models.Model):
         max_length=12,  
         default='Черновик'
     )
+    question = models.ManyToManyField(
+        'Question', 
+        verbose_name='Вопрос',   
+        related_name='subtest_question', 
+        through='SubtestQuestion'
+    )
     test = models.ForeignKey(
         Test,
         on_delete=models.CASCADE,
@@ -264,15 +270,20 @@ class Interpretation (models.Model):
         'Количество баллов от'
     )
     finish_score = models.IntegerField(
-        'Количество баллов до')
+        'Количество баллов до'
+    )
     status = models.CharField(
         'Статус интерпретации', 
         choices=STATUS_CHOICES, 
         default='Черновик'
     )
     scale = models.ForeignKey(
-        Scale, on_delete=models.CASCADE
+        Scale, 
+        on_delete=models.CASCADE,
+        related_name='scales',
+        verbose_name='Шкала'
     )
+    
 
     def __str__(self):
         return f"{self.name}"
@@ -288,6 +299,14 @@ class AnswerScale(models.Model):
         return f'{self.answer} : {self.scale}, Кол-во баллов - {self.score}'
     class Meta:
         unique_together = ('answer', 'scale', 'score')
+
+class ScaleInterpret(models.Model):
+    scale = models.ForeignKey(Scale, on_delete=models.CASCADE)
+    interpret = models.ForeignKey(Interpretation, on_delete=models.CASCADE)
+    def __str__(self):
+        return f'{self.scale} : {self.interpret}'
+    class Meta:
+        unique_together = ('scale', 'interpret')
 
 class QuestionAnswer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -312,6 +331,14 @@ class TestSubtest(models.Model):
         return f'{self.test} : {self.subtest}'
     class Meta:
         unique_together = ('test','subtest')
+
+class SubtestQuestion(models.Model):
+    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    def __str__(self):
+        return f'{self.subtest} : {self.question}'
+    class Meta:
+        unique_together = ('subtest','question')
 
 """ class Attemption (models.Model):
     number = models.IntegerField(

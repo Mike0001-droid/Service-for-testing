@@ -56,8 +56,8 @@ def pass_the_test(request, pk):
             {'test': test}
         )
     else:
-        #percentage = get_test_result(request, test,)
+        percentage = get_test_result(request, test,)
         return render(
             request, 'test_result.html',
-            #{ 'percentage':percentage}
+            { 'percentage':percentage}
         )

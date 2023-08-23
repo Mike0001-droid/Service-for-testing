@@ -23,6 +23,16 @@ class TestSubtestInline(admin.StackedInline):
     extra = 0
     raw_id_fields = ('test', 'subtest') 
 
+class SubtestQuestionInline(admin.StackedInline):
+    model = SubtestQuestion
+    extra = 0
+    raw_id_fields = ('subtest', 'question') 
+
+class ScaleInterpretInline(admin.StackedInline):
+    model = ScaleInterpret
+    extra = 0
+    raw_id_fields = ('scale', 'interpret')
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
@@ -39,7 +49,7 @@ class CategoryAdmin(admin.ModelAdmin):
             'status'
         )}),  
     )
-    inlines = (CategoryTestInline,)
+    
 
 @admin.register(Test)
 class TestAdmin(admin.ModelAdmin):
@@ -103,6 +113,7 @@ class SubtestAdmin(admin.ModelAdmin):
             'test'
         )}),  
     )
+    inlines = (SubtestQuestionInline, )
     
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
@@ -172,7 +183,8 @@ class ScaleAdmin(admin.ModelAdmin):
             'status',
     )}),
     )
-    inlines = (AnswerScaleInline,)
+    inlines = (ScaleInterpretInline,)
+    
 
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):
@@ -185,11 +197,33 @@ class ScoreAdmin(admin.ModelAdmin):
 	     'score',
     )}),
     )
-    inlines = (AnswerScaleInline,)
 
 @admin.register(Interpretation)
-class InterpretationsAdmin(admin.ModelAdmin):
-    pass
+class InterpretationAdmin(admin.ModelAdmin):
+    list_display = (
+	     'name',
+         'queue',
+         'text',
+         'start_score',
+         'finish_score',
+         'status',
+         'scale'
+    )
+    list_filter = ('name', )
+    fieldsets = (
+        (None, {'fields': (
+	     'name',
+         'queue',
+         'text',
+         'start_score',
+         'finish_score',
+         'status',
+         'scale'
+    )}),)
+    
+
+
+
 
 """ @admin.register(Attemption)
 class AttemptionsAdmin(admin.ModelAdmin):
