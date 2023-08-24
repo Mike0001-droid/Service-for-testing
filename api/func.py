@@ -1,49 +1,83 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import get_list_or_404
 from .models import *
-
+#Мы подбираем интерпретацию, в зависимости от полученных баллов. То есть, сначала мы складываем все баллы за пройденный тест
+#и раскидываем их по шкалам. Допустим:
+#	1) 3 вопроса связанны с первой шкалой
+#	2) Идем в таблицу ScaleInterpret, делаем фильтрацию по id 
+#	3) Идем в таблицу Interpretation и определяем в каком диапазоне
+#	   лежит сумма ответов условного юзера
 def get_test_result(request: WSGIRequest, test: Test):
-    #TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
-    """ def answer_obj(lst):
-        if isinstance(lst, list):
-            return AnswerScale.objects.filter(
-                answer_id__in=true_user_answers,scale_id__in=lst)
-        else:
-            return AnswerScale.objects.filter(
-                answer_id__in=true_user_answers,scale_id=lst) """
+    true_user_answer = set(request.POST.values()) & set(
+        str(x) for x in Question.objects.filter(
+            status="Опубликовано", 
+            subtest_id__in = test.subtests.values_list(
+                'id', 
+                flat=True
+            )
+            ).values_list(
+                'answers', 
+                flat=True
+            )
+    )   
+    scales_id = set(AnswerScale.objects.filter(
+            answer_id__in=true_user_answer
+        ).values_list(
+            'scale_id', 
+            flat=True
+        )
+    )
+    response = [] 
+    for i in scales_id:
+        score = sum(list(Score.objects.filter(id__in = list(
+                        AnswerScale.objects.filter(
+                            scale_id=i,
+                            answer_id__in = true_user_answer,
+                        ).values_list(
+                            'score_id', 
+                            flat=True
+                        )
+                        )).values_list('score', flat=True)))
+        percentage = [(round(x, 3) * 100) 
+            for x in [
+                score / i 
+                for i in list(
+                    Interpretation.objects.filter(
+                    scale_id=i).values_list(
+                        'finish_score', 
+                        flat=True
+                    )
+                )
+            ]
+        ]
+        def processing():
+            for i in range(len(percentage)):
+                if percentage[i] > 100.00:
+                    percentage[i] = 100.00
+            return percentage
+        response.append({
+            "id": i,
+            "score": score,
+            "interpretations": list(
+                Interpretation.objects.filter(
+                    scale_id=i).values_list(
+                    'text', 
+                    flat=True
+                )
+            ),
+            "fin_scores": list(
+                Interpretation.objects.filter(
+                    scale_id=i).values_list(
+                    'finish_score', 
+                    flat=True
+                )
+            ),
+            "percentage": processing()
+        })
+        
+    return response
+ 
     
-    """ def interp_obj(lst):
-        return Interpretation.objects.filter(scale_id__in=lst) """
-    #TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#   
-
-    true_user_answers = set(request.POST.values()) & set(str(x) for x in Question.objects.filter(status="Опубликовано", 
-    subtest_id__in = test.subtests.values_list('id', flat=True)).values_list('answers', flat=True))
-    
-    scales_pk = list(AnswerScale.objects.filter(
-        answer_id__in=true_user_answers).values_list('scale_id', flat=True))
-    
-    similar_scales_pk = set()
-    non_similar_scales_pk = []
-    for i in scales_pk:
-        if scales_pk.count(i) > 1:
-            similar_scales_pk.add(i)
-        if scales_pk.count(i) == 1:
-            non_similar_scales_pk.append(i)  
-    return 
-    
-    
-    
-
-
-    #TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
-    """ interp_obj = list(ScaleInterpret.objects.filter(scale_id__in=similar_scales_pk).values_list('id', flat=True))
-    fin_scores = list(Interpretation.objects.filter(id__in=interp_obj).values_list('id', flat=True))
-    sum_score = []
-    for x in similar_scales_pk:
-        sum_score.append(sum([i.score.score for i in answer_obj(x)]))
-    return interp_obj, fin_scores, sum_score, true_user_answers
-    """
-    #TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
 
 
@@ -51,44 +85,6 @@ def get_test_result(request: WSGIRequest, test: Test):
 
 
 
-
-
-
-    
-    
-    """ percentage = []
-    scores =[]
-    sum_score = []
-    inter_name = []
-    fin_scores = []
-    fin_sum_scores = []
-    
-    if len(non_similar_scales_pk) != 0:
-        scores += [
-            i.score.score for i in answer_obj(non_similar_scales_pk)]
-        fin_scores += [
-            i.finish_score for i in interp_obj(non_similar_scales_pk)]
-        inter_name += [
-            i.text for i in interp_obj(non_similar_scales_pk)]
-        for i in range(len(non_similar_scales_pk)):
-            percentage.append(round(scores[i] / fin_scores[i], 3) * 100)
-
-    if len(similar_scales_pk) != 0:
-        for x in similar_scales_pk:
-            sum_score.append(sum([
-                i.score.score for i in answer_obj(x)]))
-        fin_sum_scores += [
-            i.finish_score for i in interp_obj(similar_scales_pk)]
-        inter_name += [
-            i.text for i in interp_obj(similar_scales_pk)]
-        if len(fin_sum_scores) == 1:
-            percentage.append(round(sum(sum_score) / fin_sum_scores[0], 3) * 100)
-        else:
-            for i in range(len(sum_score)):
-                percentage.append(round(sum_score[i] / fin_sum_scores[i], 3) * 100)  """
-    
-    #return f" Вы получили {sum_score} баллов из {fin_sum_scores} {similar_scales_pk}, {non_similar_scales_pk}, {scales_pk} scores, fin_scores, percentage, inter_name" 
-    #return similar_scales_pk, non_similar_scales_pk, scales_pk
 
 
 
