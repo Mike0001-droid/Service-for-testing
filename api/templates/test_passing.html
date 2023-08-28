@@ -1,4 +1,5 @@
 {% block content %}
+
 <form action="{% url 'pass_the_test' test.pk%}" method="post">
     {% csrf_token %}
     <div class="container">
@@ -34,6 +35,6 @@
     </div>
 </form>
 <a href= "/tests" >
-    <h1>Вернуться к тестам</h1>
+    <h3>Вернуться к тестам</h3>
 </a>
 {% endblock %}

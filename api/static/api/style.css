@@ -162,7 +162,7 @@ h1 {
 
 h3 {
   font-size: 2vw;
-  font-weight: lighter;
+  font-weight: normal;
 }
 
 h4 {
@@ -320,4 +320,9 @@ a {
 .lasttests div {
   height: 75px;
   background-color: pink;
+
 }
+.selector {
+  width: '{{ |add:x.scores }}%';
+}
+

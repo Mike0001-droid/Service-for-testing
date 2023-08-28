@@ -18,6 +18,11 @@ class TestAPIListForUsers(generics.ListCreateAPIView):
     serializer_class = TestSerializer
     permission_classes = (ViewTestNonDraft, )
 
+""" class AnswerAPIListForUsers(generics.ListCreateAPIView):
+    queryset = Test.objects.filter(status="Опубликовано")
+    serializer_class = AnswerSerializer
+    permission_classes = (ViewTestNonDraft, ) """
+
 
 class SubtestAPIListForUsers(generics.ListCreateAPIView):
     queryset = Subtest.objects.filter(test=1)
@@ -57,7 +62,10 @@ def pass_the_test(request, pk):
         )
     else:
         percentage = get_test_result(request, test,)
+        
         return render(
             request, 'test_result.html',
-            { 'percentage': percentage}
+            { 'percentage': percentage,
+
+             }
         )
