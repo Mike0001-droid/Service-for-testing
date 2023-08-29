@@ -29,6 +29,11 @@ class SubtestAPIListForUsers(generics.ListCreateAPIView):
     serializer_class = SubTestSerializer
     permission_classes = (ViewTestNonDraft)
 
+class CategoryAPIListForUsers(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    
+
 
 def test_list(request):
     return render(request, 'tests.html')

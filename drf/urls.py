@@ -16,6 +16,7 @@ urlpatterns = [
     # http://127.0.0.1:8000/api/v1/user/1/test/?format=json
     path('api/v1/', include(router.urls)),
     path('api/v1/test/', TestAPIListForUsers.as_view()),
+    path('api/v1/category/', CategoryAPIListForUsers.as_view()),
     path('api/v1/subtests/', SubtestAPIListForUsers.as_view()),
     path('', index, name='index'),
     path('new_signup/', vyuha.SignUpView.as_view(), name='signup'),

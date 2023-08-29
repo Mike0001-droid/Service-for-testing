@@ -15,6 +15,17 @@ class TestSerializer(serializers.ModelSerializer):
         model = Test
         fields = "__all__"
 
+class TestNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
+        fields = ('id','name', )
+
+class CategorySerializer(serializers.ModelSerializer):
+    test = TestNameSerializer(many=True)
+    class Meta:
+        model = Category
+        fields = "__all__"
+
 """ class AnswerSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name')
     class Meta:

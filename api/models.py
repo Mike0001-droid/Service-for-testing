@@ -80,6 +80,8 @@ class Test (models.Model):
 
     class Meta:
         verbose_name_plural = '2) Тесты'
+        ordering = ['id']
+
 
 class Subtest (models.Model):
     name = models.CharField(

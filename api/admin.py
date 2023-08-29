@@ -50,6 +50,7 @@ class CategoryAdmin(admin.ModelAdmin):
         )}),  
     )
     
+    
 
 @admin.register(Test)
 class TestAdmin(admin.ModelAdmin):

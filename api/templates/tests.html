@@ -10,41 +10,18 @@
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="menu">
-            <div class="menubtns">
-                <div>
-                    {% if request.user.is_authenticated %}
-                        <p class="menu_name choosen">Добро пожаловать, {{user.username}} </p>
-                    {% endif %}
-                </div>
-
-                <div><img src="{% static 'img/home.png' %}">
-                    <p class="menu_name choosen"><a href="{% url 'index' %}">Главная</a></p>
-                </div>
-
-                <div><img src="{% static 'img/profile.png' %}">
-                    <p class="menu_name">Кабинет</p>
-                </div>
-                    
-                <div><img src="{% static 'img/settings.png' %}">
-                    <p class="menu_name">Настройки</p>
-                </div>
-            </div>
-            <div class="menubtns">
-                <div><img src="{% static 'img/logout.png' %}">
-                    <a href="/api/v1/drf-auth/logout/">
-                        <p>Выйти</p>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="mainpage">
-        <ul class="list-group list-group-flush">
-
-        </ul>
+        <nav class="navbar">
+          <div class="poisk">
+            <h6>ProTest</h6>
+          </div>
+        </nav>
         
+        <div>
+            <ul>
+
+            </ul>
+        </div>
     </div>
 </body>
 
@@ -58,16 +35,18 @@
             data.forEach(test => {
                 const markup =
                     `<li>
-                        <div class="card" style="width: 25rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">${test.name}</h5>
-                                
-                                <p class="card-text">${test.description_1}</p>
-                                <a href="/passing/${test.id}" class="batn btn-primary">Начать прохождение</a>
-                            </div>
+                        <div class="card">   
+                            <h7 class="card-title">${test.name}</h7>
+                            <h5 class="card-title">${test.category_name}</h5>   
+                            <p class="card-text">${test.description_1}</p>
+                            <a href="/passing/${test.id}" class="batn btn-primary">Начать прохождение</a>
                         </div>
                     </li>`;
                 document.querySelector('ul').insertAdjacentHTML('beforeend', markup);
             });
         })
 </script>
+
+
+
+
