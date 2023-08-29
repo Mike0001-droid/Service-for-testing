@@ -209,7 +209,7 @@ class Answer(models.Model):
         'Статус вопроса',
         choices=STATUS_CHOICES,
         max_length=12, 
-        default='Черновик'
+        default='Опубликовано'
     )
     def __str__(self):
         return f'{self.name}'
