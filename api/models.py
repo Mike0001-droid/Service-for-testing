@@ -35,7 +35,7 @@ class Category (models.Model):
     def __str__(self):
         return f"{self.id}) {self.name}"
     class Meta:
-        verbose_name_plural = '1) Категории'
+        verbose_name_plural = '[1] Категории'
 
 class Test (models.Model):
     name = models.CharField(
@@ -79,7 +79,7 @@ class Test (models.Model):
         return f"{self.name}"
 
     class Meta:
-        verbose_name_plural = '2) Тесты'
+        verbose_name_plural = '[2] Тесты'
         ordering = ['id']
 
 
@@ -132,7 +132,7 @@ class Subtest (models.Model):
         return f"{self.name}"
     
     class Meta:
-        verbose_name_plural = '3) Субтесты'
+        verbose_name_plural = '[3] Субтесты'
         
 
 
@@ -181,7 +181,7 @@ class Question (models.Model):
         return f"{self.name}"
     
     class Meta:
-        verbose_name_plural = '4) Вопросы'
+        verbose_name_plural = '[4] Вопросы'
 
 class Answer(models.Model):
     name = models.CharField(
@@ -215,7 +215,8 @@ class Answer(models.Model):
         return f'{self.name}'
     class Meta:
         verbose_name = 'Ответ'
-        verbose_name_plural = '5) Ответы'
+        verbose_name_plural = '[5] Ответы'
+        ordering = ['id']
 
 class Scale(models.Model):
     name = models.CharField(
@@ -242,7 +243,7 @@ class Scale(models.Model):
         return f'{self.name}'
     class Meta:
         verbose_name = 'Шкала'
-        verbose_name_plural = '6) Шкалы'
+        verbose_name_plural = '[6] Шкалы'
 
 class Score(models.Model):
     score = models.IntegerField(
@@ -258,7 +259,7 @@ class Score(models.Model):
         return f'{self.score}'
     class Meta:
         verbose_name = 'Балл'
-        verbose_name_plural = '7) Баллы'
+        verbose_name_plural = '[7] Баллы'
 
 class Interpretation (models.Model):
     name = models.CharField(
@@ -294,7 +295,7 @@ class Interpretation (models.Model):
         return f"{self.name}"
 
     class Meta:
-        verbose_name_plural = '8) Интерпретации'
+        verbose_name_plural = '[8] Интерпретации'
 
 class AnswerScale(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
