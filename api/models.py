@@ -156,9 +156,6 @@ class Question (models.Model):
     obligatory = models.BooleanField(
         'Обязательный ?'
     )
-    mix_question = models.BooleanField(
-        'Перемешивать вопросы?'
-    )
     answer = models.ManyToManyField(
         'Answer', 
         verbose_name='Ответ',   
@@ -205,6 +202,12 @@ class Answer(models.Model):
         on_delete=models.CASCADE,
         related_name='answers',
         verbose_name='Вопрос'
+    )
+    status = models.CharField(
+        'Статус вопроса',
+        choices=STATUS_CHOICES,
+        max_length=12, 
+        default='Черновик'
     )
     def __str__(self):
         return f'{self.name}'

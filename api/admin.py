@@ -123,24 +123,26 @@ class QuestionAdmin(admin.ModelAdmin):
         'subtest', 
         'type_question', 
         'obligatory', 
-        'mix_question',
-        'status'
+        'status',
+        'answers'
     )
     search_fields = ('name', )
     list_filter = ('subtest__name','status', )
     fieldsets = (
         (None, {'fields': (
             'name',
-            'queue',
+            'question_img',
             'type_question',
-            'obligatory',
-            'mix_question',
-            'status',
             'subtest',
-            'question_img'
+            'obligatory',
+            'queue',
+            'status',
         )}),  
     )
     inlines = (QuestionAnswerInline,)
+    def answers(self, obj):
+        return obj.answer.count()
+    answers.short_description = 'Количество ответов'
    
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
@@ -149,17 +151,19 @@ class AnswerAdmin(admin.ModelAdmin):
         'queue', 
 	    'question',
         'right', 
-        'scales'
+        'scales',
+        'status'
     )
     search_fields = ('name', )
     list_filter = ('question__name', )
     fieldsets = (
         (None, {'fields': (
             'name',
-            'queue',
-            'right',
+            'answer_img',
             'question',
-            'answer_img'
+            'right',
+            'queue',
+            'status'  
     )}),  
     )
     inlines = (AnswerScaleInline,)
