@@ -16,7 +16,7 @@ def get_test_result(request: WSGIRequest, test: Test):
             )
     )
     scales_id = set(AnswerScale.objects.filter(
-            status="Опубликовано",                              #Извлечение шкал, которые используются
+                                         #Извлечение шкал, которые используются
             answer_id__in=true_user_answer                      #в этом тесте
         ).values_list(
             'scale_id', 

@@ -1,40 +1,52 @@
 {% block content %}
-
-<form action="{% url 'pass_the_test' test.pk%}" method="post">
-    {% csrf_token %}
-    <div class="container">
-        <ul class="list-group">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <title>ProTest - Фигач тесты, как не в себя!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="{% static 'api/style.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="mainpage">
+        <nav class="navbar">
+          <div class="poisk">
+            <h6>ProTest</h6>
+          </div>
+        </nav>
+        <form action="{% url 'pass_the_test' test.pk%}" method="post">
+            {% csrf_token %}
             {% for subtest in test.subtests.all %}
-            <h1 class="list-group-item text-center">{{ forloop.counter }}. {{ subtest }} </h1>
-            <h3>Вопросы</h3>
-            <hr class="my-4">
-            <div class="jumbotron">
-                {% for question in subtest.questions.all %}
-                {% if question.question_img %}
-                    <img src="{{question.question_img.url}}" width="200", height="100"></h3>
-                {% endif %}
-                <div class="alert alert-dark text-center" role="alert">
-                    <h3>{{ forloop.counter }}) {{ question }}
-                    {% for answer in question.answers.all %}
-                        <div class="form-check form-check-inline">
-                        <input class="form-check-input" required type="radio" name="{{ question.pk }}" id="{{ answer.pk }}" value="{{ answer.pk }}">
-                        {% if answer.answer_img %}
-                            <label class="form-check-label" for="{{ answer.pk }}"><img src="{{answer.answer_img.url}}"  width="100", height="50"></label>
-                        {% else %} 
-                            <label class="form-check-label" for="{{ answer.pk }}">{{ answer }}</label>
-                        {% endif %}
-                        </div>
-                    {% endfor %}
-                    <hr class="my-4">
-                </div>
-                {% endfor %}
-            </div>
+                <h2> {{ subtest }} </h2>
+                <h2> {{ subtest.description_1 }}</h2>
+                <hr class="my-4">
+                    <div class="container">
+                        <ul class="list-group">
+                            <div class="jumbotron">
+                                {% for question in subtest.questions.all %}
+                                    {% if question.question_img %}
+                                        <img src="{{question.question_img.url}}" width="200", height="100"></h3>
+                                    {% endif %}
+                                    <div class="vkladka" role="alert">
+                                        <h9>{{ question }}</h9>
+                                        {% for answer in question.answers.all %}
+                                            <div class="aaa">
+                                                <input required type="radio" id="{{ answer.pk }}" name="{{ question.pk }}" class="form-check-input" >
+                                                {% if answer.answer_img %}
+                                                    <label class="form-check-label" for="{{ answer.pk }}"><img src="{{answer.answer_img.url}}" width="200", height="100"></label>
+                                                {% else %} 
+                                                    <label class="custom-control-label" for="{{ answer.pk }}">{{ answer }}</label>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </ul>
+                    </div>
             {% endfor %}
-            <button type="submit" class="btn btn-primary">Далее</button>
-        </ul>
+        <button type="submit" class="btn btn-primary">Далее</button>
+        </form>
     </div>
-</form>
-<a href= "/tests" >
-    <h3>Вернуться к тестам</h3>
-</a>
+</body>
 {% endblock %}
