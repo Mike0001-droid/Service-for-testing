@@ -80,6 +80,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'drf.urls'
 CORS_ALLOW_ALL_ORIGINS = True
+CSRF_COOKIE_SECURE=False
+CSRF_TRUSTED_ORIGINS = ['http://tests.flexidev.ru',]
 
 TEMPLATES = [
     {
