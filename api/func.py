@@ -15,7 +15,8 @@ def get_test_result(request: WSGIRequest, test: Test):
                 flat=True
             )
     )
-    scales_id = set(AnswerScale.objects.filter(                 #Извлечение шкал, которые используются
+    scales_id = set(AnswerScale.objects.filter(
+            status="Опубликовано",                              #Извлечение шкал, которые используются
             answer_id__in=true_user_answer                      #в этом тесте
         ).values_list(
             'scale_id', 
@@ -27,6 +28,7 @@ def get_test_result(request: WSGIRequest, test: Test):
         score = sum(list(
             Score.objects.filter(id__in = list(    
                 AnswerScale.objects.filter(
+                    status="Опубликовано",
                     scale_id=i,
                     answer_id__in = true_user_answer,
                 ).values_list(
@@ -39,7 +41,8 @@ def get_test_result(request: WSGIRequest, test: Test):
                 score / i 
                 for i in list(
                     Interpretation.objects.filter(
-                    scale_id=i).values_list(
+                    scale_id=i
+                ).values_list(
                         'finish_score', 
                         flat=True
                     )
@@ -57,14 +60,18 @@ def get_test_result(request: WSGIRequest, test: Test):
             "score": score,
             "interpretations": list(
                 Interpretation.objects.filter(
-                    scale_id=i).values_list(
+                    status="Опубликовано",
+                    scale_id=i
+                ).values_list(
                     'text', 
                     flat=True 
                 )
             ),
             "fin_scores": list(
                 Interpretation.objects.filter(
-                    scale_id=i).values_list(
+                    status="Опубликовано",
+                    scale_id=i
+                ).values_list(
                     'finish_score', 
                     flat=True
                 )

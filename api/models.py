@@ -18,7 +18,7 @@ class Category (models.Model):
         max_length=255
     )
     queue = models.IntegerField(
-        'Порядок следования Категории'
+        'Порядок'
     )
     status = models.CharField(
         'Статус категории',
@@ -43,7 +43,7 @@ class Test (models.Model):
         max_length=255
     )
     queue = models.IntegerField(
-        'Порядок следования теста'
+        'Порядок'
     )
     description_1 = models.TextField(
         'Описание до'
@@ -89,7 +89,7 @@ class Subtest (models.Model):
         max_length=255
     )
     queue = models.IntegerField(
-        'Порядок следования субтеста'
+        'Порядок'
     )
     description_1 = models.TextField(
         'Описание до'
@@ -135,18 +135,18 @@ class Subtest (models.Model):
         verbose_name_plural = '[3] Субтесты'
         
 
-
 class Question (models.Model):
     name = models.CharField(
         'Название вопроса',
         max_length=255
     )
     queue = models.IntegerField(
-        'Порядок следования вопроса'
+        'Порядок'
     )
     question_img = models.ImageField(
         null=True,
         blank=True,
+        verbose_name='Картинка',
         upload_to="images/"
     )
     type_question = models.CharField(
@@ -189,15 +189,13 @@ class Answer(models.Model):
         max_length=255
     )
     queue = models.IntegerField(
-        'Порядок следования ответа'
+        'Порядок'
     )
     answer_img = models.ImageField(
         null=True,
         blank=True,
-        upload_to="images/"
-    )
-    right = models.BooleanField(
-        'Ответ верный?'
+        upload_to="images/",
+        verbose_name='Картинка'
     )
     question = models.ForeignKey(
         Question,
@@ -224,7 +222,7 @@ class Scale(models.Model):
         max_length=255
     )
     queue = models.IntegerField(
-        'Порядок следования шкалы'
+        'Порядок'
     )
     status = models.CharField(
         'Статус шкалы',
@@ -267,7 +265,7 @@ class Interpretation (models.Model):
         max_length=255
     )
     queue = models.IntegerField(
-        'Порядок следования интерпретации'
+        'Порядок'
     )
     text = models.TextField(
         'Текст'

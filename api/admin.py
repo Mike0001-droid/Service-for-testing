@@ -119,8 +119,8 @@ class SubtestAdmin(admin.ModelAdmin):
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = (
-        'name',
         'queue',
+        'name',
         'subtest', 
         'type_question', 
         'obligatory', 
@@ -151,7 +151,6 @@ class AnswerAdmin(admin.ModelAdmin):
         'name', 
         'queue', 
 	    'question',
-        'right', 
         'scales',
         'status'
     )
@@ -162,7 +161,6 @@ class AnswerAdmin(admin.ModelAdmin):
             'name',
             'answer_img',
             'question',
-            'right',
             'queue',
             'status'  
     )}),  
@@ -190,10 +188,10 @@ class ScaleAdmin(admin.ModelAdmin):
     )
     inlines = (ScaleInterpretInline,)
     
-
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):
     list_display = (
+         'id',
 	     'score',
     )
     search_fields = ('score',)
@@ -206,24 +204,24 @@ class ScoreAdmin(admin.ModelAdmin):
 @admin.register(Interpretation)
 class InterpretationAdmin(admin.ModelAdmin):
     list_display = (
-	     'name',
          'queue',
+	     'name',
          'text',
          'start_score',
          'finish_score',
          'status',
          'scale'
     )
-    list_filter = ('name', )
+    list_filter = ('scale__name', )
     fieldsets = (
         (None, {'fields': (
 	     'name',
-         'queue',
-         'text',
+         'scale',
          'start_score',
          'finish_score',
+         'text',
+         'queue',
          'status',
-         'scale'
     )}),)
     
 
