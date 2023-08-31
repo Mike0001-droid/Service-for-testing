@@ -180,17 +180,7 @@ h6 {
   animation: ani 4s forwards;
   margin-top: 10px;
 }
-h7 {
-  display: inline-block;
-  font-size: 36px;
-  background: #816CC1;
-  font-weight: 700;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  opacity: 0;
-  animation: ani 4s forwards;
-  margin-top: 10px;
-}
+
 
 
 .poisk {

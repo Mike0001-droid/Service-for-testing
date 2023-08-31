@@ -259,7 +259,7 @@ class Score(models.Model):
         return f'{self.score}'
     class Meta:
         verbose_name = 'Балл'
-        verbose_name_plural = '[7] Баллы'
+        verbose_name_plural = '[7] Баллы' 
 
 class Interpretation (models.Model):
     name = models.CharField(
@@ -300,11 +300,11 @@ class Interpretation (models.Model):
 class AnswerScale(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     scale = models.ForeignKey(Scale, on_delete=models.CASCADE)
-    score = models.ForeignKey(Score, on_delete=models.CASCADE)
+    score = models.ForeignKey(Score, on_delete=models.CASCADE, null=True)
     def __str__(self):
         return f'{self.answer} : {self.scale}, Кол-во баллов - {self.score}'
     class Meta:
-        unique_together = ('answer', 'scale', 'score')
+        unique_together = ('answer', 'scale','score')
 
 class ScaleInterpret(models.Model):
     scale = models.ForeignKey(Scale, on_delete=models.CASCADE)
