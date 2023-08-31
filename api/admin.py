@@ -6,7 +6,7 @@ admin.site.unregister(Group)
 class AnswerScaleInline(admin.StackedInline):
     model = AnswerScale
     extra = 0
-    raw_id_fields = ('scale', 'answer', 'score')
+    raw_id_fields = ('scale', 'answer','score')
 
 class QuestionAnswerInline(admin.StackedInline):
     model = QuestionAnswer
@@ -201,7 +201,7 @@ class ScoreAdmin(admin.ModelAdmin):
         (None, {'fields': (
 	     'score',
     )}),
-    )
+    )  
 
 @admin.register(Interpretation)
 class InterpretationAdmin(admin.ModelAdmin):

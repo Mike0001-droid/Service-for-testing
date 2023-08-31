@@ -44,7 +44,7 @@ else:
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    )
+    ) 
 
 LOGIN_REDIRECT_URL = '/tests/'
 LOGOUT_REDIRECT_URL = '/'
