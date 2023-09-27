@@ -159,14 +159,47 @@ h1 {
   font-weight: 900;
   line-height: normal;
 }
+h2 {
+  text-align:justify;
+  margin-top: 4em;
+  margin-left: 5em;
+  margin-right: 5em;
+  color: var(--1, #816CC1);
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+h9{
+  color: var(--2, #474747);
+  font-feature-settings: 'clig' off, 'liga' off;
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 35px; /* 145.833% */
+  margin-top: 2em;
+}
 
 h3 {
-  font-size: 2vw;
-  font-weight: normal;
+  color: var(--2, #474747);
+  font-feature-settings: 'clig' off, 'liga' off;
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 35px; /* 145.833% */
+  
 }
 
 h4 {
   color: #808080;
+}
+
+.form-check-input:checked{
+  background-color: #816CC1;
 }
 
 h6 {
@@ -180,18 +213,59 @@ h6 {
   animation: ani 4s forwards;
   margin-top: 10px;
 }
-h7 {
-  display: inline-block;
-  font-size: 36px;
-  background: #816CC1;
-  font-weight: 700;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  opacity: 0;
-  animation: ani 4s forwards;
-  margin-top: 10px;
+
+h8 {
+  color: #1D212D;
+  font-variant-numeric: lining-nums tabular-nums;
+  /* 16/Semibold */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%; /* 24px */
+  letter-spacing: -0.176px;
 }
 
+.vkladka {
+  display: flex;
+  padding: 28px 52px 58px 52px;
+  width: 960px ;
+  height: 730px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 66px;
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: 34px;
+  background: #FFF;
+  margin-top: 2em;
+  box-shadow: -10px -10px 20px 0px #FFF, 10px 10px 20px 0px rgba(170, 170, 204, 0.50), 5px 5px 10px 0px rgba(170, 170, 204, 0.25), -5px -5px 10px 0px rgba(255, 255, 255, 0.50);
+}
+
+.container {
+  margin-left: 1px;
+  margin-bottom: 2em;
+}
+
+
+.aaa {
+  width: 843px;
+  height: 50px;
+  display: flex;
+  padding: 20px;
+  align-items: center;
+  gap: 12px;
+  align-self:center;
+  border-radius: 8px;
+  background: #FFF;
+  /* Elevation/01 - Cards */
+  box-shadow: 0px 2px 4px 0px rgba(29, 33, 45, 0.08), 0px 0px 2px 0px rgba(29, 33, 45, 0.08), 0px 0px 1px 0px rgba(29, 33, 45, 0.20);
+}
+
+.radio {
+  border-radius: 99px;
+  background-color:  #8D6EEF;
+}
 
 .poisk {
   margin-left: 2em;
@@ -204,8 +278,6 @@ h7 {
   opacity: 0;
   animation: ani 4s forwards;
 }
-
-
 
 .card {
   text-align: center;
@@ -227,7 +299,6 @@ ul {
   flex-flow: row wrap;
   margin-left: 10em;
   
-  margin-top: 10em;
 }
 
 
