@@ -37,19 +37,19 @@ if DEBUG:
     STATIC_DIR = os.path.join(BASE_DIR, 'static')
     STATICFILES_DIRS = [
         STATIC_DIR,
-        #'/var/www/Service-for-testing/static/',
+        # '/var/www/Service-for-testing/static/',
     ]
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    ) 
+    )
 
 LOGIN_REDIRECT_URL = '/tests/'
 LOGOUT_REDIRECT_URL = '/'
-SESSION_COOKIE_SECURE=False
-SECURE_CROSS_ORIGIN_OPENER_POLICY=None
+SESSION_COOKIE_SECURE = False
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # Application definition
 
 INSTALLED_APPS = [
@@ -80,7 +80,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'drf.urls'
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_COOKIE_SECURE=False
+CSRF_COOKIE_SECURE = False
 CSRF_TRUSTED_ORIGINS = ['http://tests.flexidev.ru',]
 
 TEMPLATES = [
@@ -105,7 +105,7 @@ WSGI_APPLICATION = 'drf.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+""" DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'sft',
@@ -114,8 +114,13 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '',
     }
+} """
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
