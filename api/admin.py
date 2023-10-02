@@ -7,7 +7,7 @@ admin.site.unregister(Group)
 class AnswerScaleInline(admin.StackedInline):
     model = AnswerScale
     extra = 0
-    raw_id_fields = ('scale', 'answer', 'score')
+    can_delete = False
 
 
 class QuestionAnswerInline(admin.StackedInline):
