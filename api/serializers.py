@@ -10,26 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = "__all__"
 
-
-class TestSerializer(serializers.ModelSerializer):
-    # category_name = serializers.CharField(source='category.name')
-    class Meta:
-        model = Test
-        fields = "__all__"
-
-
-class TestNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Test
-        fields = '__all__'
-
-
-class SubtestsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subtest
-        fields = '__all__'
-
-
 class CategorySerializer(ModelSerializer):
 
     class Meta:
@@ -42,37 +22,56 @@ class CategorySerializer(ModelSerializer):
             instance.category, many=True).data
         return rep
 
-
-""" class CampaignSerializers(ModelSerializer):
-    ads_type = serializers.CharField(source='ads_type.type')
-
+class TestSerializer(serializers.ModelSerializer):
+    #category_name = serializers.CharField(source='category.name')
     class Meta:
-        model = Campaign
-        fields = '__all__'
+        model = Test
+        fields = ('id', 'name', 'subtest')
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["subtest"] = SubTestSerializer(
+            instance.test, many=True).data
+        return rep
+
+class SubTestSerializer(ModelSerializer):
+    #test = serializers.CharField(source='test.name')
+    class Meta:
+        model = Subtest
+        fields = ('id', 'name', 'question')
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["status"] = StatusSerializers(
-            instance.status).data
-        rep["regions"] = LocatSerializer(
-            instance.regions.all(), many=True).data
-        return rep """
+        rep["question"] = QuestionNameSerializer(
+            instance.questions, many=True).data
+        return rep
+    
+class QuestionSerializer(ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ('id', 'name', 'answer')
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["answer"] = AnswerNameSerializer(
+            instance.answers, many=True).data
+        return rep
 
 
-""" class AnswerSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source='category.name')
+class TestNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
-        fields = "__all__" """
+        fields = '__all__'
 
-
-class SubTestSerializer(serializers.ModelSerializer):
+class QuestionNameSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Subtest
-        fields = "__all__"
+        model = Question
+        fields = ('id', 'name')
 
-
-class SubTestSerializer(serializers.ModelSerializer):
+class AnswerNameSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Subtest
-        fields = "__all__"
+        model = Answer
+        fields = ('id', 'name')
+
+
+

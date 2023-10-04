@@ -14,45 +14,6 @@ from .serializers import *
 from .models import *
 from .permissions import *
 
-
-class TestAPIListForUsers(ViewSet):
-    # permission_classes = [ViewTestNonDraft]
-
-    def list(self, request):
-        queryset = Test.objects.filter(status='Опубликовано')
-        serializer = TestSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        queryset = Test.objects.filter(status='Опубликовано')
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = TestSerializer(user)
-        return Response(serializer.data)
-
-    @action(
-        detail=False,
-        methods=['get'],
-        url_path='by_queue/(?P<q>[a-zA-Z0-9_]+)',
-        url_name='by-queue',
-    )
-    def test_by_queue(self, request, q):
-        queryset = Test.objects.filter(queue=q)
-        serializer = TestSerializer(queryset)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-""" class AnswerAPIListForUsers(generics.ListCreateAPIView):
-    queryset = Test.objects.filter(status="Опубликовано")
-    serializer_class = AnswerSerializer
-    permission_classes = (ViewTestNonDraft, ) """
-
-
-class SubtestAPIListForUsers(generics.ListCreateAPIView):
-    queryset = Subtest.objects.filter(test=1)
-    serializer_class = SubTestSerializer
-    permission_classes = (ViewTestNonDraft)
-
-
 class CategoryViewSet(ViewSet):
     def list(self, request):
         queryset = Category.objects.filter(status='Опубликовано')
@@ -64,6 +25,65 @@ class CategoryViewSet(ViewSet):
         user = get_object_or_404(queryset, pk=pk)
         serializer = CategorySerializer(user)
         return Response(serializer.data)
+
+class TestViewSet(ViewSet):
+    def list(self, request):
+        queryset = Test.objects.filter(status='Опубликовано')
+        serializer = TestSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Test.objects.filter(status='Опубликовано')
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = TestSerializer(user)
+        return Response(serializer.data)
+    
+class SubTestViewSet(ViewSet):
+    def list(self, request):
+        queryset = Subtest.objects.filter(status='Опубликовано')
+        serializer = SubTestSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Subtest.objects.filter(status='Опубликовано')
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = SubTestSerializer(user)
+        return Response(serializer.data)
+    
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='by_test/(?P<id>[a-zA-Z0-9_]+)',
+        url_name='by-test',
+    )
+    def subtest_by_test(self, request, id):
+        queryset = Subtest.objects.filter(test_id=id)
+        serializer = SubTestSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class QuestionViewSet(ViewSet):
+    def list(self, request):
+        queryset = Question.objects.filter(status='Опубликовано')
+        serializer = QuestionSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Question.objects.filter(status='Опубликовано')
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = QuestionSerializer(user)
+        return Response(serializer.data)
+    
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='by_subtest/(?P<id>[a-zA-Z0-9_]+)',
+        url_name='by-subtest',
+    )
+    def subtest_by_test(self, request, id):
+        queryset = Question.objects.filter(subtest_id=id)
+        serializer = QuestionSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 def test_list(request):

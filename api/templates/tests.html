@@ -27,7 +27,7 @@
 
 </html>
 <script>
-    fetch('/api/v1/test/?format=json')
+    fetch("http://127.0.0.1:8000/api/category/")
         .then(res => {
             return res.json();
         })
@@ -37,8 +37,7 @@
                     `<li>
                         <div class="card">   
                             <h7 class="card-title">${test.name}</h7>
-                            <h5 class="card-title">${test.category_name}</h5>   
-                            <p class="card-text">${test.description_1}</p>
+                            <h5 class="card-title">${test.test.name}</h5>   
                             <a href="/passing/${test.id}" class="batn btn-primary">Начать прохождение</a>
                         </div>
                     </li>`;

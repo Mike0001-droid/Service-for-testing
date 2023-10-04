@@ -12,27 +12,11 @@ TYPE_CHOICES = (
     ('Множественный выбор', 'Множественный выбор'),
 )
 
-
 class Category (models.Model):
-    name = models.CharField(
-        'Название категории',
-        max_length=255
-    )
-    queue = models.IntegerField(
-        'Порядок'
-    )
-    status = models.CharField(
-        'Статус категории',
-        max_length=12,
-        choices=STATUS_CHOICES,
-        default='Черновик'
-    )
-    test = models.ManyToManyField(
-        'Test',
-        verbose_name='Тест',
-        related_name='category_test',
-        through='CategoryTest'
-    )
+    name = models.CharField('Название категории', max_length=255)
+    queue = models.IntegerField('Порядок')
+    status = models.CharField('Статус категории', max_length=12, choices=STATUS_CHOICES, default='Черновик')
+    test = models.ManyToManyField('Test', verbose_name='Тест', related_name='category_test', through='CategoryTest')
 
     def __str__(self):
         return f"{self.id}) {self.name}"
@@ -40,47 +24,18 @@ class Category (models.Model):
     class Meta:
         verbose_name_plural = '[1] Категории'
 
-
 class Test (models.Model):
-    name = models.CharField(
-        'Название теста',
-        max_length=255
-    )
-    queue = models.IntegerField(
-        'Порядок'
-    )
-    description_1 = models.TextField(
-        'Описание до'
-    )
-    description_2 = models.TextField(
-        'Описание после'
-    )
-    comment = models.TextField(
-        'Комментарий для преподавателя',
-        null=True,
-        blank=True
-    )
-    time_for_solution = models.BooleanField(
-        'Записывать время прохождения?'
-    )
-    necessary_time = models.IntegerField(
-        'Необходимое для решения время'
-    )
-    mix_question = models.BooleanField(
-        'Перемешивать вопросы?'
-    )
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE,
-        related_name='category',
-        verbose_name='Категория'
-    )
-    status = models.CharField(
-        'Статус теста',
-        max_length=12,
-        choices=STATUS_CHOICES,
-        default='Черновик'
-    )
+    name = models.CharField('Название теста', max_length=255)
+    queue = models.IntegerField('Порядок')
+    description_1 = models.TextField('Описание до')
+    description_2 = models.TextField('Описание после')
+    comment = models.TextField('Комментарий для преподавателя', null=True, blank=True)
+    time_for_solution = models.BooleanField('Записывать время прохождения?')
+    necessary_time = models.IntegerField('Необходимое для решения время')
+    mix_question = models.BooleanField('Перемешивать вопросы?')
+    subtest = models.ManyToManyField('SubTest', verbose_name='СубТест', related_name='test_subtest', through='TestSubtest')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', verbose_name='Категория')
+    status = models.CharField('Статус теста', max_length=12, choices=STATUS_CHOICES, default='Черновик')
 
     def __str__(self):
         return f"{self.name}"
@@ -89,51 +44,18 @@ class Test (models.Model):
         verbose_name_plural = '[2] Тесты'
         ordering = ['id']
 
-
 class Subtest (models.Model):
-    name = models.CharField(
-        'Название субтеста',
-        max_length=255
-    )
-    queue = models.IntegerField(
-        'Порядок'
-    )
-    description_1 = models.TextField(
-        'Описание до'
-    )
-    description_2 = models.TextField(
-        'Описание после'
-    )
-    comment = models.TextField(
-        'Комментарий для преподавателя'
-    )
-    time_for_solution = models.BooleanField(
-        'Записывать время прохождения?'
-    )
-    necessary_time = models.IntegerField(
-        'Необходимое для решения время'
-    )
-    mix_question = models.BooleanField(
-        'Перемешивать вопросы?'
-    )
-    status = models.CharField(
-        'Статус субтеста',
-        choices=STATUS_CHOICES,
-        max_length=12,
-        default='Черновик'
-    )
-    question = models.ManyToManyField(
-        'Question',
-        verbose_name='Вопрос',
-        related_name='subtest_question',
-        through='SubtestQuestion'
-    )
-    test = models.ForeignKey(
-        Test,
-        on_delete=models.CASCADE,
-        related_name='subtests',
-        verbose_name='Тест'
-    )
+    name = models.CharField('Название субтеста', max_length=255)
+    queue = models.IntegerField('Порядок')
+    description_1 = models.TextField('Описание до', null=True, blank=True)
+    description_2 = models.TextField('Описание после')
+    comment = models.TextField('Комментарий для преподавателя')
+    time_for_solution = models.BooleanField('Записывать время прохождения?')
+    necessary_time = models.IntegerField('Необходимое для решения время')
+    mix_question = models.BooleanField('Перемешивать вопросы?')
+    status = models.CharField('Статус субтеста', choices=STATUS_CHOICES, max_length=12, default='Черновик')
+    question = models.ManyToManyField('Question', verbose_name='Вопрос', related_name='subtest_question', through='SubtestQuestion')
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='test', verbose_name='Тест')
 
     def __str__(self):
         return f"{self.name}"
@@ -143,46 +65,14 @@ class Subtest (models.Model):
 
 
 class Question (models.Model):
-    name = models.CharField(
-        'Название вопроса',
-        max_length=255
-    )
-    queue = models.IntegerField(
-        'Порядок'
-    )
-    question_img = models.ImageField(
-        null=True,
-        blank=True,
-        verbose_name='Картинка',
-        upload_to="images/"
-    )
-    type_question = models.CharField(
-        'Тип вопроса',
-        max_length=19,
-        choices=TYPE_CHOICES,
-        default='Единственный выбор'
-    )
-    obligatory = models.BooleanField(
-        'Обязательный ?'
-    )
-    answer = models.ManyToManyField(
-        'Answer',
-        verbose_name='Ответ',
-        related_name='question_answer',
-        through='QuestionAnswer'
-    )
-    status = models.CharField(
-        'Статус вопроса',
-        choices=STATUS_CHOICES,
-        max_length=12,
-        default='Черновик'
-    )
-    subtest = models.ForeignKey(
-        Subtest,
-        on_delete=models.CASCADE,
-        related_name='questions',
-        verbose_name='Субтест'
-    )
+    name = models.CharField('Название вопроса', max_length=255)
+    queue = models.IntegerField('Порядок')
+    question_img = models.ImageField(null=True, blank=True, verbose_name='Картинка', upload_to="images/")
+    type_question = models.CharField('Тип вопроса', max_length=19, choices=TYPE_CHOICES, default='Единственный выбор')
+    obligatory = models.BooleanField('Обязательный ?')
+    answer = models.ManyToManyField('Answer', verbose_name='Ответ', related_name='question_answer', through='QuestionAnswer')
+    status = models.CharField('Статус вопроса', choices=STATUS_CHOICES, max_length=12, default='Черновик')
+    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, related_name='questions', verbose_name='Субтест')
 
     def __str__(self):
         return f"{self.name}"
@@ -192,31 +82,11 @@ class Question (models.Model):
 
 
 class Answer(models.Model):
-    name = models.CharField(
-        'Название',
-        max_length=255
-    )
-    queue = models.IntegerField(
-        'Порядок'
-    )
-    answer_img = models.ImageField(
-        null=True,
-        blank=True,
-        upload_to="images/",
-        verbose_name='Картинка'
-    )
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE,
-        related_name='answers',
-        verbose_name='Вопрос'
-    )
-    status = models.CharField(
-        'Статус вопроса',
-        choices=STATUS_CHOICES,
-        max_length=12,
-        default='Опубликовано'
-    )
+    name = models.CharField('Название', max_length=255)
+    queue = models.IntegerField('Порядок')
+    answer_img = models.ImageField(null=True, blank=True, upload_to="images/", verbose_name='Картинка')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', verbose_name='Вопрос')
+    status = models.CharField('Статус вопроса', choices=STATUS_CHOICES, max_length=12, default='Опубликовано')
 
     def __str__(self):
         return f'{self.name}'
