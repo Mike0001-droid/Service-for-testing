@@ -5,13 +5,7 @@ from .models import *
 from rest_framework.renderers import JSONRenderer
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = "__all__"
-
 class CategorySerializer(ModelSerializer):
-
     class Meta:
         model = Category
         fields = '__all__'
@@ -22,20 +16,22 @@ class CategorySerializer(ModelSerializer):
             instance.category, many=True).data
         return rep
 
+
 class TestSerializer(serializers.ModelSerializer):
-    #category_name = serializers.CharField(source='category.name')
+    # category_name = serializers.CharField(source='category.name')
     class Meta:
         model = Test
         fields = ('id', 'name', 'subtest')
-    
+
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["subtest"] = SubTestSerializer(
             instance.test, many=True).data
         return rep
 
+
 class SubTestSerializer(ModelSerializer):
-    #test = serializers.CharField(source='test.name')
+    # test = serializers.CharField(source='test.name')
     class Meta:
         model = Subtest
         fields = ('id', 'name', 'question')
@@ -45,7 +41,8 @@ class SubTestSerializer(ModelSerializer):
         rep["question"] = QuestionNameSerializer(
             instance.questions, many=True).data
         return rep
-    
+
+
 class QuestionSerializer(ModelSerializer):
     class Meta:
         model = Question
@@ -61,17 +58,16 @@ class QuestionSerializer(ModelSerializer):
 class TestNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
-        fields = '__all__'
+        fields = ('id', 'name', 'description_1')
+
 
 class QuestionNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'name')
 
+
 class AnswerNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = ('id', 'name')
-
-
-
