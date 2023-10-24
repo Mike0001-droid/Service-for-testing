@@ -16,8 +16,7 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    from rest_framework.documentation import include_docs_urls
-    urlpatterns.append(path('api/', include_docs_urls(title='API docs')))
+
     urlpatterns += static(settings.STATIC_URL,
                           document_root=settings.STATIC_DIR)
     urlpatterns += static(settings.MEDIA_URL,
