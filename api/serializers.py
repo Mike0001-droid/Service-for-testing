@@ -8,7 +8,7 @@ from rest_framework.renderers import JSONRenderer
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ('id', 'name',)
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
@@ -21,7 +21,7 @@ class TestSerializer(serializers.ModelSerializer):
     # category_name = serializers.CharField(source='category.name')
     class Meta:
         model = Test
-        fields = ('id', 'name', 'subtest')
+        fields = ('id', 'name', 'sdescription', 'subtest')
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
@@ -34,13 +34,13 @@ class SubTestSerializer(ModelSerializer):
     # test = serializers.CharField(source='test.name')
     class Meta:
         model = Subtest
-        fields = ('id', 'name', 'question')
+        fields = ('id', )  # 'name', 'question')
 
-    def to_representation(self, instance):
+    """ def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["question"] = QuestionNameSerializer(
             instance.questions, many=True).data
-        return rep
+        return rep """
 
 
 class QuestionSerializer(ModelSerializer):
@@ -58,7 +58,7 @@ class QuestionSerializer(ModelSerializer):
 class TestNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
-        fields = ('id', 'name', 'description_1')
+        fields = ('id', 'name',)
 
 
 class QuestionNameSerializer(serializers.ModelSerializer):
