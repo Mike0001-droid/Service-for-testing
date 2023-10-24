@@ -25,22 +25,21 @@ class TestSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["subtest"] = SubTestSerializer(
+        rep["subtest"] = SubTestNameSerializer(
             instance.test, many=True).data
         return rep
 
 
 class SubTestSerializer(ModelSerializer):
-    # test = serializers.CharField(source='test.name')
     class Meta:
         model = Subtest
-        fields = ('id', )  # 'name', 'question')
+        fields = ('id', 'name', 'question')
 
-    """ def to_representation(self, instance):
+    def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["question"] = QuestionNameSerializer(
             instance.questions, many=True).data
-        return rep """
+        return rep
 
 
 class QuestionSerializer(ModelSerializer):
@@ -59,6 +58,12 @@ class TestNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ('id', 'name',)
+
+
+class SubTestNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subtest
+        fields = ('id',)
 
 
 class QuestionNameSerializer(serializers.ModelSerializer):
