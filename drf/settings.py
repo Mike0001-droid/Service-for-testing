@@ -37,7 +37,7 @@ if DEBUG:
     STATIC_DIR = os.path.join(BASE_DIR, 'static')
     STATICFILES_DIRS = [
         STATIC_DIR,
-        # '/var/www/Service-for-testing/static/',
+        '/var/www/Service-for-testing/static/',
     ]
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
