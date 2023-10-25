@@ -81,8 +81,7 @@ class Question (models.Model):
     queue = models.IntegerField('Порядок')
     question_img = models.ImageField(
         null=True, blank=True, verbose_name='Картинка', upload_to="images/")
-    type_question = models.CharField(
-        'Тип вопроса', max_length=19, choices=TYPE_CHOICES, default='Единственный выбор')
+    type_question = models.BooleanField('Тип вопроса (Ед.выб/Мн.выб-1/0)')
     obligatory = models.BooleanField('Обязательный ?')
     answer = models.ManyToManyField(
         'Answer', verbose_name='Ответ', related_name='question_answer', through='QuestionAnswer')

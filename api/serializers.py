@@ -37,7 +37,7 @@ class SubTestSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["question"] = QuestionNameSerializer(
+        rep["question"] = QuestionSerializer(
             instance.questions, many=True).data
         return rep
 
@@ -45,14 +45,18 @@ class SubTestSerializer(ModelSerializer):
 class QuestionSerializer(ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'name', 'answer')
+        fields = ('id', 'name', 'question_img', 'type_question', 'obligatory')
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["answer"] = AnswerNameSerializer(
+        rep["answer"] = AnswerSerializer(
             instance.answers, many=True).data
         return rep
-
+    
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ('id', 'name', 'answer_img')
 
 class TestNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -71,8 +75,3 @@ class QuestionNameSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'name')
 
-
-class AnswerNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Answer
-        fields = ('id', 'name')
