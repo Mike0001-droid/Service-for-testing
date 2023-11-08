@@ -79,7 +79,7 @@ class QuestionViewSet(ViewSet):
         url_path='by_subtest/(?P<id>[a-zA-Z0-9_]+)',
         url_name='by-subtest',
     )
-    def subtest_by_test(self, request, id):
+    def question_by_subtest(self, request, id):
         queryset = Question.objects.filter(subtest_id=id)
         serializer = QuestionSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -121,7 +121,5 @@ def pass_the_test(request, pk):
 
         return render(
             request, 'test_result.html',
-            {'percentage': percentage,
-
-             }
+            {'percentage': percentage,}
         )
