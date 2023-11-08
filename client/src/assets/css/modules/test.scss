@@ -1,0 +1,98 @@
+.attempts {
+  border-radius: $b-radius;
+  overflow: hidden;
+  background: rgba(var(--bs-white-rgb), 1);
+  box-shadow: $box-shadow-volume;
+
+  thead {
+    color: rgba(var(--bs-info-rgb), 1);
+    font-family: $font-family-base;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 12px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #E9F0F4;
+    background: #FBFCFE;
+
+    td {
+      padding: 10px 16px;
+    }
+  }
+
+  tbody {
+    color: rgba(var(--bs-secondary-rgb), 1);
+    font-family: $font-family-base;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+
+    td {
+      padding: 16px;
+    }
+  }
+
+  tr:not(:last-child) {
+    border-bottom: 1px solid #E9F0F4;
+  }
+}
+
+.counter {
+  background: rgba(var(--bs-white-rgb), 1);
+  border-radius: $b-radius;
+  box-shadow: $box-shadow-volume;
+  display: flex;
+  justify-content: center;
+  width: 81px;
+}
+
+.test {
+  background: rgba(var(--bs-white-rgb), 1);
+  border-radius: $b-radius-more;
+}
+
+.tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__pagination {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(var(--bs-success-rgb), 0.5);
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    border-radius: $b-radius;
+    color: rgba(var(--bs-success-rgb), 0.5);
+    background: transparent;
+    transition: color, border, background .3s;
+
+    &--active {
+      background: rgba(var(--bs-primary-rgb), 1);
+      border: 2px solid rgba(var(--bs-primary-rgb), 1);
+      color: rgba(var(--bs-white-rgb), 1);
+    }
+  }
+}
+
+.conclusion {
+  &__link{
+    width: fit-content;
+    margin-bottom: 1.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-right: 2rem;
+  }
+  &__point {
+    width: 1.5rem;
+    height: 2rem;
+    background-color: rgba(var(--bs-light-rgb), 1);
+    display: inline;
+    border-radius: $b-radius;
+    &--active{
+      background-color: rgba(var( --bs-info-rgb), 1);
+    }
+  }
+}
