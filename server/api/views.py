@@ -13,6 +13,7 @@ from rest_framework.permissions import *
 from .serializers import *
 from .models import *
 from .permissions import *
+from .schemas import AttemptSchema
 
 class CategoryViewSet(ViewSet):
     def list(self, request):
@@ -84,7 +85,23 @@ class QuestionViewSet(ViewSet):
         serializer = QuestionSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+class AttemptListViewSet(ViewSet):
+    def list(self, request):
+        queryset = Attemption.objects.all()
+        serializer = AttemptSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+class AttemptViewSet(ViewSet):
+    
+    schema = AttemptSchema()
+    @action(detail=False, methods=['post'])
+    def create_attempt(self, request):
+        serializer = AttemptSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def test_list(request):
     return render(request, 'tests.html')

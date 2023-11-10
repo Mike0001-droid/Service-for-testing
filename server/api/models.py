@@ -213,8 +213,10 @@ class SubtestQuestion(models.Model):
 
 class Attemption (models.Model):
     number = models.IntegerField('Номер попытки',default=0)
-    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,)
-    test = models.OneToOneField(Test,unique=False,on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,)
+    test = models.OneToOneField(Test, on_delete=models.CASCADE)
+    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, default=0)
+    answer = models.ManyToManyField(Answer, verbose_name='Ответы теста', blank=True, related_name='answer') 
 
     class Meta:
         verbose_name_plural = 'Попытки'
