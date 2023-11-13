@@ -1,0 +1,90 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+img{
+  width: 100%;
+}
+html {
+  width: 100%;
+  min-height: 100vh;
+  height: 1px;
+  overflow-x: auto;
+}
+
+body {
+  font-family: $font-family-base;
+  font-size: $fonts-size-base;
+  color: rgba(var(--bs-dark-rgb), 1);
+  background-color: rgba(var(--bs-light-rgb), 1);
+  position: relative;
+  min-width: 320px;
+  min-height: 100%;
+}
+
+h1, .h1 {
+  font-size: $h1-fz;
+}
+
+h2, .h2 {
+  font-size: $h2-fz;
+}
+
+h3, .h3 {
+  font-size: $h3-fz;
+}
+
+h4, .h4 {
+  font-size: $h4-fz;
+}
+
+h5, .h5 {
+  font-size: $h5-fz;
+}
+
+h6, .h6 {
+  font-size: $h6-fz;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#app {
+  height: 100%;
+}
+.container{
+  min-height: 1px;
+  height: 100%;
+}
+.auth {
+  height: calc(100vh - 3rem);
+}
+
+@media (max-width: 768px) {
+  .container{
+    max-width: none;
+    width: calc(100% - 30px);
+  }
+}
+@media (max-width: 576px) {
+  .container{
+    max-width: none;
+    width: calc(100% - 20px);
+  }
+}
