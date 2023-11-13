@@ -17,7 +17,7 @@ class Category (models.Model):
     name = models.CharField('Название категории', max_length=255)
     queue = models.IntegerField('Порядок')
     status = models.CharField(
-        'Статус категории', max_length=12, choices=STATUS_CHOICES, default='Опубликовано')
+        'Статус категории', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
     test = models.ManyToManyField(
         'Test', verbose_name='Тест', related_name='category_test', through='CategoryTest')
 
@@ -39,10 +39,10 @@ class Test (models.Model):
     mix_question = models.BooleanField('Перемешивать вопросы?')
     subtest = models.ManyToManyField('SubTest', verbose_name='СубТест', related_name='test_subtest', through='TestSubtest')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', verbose_name='Категория')
-    status = models.CharField('Статус теста', max_length=12, choices=STATUS_CHOICES, default='Черновик')
+    status = models.CharField('Статус теста', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.pk}-{self.name}"
 
     class Meta:
         verbose_name_plural = '[2] Тесты'
@@ -58,12 +58,12 @@ class Subtest (models.Model):
     time_for_solution = models.BooleanField('Записывать время прохождения?')
     necessary_time = models.IntegerField('Необходимое для решения время')
     mix_question = models.BooleanField('Перемешивать вопросы?')
-    status = models.CharField('Статус субтеста', choices=STATUS_CHOICES, max_length=12, default='Черновик')
+    status = models.CharField('Статус субтеста', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1], max_length=12)
     question = models.ManyToManyField('Question', verbose_name='Вопрос', related_name='subtest_question', through='SubtestQuestion')
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='test', verbose_name='Тест')
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.pk}-{self.name}"
 
     class Meta:
         verbose_name_plural = '[3] Субтесты'
@@ -76,11 +76,11 @@ class Question (models.Model):
     type_question = models.BooleanField('Тип вопроса (Ед.выб/Мн.выб : 1/0)', default=True)
     obligatory = models.BooleanField('Обязательный ?')
     answer = models.ManyToManyField('Answer', verbose_name='Ответ', related_name='question_answer', through='QuestionAnswer')
-    status = models.CharField('Статус вопроса', choices=STATUS_CHOICES, max_length=12, default='Черновик')
+    status = models.CharField('Статус вопроса', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1], max_length=12)
     subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, related_name='questions', verbose_name='Субтест')
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.pk}-{self.name}"
 
     class Meta:
         verbose_name_plural = '[4] Вопросы'
@@ -91,10 +91,10 @@ class Answer(models.Model):
     queue = models.IntegerField('Порядок')
     answer_img = models.ImageField(null=True, blank=True, upload_to="images/", verbose_name='Картинка')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', verbose_name='Вопрос')
-    status = models.CharField('Статус вопроса', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
+    status = models.CharField('Статус вопроса', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1], max_length=12)
 
     def __str__(self):
-        return f'{self.name}'
+        return f"{self.pk}-{self.name}"
 
     class Meta:
         verbose_name = 'Ответ'
@@ -105,11 +105,12 @@ class Answer(models.Model):
 class Scale(models.Model):
     name = models.CharField('Название', max_length=255)
     queue = models.IntegerField('Порядок')
-    status = models.CharField('Статус шкалы', choices=STATUS_CHOICES, max_length=12, default='Черновик')
+    status = models.CharField('Статус шкалы', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1], max_length=12)
     answer = models.ManyToManyField(Answer, verbose_name='Ответ', related_name='scale_answer', through='AnswerScale')
+    balls = models.IntegerField('Количество набранных баллов', default=0)
 
     def __str__(self):
-        return f'{self.name}'
+        return f"{self.pk}-{self.name}"
 
     class Meta:
         verbose_name = 'Шкала'
@@ -134,7 +135,7 @@ class Interpretation (models.Model):
     text = models.TextField('Текст')
     start_score = models.IntegerField('Количество баллов от')
     finish_score = models.IntegerField('Количество баллов до')
-    status = models.CharField('Статус интерпретации', choices=STATUS_CHOICES, default='Черновик', max_length=12)
+    status = models.CharField('Статус интерпретации', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1], max_length=12)
     scale = models.ForeignKey(Scale, on_delete=models.CASCADE, related_name='scales', verbose_name='Шкала')
 
     def __str__(self):
@@ -177,7 +178,6 @@ class QuestionAnswer(models.Model):
     class Meta:
         unique_together = ('question', 'answer')
 
-
 class CategoryTest(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
@@ -212,11 +212,12 @@ class SubtestQuestion(models.Model):
 
 
 class Attemption (models.Model):
-    number = models.IntegerField('Номер попытки',default=0)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,)
-    test = models.OneToOneField(Test, on_delete=models.CASCADE)
-    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, default=0)
-    answer = models.ManyToManyField(Answer, verbose_name='Ответы теста', blank=True, related_name='answer') 
+    user = models.ForeignKey(CustomUser, verbose_name='Пользователь', on_delete=models.CASCADE, blank=True, null=True)
+    test = models.ForeignKey(Test, verbose_name='Тест', on_delete=models.CASCADE, blank=True)
+    answers = models.ManyToManyField(Answer, verbose_name='Ответы теста', blank=True, related_name='answer') 
 
+    def __str__(self):
+        return f"{self.pk}"
+    
     class Meta:
         verbose_name_plural = 'Попытки'

@@ -58,21 +58,15 @@ class AttemptSerializer(ModelSerializer):
         fields = '__all__'
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["answer"] = AnswerSerializer(
-            instance.answer.all(), many=True
+        rep["answers"] = AnswerSerializer(
+            instance.answers.all(), many=True
         ).data
         return rep
     
-class AnswerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Answer
-        fields = ('id', 'name', 'answer_img')
-
 class TestNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ('id', 'name',)
-
 
 class SubTestNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,3 +79,27 @@ class QuestionNameSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'name')
 
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ('id', 'name', 'answer_img')
+
+class AnsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = '__all__'
+
+class ScaleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Scale
+        fields = '__all__'
+
+class ScoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Score
+        fields = '__all__'
+
+class InterpretationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interpretation
+        fields = '__all__'

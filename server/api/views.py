@@ -13,7 +13,9 @@ from rest_framework.permissions import *
 from .serializers import *
 from .models import *
 from .permissions import *
-from .schemas import AttemptSchema
+from .schemas import AttemptSchema, ScoreSchema
+import operator
+from itertools import chain
 
 class CategoryViewSet(ViewSet):
     def list(self, request):
@@ -96,12 +98,87 @@ class AttemptViewSet(ViewSet):
     schema = AttemptSchema()
     @action(detail=False, methods=['post'])
     def create_attempt(self, request):
-        serializer = AttemptSerializer(data=request.data, partial=True)
-        if serializer.is_valid():
+        if request.data['attempt'] == 'null':
+            serializer = AttemptSerializer(data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()  
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        elif request.data['attempt'] != 'null':
+            pk = request.data['attempt']
+            attempt = get_object_or_404(Attemption, pk=request.data['attempt'])
+            answers_id = Answer.objects.filter(id__in=request.data['answers'])
+            thing = [i.pk for i in list(chain(attempt.answers.all(), answers_id))]
+            request.data['answers'] = thing
+            try:
+                instance = Attemption.objects.get(pk=pk)
+            except:
+                
+                return Response({"error": "Object does not exists"})
+            serializer = AttemptSerializer(data=request.data, instance=instance)
+            serializer.is_valid()
             serializer.save()
+        
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ScaleListViewSet(ViewSet):
+    def list(self, request):
+        answer_id = [i.answer.values_list("id", flat=True) for i in Scale.objects.all()]
+        scores = [sum(list(Score.objects.filter(answer__in=list(i)).values_list("score", flat=True))) for i in answer_id]  
+        scales_names = [i.pk for i in Scale.objects.all()]
+        resp = dict(zip(scales_names, scores))
+        #(round(x, 3) * 100) 
+        objects = [list(Interpretation.objects.filter(scale=k).values_list("finish_score", flat=True)) for k in scales_names]
+
+        """ for i in range(len(scores)):
+            print(i)
+            print(len(objects))
+            result = [x/y[i] for x in scores for y in objects]
+ """
+        for i in range(len(scores)):
+            print(objects[i])
+        
+            
+        
+        print(len(objects))
+        queryset = Scale.objects.all()
+        serializer = ScaleSerializer(queryset, many=True)
+        return Response(resp)
+    
+class AnsListViewSet(ViewSet):
+    def list(self, request):
+        queryset = Answer.objects.all()
+        serializer = AnsSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    
+class ScoreListViewSet(ViewSet):
+    def list(self, request):
+        queryset = Score.objects.all()
+        serializer = ScoreSerializer(queryset, many=True)
+        return Response(serializer.data)
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='by_answers_id/(?P<id>[a-zA-Z0-9_]+)',
+        url_name='by-answers',
+    )
+    def scorebyanswer(self, request, id):
+        attempt_id = get_object_or_404(Attemption, pk=id)
+        queryset = Score.objects.filter(answer__in = attempt_id.answers.all())
+        serializer = ScoreSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class InterpretationListViewSet(ViewSet):
+    def list(self, request):
+        queryset = Interpretation.objects.all()
+        serializer = InterpretationSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 def test_list(request):
     return render(request, 'tests.html')
