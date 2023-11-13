@@ -239,7 +239,7 @@ class InterpretationAdmin(admin.ModelAdmin):
          )}),)
 
 
-""" @admin.register(Attemption)
+@admin.register(Attemption)
 class AttemptionsAdmin(admin.ModelAdmin):
     pass
- """
+

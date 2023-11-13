@@ -13,6 +13,7 @@ from rest_framework.permissions import *
 from .serializers import *
 from .models import *
 from .permissions import *
+from .schemas import AttemptSchema
 
 class CategoryViewSet(ViewSet):
     def list(self, request):
@@ -79,12 +80,28 @@ class QuestionViewSet(ViewSet):
         url_path='by_subtest/(?P<id>[a-zA-Z0-9_]+)',
         url_name='by-subtest',
     )
-    def subtest_by_test(self, request, id):
+    def question_by_subtest(self, request, id):
         queryset = Question.objects.filter(subtest_id=id)
         serializer = QuestionSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+class AttemptListViewSet(ViewSet):
+    def list(self, request):
+        queryset = Attemption.objects.all()
+        serializer = AttemptSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+class AttemptViewSet(ViewSet):
+    
+    schema = AttemptSchema()
+    @action(detail=False, methods=['post'])
+    def create_attempt(self, request):
+        serializer = AttemptSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def test_list(request):
     return render(request, 'tests.html')
@@ -121,7 +138,5 @@ def pass_the_test(request, pk):
 
         return render(
             request, 'test_result.html',
-            {'percentage': percentage,
-
-             }
+            {'percentage': percentage,}
         )

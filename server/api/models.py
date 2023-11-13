@@ -31,19 +31,15 @@ class Category (models.Model):
 class Test (models.Model):
     name = models.CharField('Название теста', max_length=255)
     queue = models.IntegerField('Порядок')
-    sdescription = models.TextField('Описание до', null=True)
-    fdescription = models.TextField('Описание после', null=True)
-    comment = models.TextField(
-        'Комментарий для преподавателя', null=True, blank=True)
+    sdescription = models.TextField('Описание до', null=True, blank=True)
+    fdescription = models.TextField('Описание после', null=True, blank=True)
+    comment = models.TextField('Комментарий для преподавателя', null=True, blank=True)
     time_for_solution = models.BooleanField('Записывать время прохождения?')
     necessary_time = models.IntegerField('Необходимое для решения время')
     mix_question = models.BooleanField('Перемешивать вопросы?')
-    subtest = models.ManyToManyField(
-        'SubTest', verbose_name='СубТест', related_name='test_subtest', through='TestSubtest')
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name='category', verbose_name='Категория')
-    status = models.CharField(
-        'Статус теста', max_length=12, choices=STATUS_CHOICES, default='Черновик')
+    subtest = models.ManyToManyField('SubTest', verbose_name='СубТест', related_name='test_subtest', through='TestSubtest')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', verbose_name='Категория')
+    status = models.CharField('Статус теста', max_length=12, choices=STATUS_CHOICES, default='Черновик')
 
     def __str__(self):
         return f"{self.name}"
@@ -56,18 +52,15 @@ class Test (models.Model):
 class Subtest (models.Model):
     name = models.CharField('Название субтеста', max_length=255)
     queue = models.IntegerField('Порядок')
-    sdescription = models.TextField('Описание до', null=True)
-    fdescription = models.TextField('Описание после', null=True)
-    comment = models.TextField('Комментарий для преподавателя')
+    sdescription = models.TextField('Описание до', null=True, blank=True)
+    fdescription = models.TextField('Описание после', null=True, blank=True)
+    comment = models.TextField('Комментарий для преподавателя', null=True, blank=True)
     time_for_solution = models.BooleanField('Записывать время прохождения?')
     necessary_time = models.IntegerField('Необходимое для решения время')
     mix_question = models.BooleanField('Перемешивать вопросы?')
-    status = models.CharField(
-        'Статус субтеста', choices=STATUS_CHOICES, max_length=12, default='Черновик')
-    question = models.ManyToManyField(
-        'Question', verbose_name='Вопрос', related_name='subtest_question', through='SubtestQuestion')
-    test = models.ForeignKey(
-        Test, on_delete=models.CASCADE, related_name='test', verbose_name='Тест')
+    status = models.CharField('Статус субтеста', choices=STATUS_CHOICES, max_length=12, default='Черновик')
+    question = models.ManyToManyField('Question', verbose_name='Вопрос', related_name='subtest_question', through='SubtestQuestion')
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='test', verbose_name='Тест')
 
     def __str__(self):
         return f"{self.name}"
@@ -79,16 +72,12 @@ class Subtest (models.Model):
 class Question (models.Model):
     name = models.CharField('Название вопроса', max_length=255)
     queue = models.IntegerField('Порядок')
-    question_img = models.ImageField(
-        null=True, blank=True, verbose_name='Картинка', upload_to="images/")
-    type_question = models.BooleanField('Тип вопроса (Ед.выб/Мн.выб-1/0)')
+    question_img = models.ImageField(null=True, blank=True, verbose_name='Картинка', upload_to="images/")
+    type_question = models.BooleanField('Тип вопроса (Ед.выб/Мн.выб : 1/0)', default=True)
     obligatory = models.BooleanField('Обязательный ?')
-    answer = models.ManyToManyField(
-        'Answer', verbose_name='Ответ', related_name='question_answer', through='QuestionAnswer')
-    status = models.CharField(
-        'Статус вопроса', choices=STATUS_CHOICES, max_length=12, default='Черновик')
-    subtest = models.ForeignKey(
-        Subtest, on_delete=models.CASCADE, related_name='questions', verbose_name='Субтест')
+    answer = models.ManyToManyField('Answer', verbose_name='Ответ', related_name='question_answer', through='QuestionAnswer')
+    status = models.CharField('Статус вопроса', choices=STATUS_CHOICES, max_length=12, default='Черновик')
+    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, related_name='questions', verbose_name='Субтест')
 
     def __str__(self):
         return f"{self.name}"
@@ -100,12 +89,9 @@ class Question (models.Model):
 class Answer(models.Model):
     name = models.CharField('Название', max_length=255)
     queue = models.IntegerField('Порядок')
-    answer_img = models.ImageField(
-        null=True, blank=True, upload_to="images/", verbose_name='Картинка')
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name='answers', verbose_name='Вопрос')
-    status = models.CharField(
-        'Статус вопроса', choices=STATUS_CHOICES, max_length=12, default='Опубликовано')
+    answer_img = models.ImageField(null=True, blank=True, upload_to="images/", verbose_name='Картинка')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', verbose_name='Вопрос')
+    status = models.CharField('Статус вопроса', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
 
     def __str__(self):
         return f'{self.name}'
@@ -119,10 +105,8 @@ class Answer(models.Model):
 class Scale(models.Model):
     name = models.CharField('Название', max_length=255)
     queue = models.IntegerField('Порядок')
-    status = models.CharField(
-        'Статус шкалы', choices=STATUS_CHOICES, max_length=12, default='Черновик')
-    answer = models.ManyToManyField(
-        Answer, verbose_name='Ответ', related_name='scale_answer', through='AnswerScale')
+    status = models.CharField('Статус шкалы', choices=STATUS_CHOICES, max_length=12, default='Черновик')
+    answer = models.ManyToManyField(Answer, verbose_name='Ответ', related_name='scale_answer', through='AnswerScale')
 
     def __str__(self):
         return f'{self.name}'
@@ -134,8 +118,7 @@ class Scale(models.Model):
 
 class Score(models.Model):
     score = models.IntegerField('Количество баллов')
-    answer = models.ManyToManyField(
-        Answer, verbose_name='Баллы', related_name='score_answer', through='AnswerScale')
+    answer = models.ManyToManyField(Answer, verbose_name='Баллы', related_name='score_answer', through='AnswerScale')
 
     def __str__(self):
         return f'{self.score}'
@@ -151,10 +134,8 @@ class Interpretation (models.Model):
     text = models.TextField('Текст')
     start_score = models.IntegerField('Количество баллов от')
     finish_score = models.IntegerField('Количество баллов до')
-    status = models.CharField(
-        'Статус интерпретации', choices=STATUS_CHOICES, default='Черновик', max_length=12)
-    scale = models.ForeignKey(
-        Scale, on_delete=models.CASCADE, related_name='scales', verbose_name='Шкала')
+    status = models.CharField('Статус интерпретации', choices=STATUS_CHOICES, default='Черновик', max_length=12)
+    scale = models.ForeignKey(Scale, on_delete=models.CASCADE, related_name='scales', verbose_name='Шкала')
 
     def __str__(self):
         return f"{self.name}"
@@ -230,28 +211,12 @@ class SubtestQuestion(models.Model):
         unique_together = ('subtest', 'question')
 
 
-""" class Attemption (models.Model):
-    number = models.IntegerField(
-        'Номер попытки',
-        default=0
-    )
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-    )
-    test = models.OneToOneField(
-        Test,
-        unique=False,
-        on_delete=models.CASCADE
-    )
+class Attemption (models.Model):
+    number = models.IntegerField('Номер попытки',default=0)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,)
+    test = models.OneToOneField(Test, on_delete=models.CASCADE)
+    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, default=0)
+    answer = models.ManyToManyField(Answer, verbose_name='Ответы теста', blank=True, related_name='answer') 
+
     class Meta:
         verbose_name_plural = 'Попытки'
-
-    date = models.DateTimeField(
-        'Дата и время прохождения',
-        auto_now=True
-    )
-    time_spent = models.IntegerField(
-        'Затраченное время'
-    ) 
- """
