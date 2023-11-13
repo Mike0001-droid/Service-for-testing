@@ -93,6 +93,43 @@ class AttemptListViewSet(ViewSet):
         serializer = AttemptSerializer(queryset, many=True)
         return Response(serializer.data)
     
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='by_attempt_id/(?P<id>[a-zA-Z0-9_]+)',
+        url_name='by-attempt',
+    )
+    def attemptbyid(self, request, id):
+        attempt_id = get_object_or_404(Attemption, pk=id)
+        answer_id = list(attempt_id.answers.values_list("id", flat=True))
+        scores = [sum(list(Score.objects.filter(answer=i).values_list("score", flat=True))) for i in answer_id]
+        print(scores)
+        scales_pk = [i.pk for i in Scale.objects.all()]
+        scales_name = [i.name for i in Scale.objects.all()]
+        finish_scores = [list(Interpretation.objects.filter(scale=k).values_list("finish_score", flat=True)) for k in scales_pk]
+        interpretations_name = [list(Interpretation.objects.filter(scale=k).values_list("name", flat=True)) for k in scales_pk]
+        percentage = []
+        interp_rercentage = []
+        for t in range(len(scales_pk)):
+            finish_scores = [y for y in finish_scores]
+            scores = [x for x in scores]
+            if len(finish_scores[t]) > 1:
+                percentage.append([100.0 if (round(scores[t]/finish_scores[t][k], 3)*100)>100.0 else (round(scores[t]/finish_scores[t][k], 3)*100) for k in range(len(finish_scores[t]))])
+            else:
+                if round(scores[t]/finish_scores[t][0],3)*100<100.00:
+                    percentage.append([round(scores[t]/finish_scores[t][0],3)*100]) 
+                else:
+                    percentage.append([round(scores[t]/finish_scores[t][0],3)*100]) 
+        for l in range(len(percentage)):
+            if len(interpretations_name[l])>1: 
+                interp_rercentage.append([{f"{interpretations_name[l][i]}": float(percentage[l][i])} for i in range(len(interpretations_name[l]))])
+            else:
+                interp_rercentage.append([{f"{interpretations_name[l][0]}": float(percentage[l][0])}])
+        scale_score = dict(zip(scales_name, interp_rercentage)) 
+        queryset = Attemption.objects.filter(id = id)
+        serializer = AttemptSerializer(queryset, many=True)
+        return Response(scale_score, status=status.HTTP_200_OK)
+    
 class AttemptViewSet(ViewSet):
     
     schema = AttemptSchema()
@@ -127,27 +164,9 @@ class AttemptViewSet(ViewSet):
 
 class ScaleListViewSet(ViewSet):
     def list(self, request):
-        answer_id = [i.answer.values_list("id", flat=True) for i in Scale.objects.all()]
-        scores = [sum(list(Score.objects.filter(answer__in=list(i)).values_list("score", flat=True))) for i in answer_id]  
-        scales_names = [i.pk for i in Scale.objects.all()]
-        resp = dict(zip(scales_names, scores))
-        #(round(x, 3) * 100) 
-        objects = [list(Interpretation.objects.filter(scale=k).values_list("finish_score", flat=True)) for k in scales_names]
-
-        """ for i in range(len(scores)):
-            print(i)
-            print(len(objects))
-            result = [x/y[i] for x in scores for y in objects]
- """
-        for i in range(len(scores)):
-            print(objects[i])
-        
-            
-        
-        print(len(objects))
         queryset = Scale.objects.all()
         serializer = ScaleSerializer(queryset, many=True)
-        return Response(resp)
+        return Response(serializer.data)
     
 class AnsListViewSet(ViewSet):
     def list(self, request):
