@@ -1,6 +1,5 @@
 <template>
-    <top-bar class="mb-4"/>
-    <HistoryPage class="mb-4" :breadcrumbs="breadcrumb.breadcrumbs" :breadcrumbs-active="breadcrumb.active"/>
+    <HistoryPage class="mb-4"/>
     <div class="testCard testCard-point text-secondary mb-4">
         Быстрая навигация по популярным тестам и тематикам. Всего на сайте более тысячи тестов, найти нужный можно
         при помощи подробного <span class="text-primary">тематического указателя</span>, по каталогу
@@ -38,7 +37,7 @@
             placeholder="Поиск"
             v-model="currentFilter.searchValue"
         />
-        <b-button pill variant="light">
+        <b-button class="p-1" pill variant="light">
             <img src="@/assets/img/icon/search.svg" alt="">
         </b-button>
     </div>
@@ -63,13 +62,12 @@
 
 <script>
 import {app} from "@/services";
-import TopBar from "@/components/top-bar.vue";
-import HistoryPage from "@/components/history-page.vue";
 import TestCard from "@/components/test-card.vue";
+import HistoryPage from "@/components/history-page.vue";
 
 export default {
-    name: "AllTest",
-    components: {TestCard, HistoryPage, TopBar},
+    name: "all-test",
+    components: {HistoryPage, TestCard},
     data() {
         return {
             testFilters: [

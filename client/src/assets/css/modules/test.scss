@@ -50,6 +50,10 @@
 .test {
   background: rgba(var(--bs-white-rgb), 1);
   border-radius: $b-radius-more;
+  &__cover{
+    border-radius: $b-radius;
+    overflow: hidden;
+  }
 }
 
 .tools {

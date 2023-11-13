@@ -1,5 +1,5 @@
 .topBar {
-  //position: relative;
+  position: relative;
 
   &__content {
     //position: relative;
@@ -98,6 +98,7 @@
 
 @media (max-width: 767px) {
   .topBar {
+    position: inherit;
     &__burger {
       display: block;
     }
@@ -135,7 +136,7 @@
       &--show {
         transform: translateY(0);
         min-height: fit-content;
-        height: 30vh;
+        min-height: 30vh;
         justify-content: center;
       }
     }

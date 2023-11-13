@@ -1,6 +1,5 @@
 <template>
     <div class="conclusion col-10">
-        <history-page class="mt-4 mb-5"/>
         <p class="text-success mb-3">
             Внимание! Результаты и интерпретации, полученные без участия специалистов, не следует воспринимать слишком
             серьезно. Диагностическую ценность имеют только исследования, проведенные <span
@@ -139,10 +138,9 @@
 </template>
 
 <script>
-import HistoryPage from "@/components/history-page.vue";
 
 export default {
-    name: "TestFinale",
-    components: {HistoryPage}
+    name: "test-finale",
+    components: {}
 }
 </script>

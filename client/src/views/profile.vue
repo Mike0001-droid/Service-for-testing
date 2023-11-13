@@ -100,7 +100,7 @@ import TestCard from "@/components/test-card.vue";
 import HistoryPage from "@/components/history-page.vue";
 
 export default {
-    name: "ProfilePage",
+    name: "profile",
     components: {HistoryPage, TestCard,TopBar},
     data() {
         return {

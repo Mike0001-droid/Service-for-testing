@@ -48,18 +48,23 @@
                     </div>
                 </div>
                 <div v-if="isStartTesting" class="tools">
-                    <b-button variant="outline-primary" class="px-4 py-2" @click="changeQuestion('prev')">Назад</b-button>
+                    <b-button variant="outline-primary" class="px-4 py-2" @click="changeQuestion('prev')">Назад
+                    </b-button>
                     <div class="d-flex gap-2">
                         <button
                             v-for="(slide,index) in swiper?.slides"
                             :key="slide"
-                            :class="`tools__pagination ${swiper.activeIndex>=index?'tools__pagination--active':''}`"
-                            @click="changeQuestion(index + 1,true)"
+                            :class="`tools__pagination ${activeSlide>=index?'tools__pagination--active':''}`"
+                            @click="changeQuestion(index,true)"
                         >
                             {{ index + 1 }}
                         </button>
                     </div>
-                    <b-button variant="primary" class="px-4 py-2" @click="changeQuestion('next')">Далее</b-button>
+                    <b-button v-if="swiper?.activeIndex === swiper?.slides.length - 1" variant="primary"
+                              class="px-4 py-2" @click="onSubmit">Следующий
+                    </b-button>
+                    <b-button v-else variant="primary" class="px-4 py-2" @click="changeQuestion('next')">Далее
+                    </b-button>
                 </div>
             </template>
         </div>
@@ -77,7 +82,7 @@ import Swiper from "swiper";
 import app from "@/services/app";
 
 export default {
-    name: "TestResponse",
+    name: "test-response",
     components: {TestItem},
     data() {
         return {
@@ -85,7 +90,8 @@ export default {
             timerValue: 1000,
             isStartTesting: false,
             showLoaderSending: true,
-            selectAnswer: []
+            selectAnswer: [],
+            activeSlide: 0
         }
     },
     created() {
@@ -105,20 +111,22 @@ export default {
     },
     methods: {
         initSwiper() {
-            const options = {};
+            const options = {
+                allowTouchMove: false
+            };
             this.swiper = new Swiper('.swiper-container', options);
         },
         changeQuestion(type, meaning = false) {
-            console.log(this.swiper.activeIndex)
-            if (this.swiper.activeIndex === this.swiper.slides.length - 1) {
-                this.onSubmit();
-            }
             if (meaning) {
                 this.swiper.slideTo(type);
             } else {
-                if (type === 'prev') this.swiper.slidePrev();
-                else this.swiper.slideNext();
+                if (type === 'prev') {
+                    this.swiper.slidePrev()
+                } else {
+                    this.swiper.slideNext()
+                }
             }
+            this.activeSlide = this.swiper.activeIndex;
         },
         startTimer() {
             this.timer = setInterval(() => {
@@ -138,15 +146,17 @@ export default {
             } else {
                 this.next();
             }
-            this.test.active_subtest += 1;
         },
-        next(params) {
-            this.$router.push(params || 'finale');
+        next() {
+            this.$router.push(this.$route.path.replace('response', 'finale'));
         },
         getSubTest() {
             this.showLoaderSending = true;
             this.stopTimer();
+            this.activeSlide = 0;
+            this.swiper?.slideTo(0);
             app.getSubTest(this.test.subtest[this.test.active_subtest]?.id).then(data => {
+                this.test.active_subtest+=1;
                 this.$store.dispatch('updateTest', {...this.test, select_subtest: data});
                 this.test = this.$store.state.test;
                 this.showLoaderSending = false;
@@ -158,7 +168,7 @@ export default {
         },
         startSubTest() {
             this.isStartTesting = true;
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.initSwiper();
                 this.startTimer();
             })

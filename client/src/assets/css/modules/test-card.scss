@@ -1,53 +1,50 @@
 .testCard {
-  padding: 0;
+    padding: 0;
 
-  &-boxshadow {
-    box-shadow: $box-shadow-volume;
-  }
-
-  &-background {
-    background-color: rgba(var(--bs-white-rgb),1);
-    border-radius: $b-radius;
-  }
-
-  &-small {
-    padding: 10px 0;
-  }
-
-  &-title {
-    background: rgba(var(--bs-info-rgb),1);
-    border-radius: $b-radius;
-    padding: 0.5rem 1rem;
-  }
-
-  &-point {
-    padding-left: 30px;
-    position: relative;
-
-    &:before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      background-color: rgba(var(--bs-info-rgb),1);
-      width: 15px;
-      border-radius: $b-radius-more;
-    }
-  }
-
-  &-arrow {
-    position: relative;
-    padding-right: 40px;
-
-    &:after {
-      content: url("@/assets/img/icon/arrow.svg");
-      position: absolute;
-      right: 20px;
+    &-boxshadow {
+        box-shadow: $box-shadow-volume;
     }
 
-    &:hover {
-      background: rgba(var(--bs-info-rgb),0.7);
+    &-background {
+        background-color: rgba(var(--bs-white-rgb), 1);
+        border-radius: $b-radius;
     }
-  }
+
+    &-small {
+        padding: 10px 0;
+    }
+
+    &-title {
+        background: rgba(var(--bs-info-rgb), 1);
+        border-radius: $b-radius;
+        padding: 0.5rem 1rem;
+    }
+
+    &-point {
+        padding-left: 30px;
+        position: relative;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background-color: rgba(var(--bs-info-rgb), 1);
+            width: 15px;
+            border-radius: $b-radius-more;
+        }
+    }
+
+    &-arrow {
+        position: relative;
+        padding-right: 40px;
+        cursor: pointer;
+
+        &:after {
+            content: url("@/assets/img/icon/arrow.svg");
+            position: absolute;
+            right: 20px;
+        }
+    }
 }

@@ -2,8 +2,12 @@ import {createRouter, createWebHistory} from 'vue-router';
 import home from '@/views/home.vue';
 import auth from "@/views/auth.vue";
 import profile from "@/views/profile.vue";
-import AllTests from "@/views/all-tests.vue";
-import PassedTests from "@/views/passed-tests.vue";
+
+import WrapperAll from "@/views/wrapper-all.vue";
+import WrapperPassed from "@/views/wrapper-passed.vue";
+import AllTests from "@/views/tests-all.vue";
+import PassedTests from "@/views/tests-passed.vue";
+
 import Test from "@/views/test.vue";
 import testDescription from "@/views/test-description.vue";
 import testFinale from "@/views/test-finale.vue";
@@ -44,121 +48,214 @@ const routes = [
             requiresAuth: true,
             breadcrumb: {
                 label: 'Публичные счета',
-                link: '1'
             }
         },
         props: true,
     },
     {
-        path: '/tests',
-        name: 'tests',
-        component: AllTests,
+        path: '/all_tests',
+        name: 'all_tests',
+        component: WrapperAll,
+        redirect: {name: 'allTests'},
         meta: {
             title: 'Все тесты',
             requiresAuth: false,
-            breadcrumb() {
-                return {
-                    label: 'Публичные счета222',
-                    link: `tests`,
-                    current: false,
-                    _path:'/tests'
-                }
-            }
+            breadcrumb: false
         },
         props: true,
+        children: [
+            {
+                path: '',
+                name: 'allTests',
+                component: AllTests,
+                meta: {
+                    title: 'ProTest',
+                    requiresAuth: false,
+                    current: false,
+                    breadcrumb() {
+                        return {
+                            label: 'Все тесты',
+                            link: `tests`,
+                            current: false,
+                        }
+                    }
+                },
+                props: true,
+            },
+            {
+                path: '',
+                name: 'AllTest',
+                component: Test,
+                meta: {
+                    title: 'ProTest',
+                    requiresAuth: false,
+                    current: false,
+                    breadcrumb: false
+                },
+                props: true,
+                redirect: {name: 'allDescription'},
+                children: [
+                    {
+                        path: 'description',
+                        name: 'allDescription',
+                        component: testDescription,
+                        meta: {
+                            title: 'Описание', step: 1, requiresAuth: false,
+                            breadcrumb() {
+                                return {
+                                    label: 'Тест',
+                                    link: `test`,
+                                    current: false,
+                                    _path: ''
+                                }
+                            }
+                        },
+                        props: true
+                    },
+                    {
+                        path: 'response',
+                        name: 'allResponse',
+                        component: testResponse,
+                        meta: {
+                            title: 'Тест',
+                            step: 2,
+                            requiresAuth: false,
+                            breadcrumb() {
+                                return {
+                                    label: 'Тест',
+                                    link: `test`,
+                                    current: false,
+                                }
+                            }
+                        },
+                        props: true
+                    },
+                    {
+                        path: 'finale',
+                        name: 'allFinale',
+                        component: testFinale,
+                        meta: {
+                            title: 'Описание теста',
+                            step: 3,
+                            requiresAuth: false,
+                            breadcrumb() {
+                                return {
+                                    label: 'тест заключение',
+                                    link: `test`,
+                                    current: false,
+                                    _path: '/finale'
+                                }
+                            }
+                        },
+                        props: true
+                    }
+                ]
+            }
+        ]
     },
     {
         path: '/passed_tests',
         name: 'passed_tests',
-        component: PassedTests,
+        component: WrapperPassed,
+        redirect: {name: 'PassedTests'},
         meta: {
             title: 'Пройденные тесты',
             requiresAuth: true,
-            breadcrumb: {
-                label: 'Публичные счета',
-                link: `passed_tests`
-            }
+            breadcrumb: false
         },
         props: true,
-    },
-    {
-        path: '/test',
-        name: 'test',
-        component: Test,
-        meta: {
-            title: 'ProTest',
-            requiresAuth: false,
-            current: false,
-            breadcrumb() {
-                return {
-                    label: 'Публичные счета321',
-                    link: `test2`,
-                    current: false,
-                    _path:'/'
-                }
-            }
-        },
-        props: true,
-        redirect: {name: 'description'},
         children: [
             {
-                path: 'description',
-                name: 'description',
-                component: testDescription,
+                path: '',
+                name: 'PassedTests',
+                component: PassedTests,
                 meta: {
-                    title: 'Описание теста', step: 1, requiresAuth: false,
+                    title: 'ProTest',
+                    requiresAuth: false,
+                    current: false,
                     breadcrumb() {
                         return {
-                            label: 'Публичные счета3221',
-                            link: `test`,
+                            label: 'Пройденные тесты',
+                            link: `tests`,
                             current: false,
-                            _path:''
                         }
                     }
                 },
-                props: true
+                props: true,
             },
             {
-                path: 'response',
-                name: 'response',
-                component: testResponse,
+                path: '',
+                name: 'PassedTest',
+                component: Test,
                 meta: {
-                    title: 'Описание теста',
-                    step: 2,
+                    title: 'ProTest',
                     requiresAuth: false,
-                    breadcrumb() {
-                        return {
-                            label: 'Публичные счета31',
-                            link: `response`,
-                            current: false,
-                            _path:'/response'
-                        }
-                    }
+                    current: false,
+                    breadcrumb: false
                 },
-                props: true
-            },
-            {
-                path: 'finale',
-                name: 'finale',
-                component: testFinale,
-                meta: {
-                    title: 'Описание теста',
-                    step: 3,
-                    requiresAuth: false,
-                    breadcrumb() {
-                        return {
-                            label: 'Публичные счета123',
-                            link: `finale`,
-                            current: false,
-                            _path:'/finale'
-                        }
+                props: true,
+                redirect: {name: 'passedDescription'},
+                children: [
+                    {
+                        path: 'description',
+                        name: 'passedDescription',
+                        component: testDescription,
+                        meta: {
+                            title: 'Описание', step: 1, requiresAuth: false,
+                            breadcrumb() {
+                                return {
+                                    label: 'Тест',
+                                    link: `test`,
+                                    current: false,
+                                    _path: ''
+                                }
+                            }
+                        },
+                        props: true
+                    },
+                    {
+                        path: 'response',
+                        name: 'passedResponse',
+                        component: testResponse,
+                        meta: {
+                            title: 'Тест',
+                            step: 2,
+                            requiresAuth: false,
+                            breadcrumb() {
+                                return {
+                                    label: 'Тест',
+                                    link: `test`,
+                                    current: false,
+                                }
+                            }
+                        },
+                        props: true
+                    },
+                    {
+                        path: 'finale',
+                        name: 'passedFinale',
+                        component: testFinale,
+                        meta: {
+                            title: 'Описание теста',
+                            step: 3,
+                            requiresAuth: false,
+                            breadcrumb() {
+                                return {
+                                    label: 'тест заключение',
+                                    link: `test`,
+                                    current: false,
+                                    _path: '/finale'
+                                }
+                            }
+                        },
+                        props: true
                     }
-                },
-                props: true
+                ]
             }
         ]
-    },
+    }
 ];
+
 
 const router = createRouter({
     history: createWebHistory(),
@@ -166,7 +263,6 @@ const router = createRouter({
     linkExactActiveClass: 'is-active',
     routes: routes
 });
-
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title + ' - ProTest' || 'ProTest';
     if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -179,7 +275,7 @@ router.beforeEach((to, from, next) => {
                 next();
             }
         } else {
-            next({name: 'tests'});
+            next({name: 'auth'});
         }
     } else {
         next();

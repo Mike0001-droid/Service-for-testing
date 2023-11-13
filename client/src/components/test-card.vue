@@ -1,13 +1,13 @@
 <template>
     <template v-if="isPassed">
         <div class="testCard testCard-background testCard-point testCard-small d-flex justify-content-between"
-             @click="next()">
+             @click="next('PassedTest')">
             <p class="text-secondary fw-medium">Тест Название</p>
             <p class="text-primary testCard-arrow">14 попыток </p>
         </div>
     </template>
     <template v-else>
-        <div class="testCard testCard-background testCard-boxshadow pb-2" @click="next()">
+        <div class="testCard testCard-background testCard-boxshadow pb-2" @click="next('AllTest')">
             <p class="testCard-title text-light mb-2 d-flex gap-2">
             <span>
                 <img src="@/assets/img/icon/info.svg" alt=""/>
@@ -28,7 +28,7 @@
 
 <script>
 export default {
-    name: "TestCard",
+    name: "test-card",
     props: {
         title: {
             type: String,
@@ -53,9 +53,9 @@ export default {
         }
     },
     methods: {
-        next() {
+        next(params) {
             this.$store.dispatch('addTestId', {test_id: this.id});
-            this.$router.push({name: `test`});
+            this.$router.push({name: params || 'AllTest'});
         }
     }
 }

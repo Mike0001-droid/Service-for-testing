@@ -63,7 +63,7 @@
 import {accountMenu} from '@/settings';
 
 export default {
-    name: "TopBar",
+    name: "top-bar",
     data() {
         return {
             accountMenu: [],

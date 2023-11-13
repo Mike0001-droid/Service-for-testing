@@ -1,14 +1,17 @@
 <template>
     <div class="test p-4 d-flex flex-column align-items-center">
         <p class="h2 fw-bold mb-4">{{ title }}</p>
-        <div v-if="question_img" class="w-100 px-2 mb-4">
-            <img :src="`http://tests.flexidev.ru${question_img}`" alt="">
+        <div v-if="question_img" class="d-flex px-2 mb-4">
+            <div class="test__cover col-12 col-sm-7 col-md-6 col-lg-5">
+                <img :src="`http://tests.flexidev.ru${question_img}`" alt="">
+            </div>
         </div>
         <template v-if="type_question">
-            <b-form-radio-group class="w-100 row g-2" v-for="answer in answers" :key="'answer_'+answer.id+Date.now()">
+            <b-form-radio-group class="gap-2 w-100 row g-2" v-for="answer in answers" :key="'answer_'+answer.id+Date.now()">
                 <b-form-checkbox
                     v-if="answer.question_img"
-                    button button-variant="outline-secondary"
+                    button
+                    button-variant="outline-secondary"
                     :value="answer.id"
                     v-model="selectAnswer"
                     @change="changeAnswer()"
@@ -67,7 +70,7 @@
 <script>
 
 export default {
-    name: "TestItem",
+    name: "test-item",
     props: {
         answerId: {
             type: Number

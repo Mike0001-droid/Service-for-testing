@@ -22,11 +22,18 @@
                             <b-button
                                 type="submit"
                                 variant="primary"
-                                class="btn btn-fill w-100 p-2 mt-4 mb-3"
+                                class="btn btn-fill w-100 p-2 mt-4 mb-2"
                             >
                                 войти
                             </b-button>
-                            <b-button variant="secondary" class="border-top w-100 p-2">Забыли пароль?</b-button>
+                            <b-button variant="secondary" class="border-bottom w-100 p-2 mb-3">Забыли пароль?</b-button>
+                            <b-button
+                                variant="outline-primary"
+                                class="btn btn-fill w-100 p-2 mb-3"
+                                @click="next('all_tests')"
+                            >
+                                Войти без регистрации
+                            </b-button>
                         </b-form>
                     </b-tab>
                     <b-tab title="Регистрация" class="w-75">
@@ -65,7 +72,7 @@
 
 <script>
 export default {
-    name: "AuthPage",
+    name: "auth-page",
     data() {
         return {
             selectType: "",
@@ -84,9 +91,6 @@ export default {
         this.selectType = this.$route.params.type;
     },
     methods: {
-        changeType() {
-            console.log('тип поменялся')
-        },
         onSubmit() {
             this.next();
         },

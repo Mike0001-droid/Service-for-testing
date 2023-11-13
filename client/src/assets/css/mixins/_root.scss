@@ -1,8 +1,9 @@
 :root {
   --bs-border-color: #474747;
   --bs-body-bg: #FFFFFF;
+  --bs-breadcrumb-divider: '-'
 }
-
+$breadcrumb-divider: quote("-");
 .form-check-inline {
   width: 100%;
 }
@@ -53,7 +54,7 @@
     box-shadow: $box-shadow-soft;
     text-align: left;
     position: relative;
-
+    margin-bottom: 0.75rem;
     &:after {
       content: '';
       width: 20px;
