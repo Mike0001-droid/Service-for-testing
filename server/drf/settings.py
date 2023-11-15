@@ -27,9 +27,9 @@ SECRET_KEY = 'django-insecure-1f0(t-k^y0)&b%c2^mcn^)j@ck3y&n-8x=h8-8lw_xho24vm-v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 if DEBUG:
-    ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ['tests.flexidev.ru', '127.0.0.1']
 else:
-    ALLOWED_HOSTS = ['92.53.115.82', '127.0.0.1', 'tests.flexidev.ru']
+    ALLOWED_HOSTS = ['92.53.115.82', 'tests.flexidev.ru', 'localhost']
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -105,15 +105,14 @@ WSGI_APPLICATION = 'drf.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
+DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
-    } 
-else:
-    DATABASES = {
+} 
+""" 
+DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'sft',
@@ -122,7 +121,7 @@ else:
             'HOST': '127.0.0.1',
             'PORT': '',
         }
-    } 
+}  """
 
 
 

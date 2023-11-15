@@ -2,13 +2,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from api.views import index, test_list
 from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path('', index, name='index'),
-    path('tests/', login_required(test_list)),
     path('api/admin/', admin.site.urls),
     path('api/test/', include('api.urls', namespace='app')),
 ]
