@@ -129,7 +129,8 @@ class AttemptViewSet(ViewSet):
     schema = AttemptSchema()
     @action(detail=False, methods=['post'])
     def create_attempt(self, request):
-        if request.data['attempt'] == 'null':
+        
+        if 'attempt' not in request.data:
             serializer = AttemptSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()  
@@ -137,7 +138,7 @@ class AttemptViewSet(ViewSet):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
-        elif request.data['attempt'] != 'null':
+        elif 'attempt' in request.data:
             pk = request.data['attempt']
             attempt = get_object_or_404(Attemption, pk=request.data['attempt'])
             answers_id = Answer.objects.filter(id__in=request.data['answers'])
