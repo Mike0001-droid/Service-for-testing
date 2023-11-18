@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from users.models import CustomUser
+from users.models import MyUser
 from .models import *
 from rest_framework.renderers import JSONRenderer
 
@@ -22,6 +22,7 @@ class TestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ('id', 'name', 'sdescription', 'subtest')
+
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["subtest"] = SubTestNameSerializer(
@@ -51,22 +52,26 @@ class QuestionSerializer(ModelSerializer):
         rep["answer"] = AnswerSerializer(
             instance.answers, many=True).data
         return rep
-    
+
+
 class AttemptSerializer(ModelSerializer):
     class Meta:
         model = Attemption
         fields = '__all__'
+
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["answers"] = AnswerSerializer(
             instance.answers.all(), many=True
         ).data
         return rep
-    
+
+
 class TestNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ('id', 'name',)
+
 
 class SubTestNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,25 +84,30 @@ class QuestionNameSerializer(serializers.ModelSerializer):
         model = Question
         fields = ('id', 'name')
 
+
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = ('id', 'name', 'answer_img')
+
 
 class AnsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = '__all__'
 
+
 class ScaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scale
         fields = '__all__'
 
+
 class ScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Score
         fields = '__all__'
+
 
 class InterpretationSerializer(serializers.ModelSerializer):
     class Meta:

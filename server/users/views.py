@@ -1,23 +1,67 @@
-from typing import Any
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.contrib.auth.models import Group
-from django.views.generic import CreateView
-from users.forms import CustomUserCreationForm
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.viewsets import ViewSet
+from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.decorators import action
+from rest_framework import status
+from django.core.mail import send_mail
+from django.contrib.auth.hashers import make_password
+from users.serializers import MyUserSerializer, MyTokenObtainPairSerializer
+from users.models import MyUser
+PermissionClass = IsAuthenticated  # if not settings.DEBUG else AllowAny
 
-class SignUpView(CreateView):
-    form_class = CustomUserCreationForm
-    success_url = reverse_lazy('/api/v1/drf-auth/login/')
-    template_name = 'new_signup.html'
-    @csrf_exempt
-    def post(self, request, *args, **kwargs):
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
-            return redirect('/api/v1/drf-auth/login/')
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+    serializer_class = MyTokenObtainPairSerializer
+
+
+class MyUserViewSet(ViewSet):
+    """
+    list:
+        Авторизированный пользователь
+    create_user:
+        Создание пользователя
+    update_user:
+        Обновление пользователей
+    """
+
+    def list(self, request):
+        serializer = MyUserSerializer(request.user, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['post'])
+    def create_user(self, request):
+        serializer = MyUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
         else:
-            return render(request, self.template_name, {'form' : form})
-        
+            text_error = ''
+            error_dict = {}
+            for error in serializer.errors:
+                elm_error = serializer.errors.get(error)
+                if len(elm_error) > 0:
+                    text_error += "{} \n".format(elm_error[0])
+                    error_dict.update({error: elm_error[0]})
+            return Response({"detail": text_error, "error": error_dict}, status=status.HTTP_400_BAD_REQUEST)
+
+        token_data = {
+            "email": request.data["email"],
+            "password": request.data["password"]
+        }
+        token_serializer = MyTokenObtainPairSerializer(data=token_data)
+        token_serializer.is_valid(raise_exception=True)
+        return Response(token_serializer.validated_data, status=status.HTTP_201_CREATED)
+
+    def get_permissions(self):
+        if self.action == "list":
+            permission_classes = [IsAuthenticated]
+        elif self.action == "create_user":
+            permission_classes = [AllowAny]
+        elif self.action == "update_user":
+            permission_classes = [IsAuthenticated]
+        elif self.action == "password_reset_user":
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
