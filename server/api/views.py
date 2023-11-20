@@ -139,7 +139,11 @@ class AttemptListViewSet(ViewSet):
                     scales_json[i]['result'][u]['percent'] = interp_rercentage[i][u]
             else:
                 scales_json[i]['result'][0]['percent'] = interp_rercentage[i][0]
-        return Response(scales_json, status=status.HTTP_200_OK)
+        
+        otvet = {"url":f"http://tests.flexidev.ru/#/attempt/{id}", "data": []}
+        for i in range(len(scales_json)):
+            otvet["data"].append(scales_json[i])
+        return Response(otvet, status=status.HTTP_200_OK)
        
 class AttemptViewSet(ViewSet):
     permission_classes = [AllowAny]
