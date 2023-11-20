@@ -146,10 +146,8 @@ class AttemptViewSet(ViewSet):
     schema = AttemptSchema()
     @action(detail=False, methods=['post'])
     def create_attempt(self, request):
-        
         if 'attempt' not in request.data:
             serializer = AttemptSerializer(data=request.data, partial=True)
-            
             if serializer.is_valid():
                 serializer.save()  
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -165,7 +163,6 @@ class AttemptViewSet(ViewSet):
             try:
                 instance = Attemption.objects.get(pk=pk)
             except:
-                
                 return Response({"error": "Object does not exists"})
             serializer = AttemptSerializer(data=request.data, instance=instance)
             serializer.is_valid()
@@ -177,10 +174,8 @@ class AttemptViewSet(ViewSet):
 
 class ScaleListViewSet(ViewSet):
     def list(self, request):
-        
         queryset = Scale.objects.all()
         serializer = ScaleSerializer(queryset, many=True)
-        
         return Response(serializer.data)
     
 class AnsListViewSet(ViewSet):
