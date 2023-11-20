@@ -10,7 +10,7 @@ from .models import *
 from .permissions import *
 from .schemas import AttemptSchema
 from itertools import chain
-
+from django.middleware.csrf import get_token
 class CategoryViewSet(ViewSet):
     def list(self, request):
         queryset = Category.objects.filter(status='Опубликовано')
@@ -150,10 +150,12 @@ class AttemptViewSet(ViewSet):
             serializer = AttemptSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()  
+                #csrf_token = get_token(request)
+                
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
+        
         elif 'attempt' in request.data:
             pk = request.data['attempt']
             attempt = get_object_or_404(Attemption, pk=request.data['attempt'])
@@ -167,7 +169,6 @@ class AttemptViewSet(ViewSet):
             serializer = AttemptSerializer(data=request.data, instance=instance)
             serializer.is_valid()
             serializer.save()
-            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
