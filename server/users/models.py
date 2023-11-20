@@ -60,17 +60,12 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField('Имя', max_length=150, blank=True)
     last_name = models.CharField('Фамилия', max_length=150, blank=True)
     phone = models.CharField('Телефон', max_length=15, blank=True)
-    gender = models.CharField(
-        'Пол', max_length=7, choices=GENDER_CHOICES, default='MEN')
-    group = models.CharField('Группа', max_length=13,
-                             choices=GROUP_CHOICES, default='Студент')
-    age = models.IntegerField('Возраст', blank=True)
-    date_joined = models.DateTimeField(
-        'Дата регистрации', default=timezone.now)
-    is_active = models.BooleanField('Активный', help_text='Отметьте, если пользователь должен считаться активным. '
-                                                          'Уберите эту отметку вместо удаления учётной записи.', default=True)
-    is_staff = models.BooleanField('Статус персонала', help_text='Отметьте, если пользователь может входить в '
-                                                                 'административную часть сайта.', default=False)
+    gender = models.CharField('Пол', max_length=7, choices=GENDER_CHOICES, default='MEN')
+    group = models.CharField('Группа', max_length=13,choices=GROUP_CHOICES, default='Студент')
+    age = models.IntegerField('Возраст', blank=True, null=True)
+    date_joined = models.DateTimeField('Дата регистрации', default=timezone.now)
+    is_active = models.BooleanField('Активный', help_text='Отметьте, если пользователь должен считаться активным. ''Уберите эту отметку вместо удаления учётной записи.', default=True)
+    is_staff = models.BooleanField('Статус персонала', help_text='Отметьте, если пользователь может входить в ''административную часть сайта.', default=False)
 
     objects = MyUserManager()
 
