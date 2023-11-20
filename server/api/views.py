@@ -82,6 +82,7 @@ class QuestionViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class AttemptListViewSet(ViewSet):
+    permission_classes = [AllowAny]
     def list(self, request):
         queryset = Attemption.objects.all()
         serializer = AttemptSerializer(queryset, many=True)
@@ -141,13 +142,14 @@ class AttemptListViewSet(ViewSet):
         return Response(scales_json, status=status.HTTP_200_OK)
        
 class AttemptViewSet(ViewSet):
-    
+    permission_classes = [AllowAny]
     schema = AttemptSchema()
     @action(detail=False, methods=['post'])
     def create_attempt(self, request):
         
         if 'attempt' not in request.data:
             serializer = AttemptSerializer(data=request.data, partial=True)
+            
             if serializer.is_valid():
                 serializer.save()  
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -168,15 +170,17 @@ class AttemptViewSet(ViewSet):
             serializer = AttemptSerializer(data=request.data, instance=instance)
             serializer.is_valid()
             serializer.save()
-        
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ScaleListViewSet(ViewSet):
     def list(self, request):
+        
         queryset = Scale.objects.all()
         serializer = ScaleSerializer(queryset, many=True)
+        
         return Response(serializer.data)
     
 class AnsListViewSet(ViewSet):
