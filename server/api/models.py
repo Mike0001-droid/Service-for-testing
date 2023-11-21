@@ -30,6 +30,7 @@ class Category (models.Model):
 
 class Test (models.Model):
     name = models.CharField('Название теста', max_length=255)
+    author = models.CharField('Автор теста', null=True, blank=True, max_length=100)
     queue = models.IntegerField('Порядок')
     sdescription = models.TextField('Описание до', null=True, blank=True)
     fdescription = models.TextField('Описание после', null=True, blank=True)

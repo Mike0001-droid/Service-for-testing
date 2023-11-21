@@ -33,8 +33,12 @@ class TestViewSet(ViewSet):
         queryset = Test.objects.filter(status='Опубликовано')
         user = get_object_or_404(queryset, pk=pk)
         serializer = TestSerializer(user)
-        return Response(serializer.data)
-    
+        sub_id = [i['id'] for i in serializer.data['subtest']]
+        quest_id = list(filter(None, list(Subtest.objects.filter(id__in=sub_id).values_list('questions', flat=True))))
+        response = {'count': len(quest_id)}
+        response.update(serializer.data)
+        return Response(response)
+
 class SubTestViewSet(ViewSet):
     def list(self, request):
         queryset = Subtest.objects.filter(status='Опубликовано')
@@ -56,7 +60,7 @@ class SubTestViewSet(ViewSet):
     def subtest_by_test(self, request, id):
         queryset = Subtest.objects.filter(test_id=id)
         serializer = SubTestSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)    
 
 class QuestionViewSet(ViewSet):
     def list(self, request):
@@ -88,6 +92,11 @@ class AttemptListViewSet(ViewSet):
         serializer = AttemptSerializer(queryset, many=True)
         return Response(serializer.data)
     
+    def retrieve(self, request, pk=None):
+        queryset = Attemption.objects.filter(test=pk)
+        serializer = AttemptSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
     @action(
         detail=False,
         methods=['get'],
@@ -102,9 +111,7 @@ class AttemptListViewSet(ViewSet):
             if len(Answer.objects.filter(scale_answer=k)) > 1:
                 scores.append(sum(list(Score.objects.filter(answer__in=list(Answer.objects.filter(scale_answer=k).values_list("id", flat=True))).values_list("score", flat=True))))
             else:
-                 
                 scores.append(sum(list(Score.objects.filter(answer=get_object_or_404(Answer, scale_answer=k).pk).values_list("score", flat=True))))
-        
         interp_text = [list(Interpretation.objects.filter(scale=k).values_list("text", flat=True)) for k in scales_pk]
         finish_scores = [list(Interpretation.objects.filter(scale=k).values_list("finish_score", flat=True)) for k in scales_pk]
         interpretations_name = [list(Interpretation.objects.filter(scale=k).values_list("name", flat=True)) for k in scales_pk]

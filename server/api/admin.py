@@ -62,6 +62,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class TestAdmin(admin.ModelAdmin):
     list_display = (
         'name',
+        'author',
         'queue',
         'category',
         'sdescription',
@@ -73,20 +74,21 @@ class TestAdmin(admin.ModelAdmin):
         'status'
     )
     search_fields = ('name', )
-    list_filter = ('status', 'category__name')
+    list_filter = ('status', 'category__name', 'author')
     fieldsets = (
         (None, {'fields': (
             'name',
-                'queue',
-                'sdescription',
-                'fdescription',
-                'comment',
-                'time_for_solution',
-                'necessary_time',
-                'mix_question',
-                'status',
-                'category'
-                )}),
+            'author',
+            'queue',
+            'sdescription',
+            'fdescription',
+            'comment',
+            'time_for_solution',
+            'necessary_time',
+            'mix_question',
+            'status',
+            'category'
+            )}),
     )
     inlines = (TestSubtestInline,)
 
