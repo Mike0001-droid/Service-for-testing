@@ -49,7 +49,7 @@ class QuestionSerializer(ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["answer"] = AnswerSerializer(
-            instance.answers, many=True).data
+            instance.answer, many=True).data
         return rep
 
 

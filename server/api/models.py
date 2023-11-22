@@ -57,7 +57,7 @@ class Test (models.Model):
 class Subtest (models.Model):
     name = models.CharField('Название субтеста', max_length=255)
     queue = models.IntegerField('Порядок')
-    sdescription = models.TextField('Описание до', null=True, blank=True)
+    description = models.TextField('Описание до', null=True, blank=True)
     fdescription = models.TextField('Описание после', null=True, blank=True)
     comment = models.TextField(
         'Комментарий для преподавателя', null=True, blank=True)
@@ -86,8 +86,10 @@ class Question (models.Model):
     type_question = models.BooleanField(
         'Тип вопроса (Ед.выб/Мн.выб : 1/0)', default=True)
     obligatory = models.BooleanField('Обязательный ?')
+    """ answer = models.ManyToManyField(
+        'Answer', verbose_name='Ответ', related_name='question_answer', through='QuestionAnswer') """
     answer = models.ManyToManyField(
-        'Answer', verbose_name='Ответ', related_name='question_answer', through='QuestionAnswer')
+        'Answer', verbose_name='Ответы теста', blank=True, related_name='question_answer')
     status = models.CharField(
         'Статус вопроса', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1], max_length=12)
     subtest = models.ForeignKey(
@@ -105,8 +107,7 @@ class Answer(models.Model):
     queue = models.IntegerField('Порядок')
     answer_img = models.ImageField(
         null=True, blank=True, upload_to="images/", verbose_name='Картинка')
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name='answers', verbose_name='Вопрос')
+    
     status = models.CharField(
         'Статус вопроса', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1], max_length=12)
 

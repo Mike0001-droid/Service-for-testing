@@ -99,7 +99,7 @@ class SubtestAdmin(admin.ModelAdmin):
         'name',
         'queue',
         'test',
-        'sdescription',
+        'description',
         'fdescription',
         'comment',
         'time_for_solution',
@@ -113,7 +113,7 @@ class SubtestAdmin(admin.ModelAdmin):
         (None, {'fields': (
             'name',
             'queue',
-            'sdescription',
+            'description',
             'fdescription',
             'comment',
             'time_for_solution',
@@ -126,13 +126,14 @@ class SubtestAdmin(admin.ModelAdmin):
     inlines = (SubtestQuestionInline, )
 
 
-@admin.register(Question)
+""" @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = (
         'queue',
         'name',
         'subtest',
         'type_question',
+        'answer',
         'obligatory',
         'status',
         'answers'
@@ -144,6 +145,7 @@ class QuestionAdmin(admin.ModelAdmin):
             'name',
             'question_img',
             'type_question',
+            'answer',
             'subtest',
             'obligatory',
             'queue',
@@ -154,7 +156,7 @@ class QuestionAdmin(admin.ModelAdmin):
 
     def answers(self, obj):
         return obj.answer.count()
-    answers.short_description = 'Количество ответов'
+    answers.short_description = 'Количество ответов' """
 
 
 @admin.register(Answer)
@@ -162,17 +164,17 @@ class AnswerAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'queue',
-        'question',
+        #'question',
         'scales',
         'status'
     )
     search_fields = ('name', )
-    list_filter = ('question__name', )
+    #list_filter = ('question__name', )
     fieldsets = (
         (None, {'fields': (
             'name',
             'answer_img',
-            'question',
+            #'question',
             'queue',
             'status'
         )}),
@@ -244,4 +246,9 @@ class InterpretationAdmin(admin.ModelAdmin):
 @admin.register(Attemption)
 class AttemptionsAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(Question)
+class QuestionsAdmin(admin.ModelAdmin):
+    pass
+
 
