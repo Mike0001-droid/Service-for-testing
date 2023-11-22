@@ -4,12 +4,16 @@ from django.urls import path, include
 from drf import settings
 from django.contrib.auth.decorators import login_required
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenRefreshView
+from users.views import MyTokenObtainPairView
 
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/test/', include('api.urls', namespace='app')),
     path('api/user/', include('users.urls', namespace='user')),
+    path('api/token/create/', MyTokenObtainPairView.as_view(), name='token_auth'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 if settings.DEBUG:

@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password
 from users.serializers import MyUserSerializer, MyTokenObtainPairSerializer
 from users.models import MyUser
+from users.schemas import UserSchema
 PermissionClass = IsAuthenticated  # if not settings.DEBUG else AllowAny
 
 
@@ -25,11 +26,24 @@ class MyUserViewSet(ViewSet):
     update_user:
         Обновление пользователей
     """
-
+    schema = UserSchema()
     def list(self, request):
+        print(request.user)
         serializer = MyUserSerializer(request.user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['post'])
+    def update_user(self, request):
+        if 'email' in request.data:
+            del request.data['email']
+        if 'password' in request.data:
+            request.data['password'] = make_password(request.data['password'])
+        serializer = MyUserSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
+        return Response(serializer.data) 
+    
     @action(detail=False, methods=['post'])
     def create_user(self, request):
         serializer = MyUserSerializer(data=request.data)

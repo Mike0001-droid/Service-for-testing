@@ -12,8 +12,7 @@ class MyUserSerializer(ModelSerializer):
 
     class Meta:
         model = MyUser
-        fields = ('id', 'email', 'password', 'first_name',
-                  'last_name', 'phone', 'date_joined', 'last_login')
+        fields = ('id', 'email', 'password', 'name', 'surname', 'age', 'gender')
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -25,7 +24,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['email'] = user.email
-        token['first_name'] = user.first_name
-        token['last_name'] = user.last_name
+        token['name'] = user.name
+        token['surname'] = user.surname
 
         return token

@@ -4,31 +4,25 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
 from django.contrib.auth.models import AbstractUser
-GENDER_CHOICES = (
-    ('Men', 'Men'),
-    ('Women', 'Women'),
-    ('Мужчина', 'Мужчина'),
-    ('Женщина', 'Женщина'),
-)
-GROUP_CHOICES = (
-    ('Студент', 'Студент'),
-    ('Преподаватель', 'Преподаватель'),
-)
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, name, surname, age, gender, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
         """
+        
         if not email:
             raise ValueError('Users must have an email address')
 
         user = self.model(
             email=self.normalize_email(email),
+            name=name,
+            surname=surname,
+            age=age,
+            gender=gender
         )
-
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -55,15 +49,11 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         max_length=255,
         unique=True,
     )
-    username = models.CharField('Логин пользователя', max_length=255,
-                                unique=True,)
-    first_name = models.CharField('Имя', max_length=150, blank=True)
-    last_name = models.CharField('Фамилия', max_length=150, blank=True)
-    phone = models.CharField('Телефон', max_length=15, blank=True)
-    gender = models.CharField('Пол', max_length=7, choices=GENDER_CHOICES, default='MEN')
-    group = models.CharField('Группа', max_length=13,choices=GROUP_CHOICES, default='Студент')
-    age = models.IntegerField('Возраст', blank=True, null=True)
-    date_joined = models.DateTimeField('Дата регистрации', default=timezone.now)
+    
+    name = models.CharField('Имя', max_length=150, blank=True)
+    surname = models.CharField('Фамилия', max_length=150, blank=True)
+    gender = models.CharField('Пол', max_length=7, default='Мужской')
+    age = models.DateField('Дата рождения', max_length=8, null=True)
     is_active = models.BooleanField('Активный', help_text='Отметьте, если пользователь должен считаться активным. ''Уберите эту отметку вместо удаления учётной записи.', default=True)
     is_staff = models.BooleanField('Статус персонала', help_text='Отметьте, если пользователь может входить в ''административную часть сайта.', default=False)
 
@@ -79,7 +69,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
     def full_name(self):
-        return f'{self.first_name} {self.last_name}' if self.first_name and self.last_name else self.email
+        return f'{self.name} {self.surname}' if self.name and self.surname else self.email
 
     def has_perm(self, perm, obj=None):
         """Does the user have a specific permission?"""
