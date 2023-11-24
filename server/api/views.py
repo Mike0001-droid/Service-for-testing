@@ -127,13 +127,6 @@ class AttemptListViewSet(ViewSet):
         for i in range(len(scales_json)):
             fin_score = sum(list(Score.objects.filter(id__in=AnswerScale.objects.filter(
                 scale=scales_pk[i]).values_list("score", flat=True)).values_list("score", flat=True)))
-            print(s_f_scores[i])
-            if s_f_scores[i][0][0] < fin_score and fin_score <= s_f_scores[i][0][1]:
-                print(s_f_scores[i])
-                print(inter_name[i][0])
-                scales_json[i].update(
-                    {"fin_interpretations": inter_name[i][0]})
-
             scales_json[i].update({"fin_scores": fin_score})
             scales_json[i].update({"interpretations": inter_name[i]})
             scales_json[i].update({"s_f_cores": s_f_scores[i]})
