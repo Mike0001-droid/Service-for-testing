@@ -22,6 +22,7 @@ class TestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ('id', 'name', 'author', 'sdescription', 'subtest')
+
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["subtest"] = SubTestNameSerializer(
@@ -32,7 +33,7 @@ class TestSerializer(serializers.ModelSerializer):
 class SubTestSerializer(ModelSerializer):
     class Meta:
         model = Subtest
-        fields = ('id', 'name', 'necessary_time', 'sdescription', 'question')
+        fields = ('id', 'name', 'necessary_time', 'description', 'question')
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)

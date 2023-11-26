@@ -11,6 +11,9 @@ from .permissions import *
 from .schemas import AttemptSchema
 from itertools import chain
 from django.middleware.csrf import get_token
+from rest_framework_simplejwt.authentication import JWTAuthentication
+import jwt
+from drf.settings import SECRET_KEY
 
 
 class CategoryViewSet(ViewSet):
@@ -125,8 +128,15 @@ class AttemptListViewSet(ViewSet):
                        for i in Scale.objects.filter(id__in=scales_pk)]
 
         for i in range(len(scales_json)):
-            fin_score = sum(list(Score.objects.filter(id__in=AnswerScale.objects.filter(
-                scale=scales_pk[i]).values_list("score", flat=True)).values_list("score", flat=True)))
+            scores_id = AnswerScale.objects.filter(scale=scales_pk[i]).values_list(
+                "score", flat=True)
+            scores = list(Score.objects.filter(
+                id__in=scores_id).values_list("score", flat=True))
+
+            if len(scores) > 1:
+                fin_score = sum(scores)
+            else:
+                fin_score = sum(scores)*len(scores_id)
             scales_json[i].update({"fin_scores": fin_score})
             scales_json[i].update({"interpretations": inter_name[i]})
             scales_json[i].update({"s_f_cores": s_f_scores[i]})
@@ -143,10 +153,13 @@ class AttemptViewSet(ViewSet):
     @action(detail=False, methods=['post'])
     def create_attempt(self, request):
         if 'attempt' not in request.data:
+
+            request.data['user'] = jwt.decode(request.data['user'],
+                                              SECRET_KEY, algorithms=["HS256"])['user_id']
+
             serializer = AttemptSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-                # csrf_token = get_token(request)
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
