@@ -41,5 +41,11 @@ class UserSchema(AutoSchema):
                     location='form',
                     required=False,
                     schema=coreschema.String(description='Пароль пользователя')
+                ),
+                coreapi.Field(
+                    name='new_password',
+                    location='form',
+                    required=False,
+                    schema=coreschema.String(description='Новый пароль пользователя')
                 )
         ]

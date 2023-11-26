@@ -144,6 +144,24 @@ class AttemptListViewSet(ViewSet):
         for i in range(len(scales_json)):
             otvet["data"].append(scales_json[i])
         return Response(otvet, status=status.HTTP_200_OK)
+    
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='by_user_attempt/(?P<token>[a-zA-Z0-9_.]+)/(?P<id>[a-zA-Z0-9_.]+)',
+        url_name='by-user-attempt',
+    )
+    def userattempt(self, request, token, id):
+        decode = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
+        queryset = Attemption.objects.filter(user=decode, test=id)
+        test_name = get_object_or_404(Test, pk=id).name
+        attempt_id = {
+            "test_name": test_name,
+            "attempt_count": len(queryset),
+            "attempt_id": queryset.values_list("id", flat=True),
+        }
+        return Response(attempt_id)
+        
 
 
 class AttemptViewSet(ViewSet):
@@ -156,12 +174,12 @@ class AttemptViewSet(ViewSet):
 
             request.data['user'] = jwt.decode(request.data['user'],
                                               SECRET_KEY, algorithms=["HS256"])['user_id']
-
+           
             serializer = AttemptSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+                return Response({"mesage": serializer.data, "token":'123'}, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

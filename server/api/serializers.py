@@ -66,6 +66,18 @@ class AttemptSerializer(ModelSerializer):
         ).data
         return rep
 
+class AttemptUserSerializer(ModelSerializer):
+    class Meta:
+        model = Attemption
+        fields = ('test', )
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["test"] = TestNameSerializer(
+            instance.test).data
+        return rep
+
+
 
 class TestNameSerializer(serializers.ModelSerializer):
     class Meta:
