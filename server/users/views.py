@@ -56,7 +56,6 @@ class MyUserViewSet(ViewSet):
                     text_error += "{} \n".format(elm_error[0])
                     error_dict.update({error: elm_error[0]})
             return Response({"detail": text_error, "error": error_dict}, status=status.HTTP_400_BAD_REQUEST)
-
         token_data = {
             "email": request.data["email"],
             "password": request.data["password"]
