@@ -12,12 +12,6 @@ class AttemptSchema(AutoSchema):
                     schema=coreschema.String(description='ID Попытки')
                 ),
                 coreapi.Field(
-                    name='user',
-                    location='form',
-                    required=False,
-                    schema=coreschema.String(description='Имя пользователя')
-                ),
-                coreapi.Field(
                     name='test',
                     location='form',
                     required=False,

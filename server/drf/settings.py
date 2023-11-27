@@ -103,7 +103,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'drf.wsgi.application'
 
-
+LANGUAGE_CODE = 'ru-RU'
+TIME_ZONE = 'Asia/Yekaterinburg'
+USE_I18N = True
+USE_L10N = True
+USE_TZ = False
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASES = {
@@ -184,7 +188,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,

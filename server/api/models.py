@@ -236,6 +236,7 @@ class SubtestQuestion(models.Model):
 
 
 class Attemption (models.Model):
+    created = models.DateTimeField('Создано', auto_now_add=True)
     user = models.ForeignKey(MyUser, verbose_name='Пользователь',
                              on_delete=models.CASCADE, blank=True, null=True)
     test = models.ForeignKey(Test, verbose_name='Тест',
