@@ -148,10 +148,10 @@ class AttemptListViewSet(ViewSet):
     @action(
         detail=False,
         methods=['get'],
-        url_path='by_user_attempt/(?P<token>[a-zA-Z0-9_.]+)/(?P<id>[a-zA-Z0-9_.]+)',
-        url_name='by-user-attempt',
+        url_path='user_attempt_by_id/(?P<token>[a-zA-Z0-9_.]+)/(?P<id>[a-zA-Z0-9_.]+)',
+        url_name='user-attempt-by-id',
     )
-    def userattempt(self, request, token, id):
+    def userattempt_by_id(self, request, token, id):
         decode = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
         queryset = Attemption.objects.filter(user=decode, test=id)
         test_name = get_object_or_404(Test, pk=id).name
@@ -161,6 +161,27 @@ class AttemptListViewSet(ViewSet):
             "attempt_id": queryset.values_list("id", flat=True),
         }
         return Response(attempt_id)
+    
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='user_attempt/(?P<token>[a-zA-Z0-9_.]+)',
+        url_name='user-attempt',
+    )
+    def userattempt(self, request, token):
+        decode = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
+        queryset = Attemption.objects.filter(user=decode)
+        data = []
+        
+        for i in set(queryset.values_list("test", flat=True)):
+            print(i)
+            data.append({
+                "test_id": i,
+                "test": get_object_or_404(Test, pk=i).name,
+                "count": len(queryset.filter(test=i)),
+                "attempts_id": queryset.filter(test=i).values_list("id", flat=True)
+            })
+        return Response(data, status=status.HTTP_200_OK)
         
 
 
@@ -179,7 +200,7 @@ class AttemptViewSet(ViewSet):
             if serializer.is_valid():
                 serializer.save()
             
-                return Response({"mesage": serializer.data, "token":'123'}, status=status.HTTP_201_CREATED)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
