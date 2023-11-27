@@ -13,8 +13,10 @@ PermissionClass = IsAuthenticated  # if not settings.DEBUG else AllowAny
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
+    
     permission_classes = [AllowAny]
     serializer_class = MyTokenObtainPairSerializer
+    
 
 
 class MyUserViewSet(ViewSet):

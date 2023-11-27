@@ -96,13 +96,22 @@ class QuestionViewSet(ViewSet):
 
 
 class AttemptListViewSet(ViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request):
-        queryset = Attemption.objects.all()
-        serializer = AttemptSerializer(queryset, many=True)
-        return Response(serializer.data)
-
+        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+        queryset = Attemption.objects.filter(user=decode)
+        data = []
+        for i in set(queryset.values_list("test", flat=True)):
+            print(i)
+            data.append({
+                "test_id": i,
+                "test": get_object_or_404(Test, pk=i).name,
+                "count": len(queryset.filter(test=i)),
+                "attempts_id": queryset.filter(test=i).values_list("id", flat=True)
+            })
+        return Response(data, status=status.HTTP_200_OK)
+        
     def retrieve(self, request, pk=None):
         queryset = Attemption.objects.filter(test=pk)
         serializer = AttemptSerializer(queryset, many=True)
@@ -148,40 +157,19 @@ class AttemptListViewSet(ViewSet):
     @action(
         detail=False,
         methods=['get'],
-        url_path='user_attempt_by_id/(?P<token>[a-zA-Z0-9_.]+)/(?P<id>[a-zA-Z0-9_.]+)',
+        url_path='user_attempt_by_id/(?P<id>[a-zA-Z0-9_.]+)',
         url_name='user-attempt-by-id',
     )
-    def userattempt_by_id(self, request, token, id):
-        decode = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
+    def userattempt_by_id(self, request, id):
+        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[7:], SECRET_KEY, algorithms=["HS256"])['user_id']
         queryset = Attemption.objects.filter(user=decode, test=id)
         test_name = get_object_or_404(Test, pk=id).name
         attempt_id = {
             "test_name": test_name,
             "attempt_count": len(queryset),
             "attempt_id": queryset.values_list("id", flat=True),
-        }
-        return Response(attempt_id)
-    
-    @action(
-        detail=False,
-        methods=['get'],
-        url_path='user_attempt/(?P<token>[a-zA-Z0-9_.]+)',
-        url_name='user-attempt',
-    )
-    def userattempt(self, request, token):
-        decode = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
-        queryset = Attemption.objects.filter(user=decode)
-        data = []
-        
-        for i in set(queryset.values_list("test", flat=True)):
-            print(i)
-            data.append({
-                "test_id": i,
-                "test": get_object_or_404(Test, pk=i).name,
-                "count": len(queryset.filter(test=i)),
-                "attempts_id": queryset.filter(test=i).values_list("id", flat=True)
-            })
-        return Response(data, status=status.HTTP_200_OK)
+        }  
+        return Response(attempt_id, status=status.HTTP_200_OK)
         
 
 
