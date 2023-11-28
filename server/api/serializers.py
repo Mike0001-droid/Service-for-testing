@@ -58,12 +58,13 @@ class AttemptSerializer(ModelSerializer):
     class Meta:
         model = Attemption
         fields = '__all__'
-
+        
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["answers"] = AnswerSerializer(
             instance.answers.all(), many=True
         ).data
+        rep["created"] = Attemption.formatted_datetime(instance)
         return rep
 
 class AttemptUserSerializer(ModelSerializer):

@@ -10,6 +10,7 @@ class MyUserSerializer(ModelSerializer):
         user = MyUser.objects.create_user(**validated_data)
         return user
 
+   
     class Meta:
         model = MyUser
         fields = ('id', 'email', 'password', 'name', 'surname', 'age', 'gender')

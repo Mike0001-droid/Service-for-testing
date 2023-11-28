@@ -6,6 +6,7 @@ from .models import *
        
 class ViewTestNonDraft(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
+        if view.action == 'create_attempt':
+            print(request.META)
             return True
-        return bool(request.user and request.user.is_staff)
+        

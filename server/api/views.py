@@ -109,7 +109,7 @@ class AttemptListViewSet(ViewSet):
                 "test_id": i,
                 "test": get_object_or_404(Test, pk=i).name,
                 "count": len(queryset.filter(test=i)),
-                "attempts_id": [{"id": x.id, "created": get_object_or_404(Attemption, pk=x.id).created} for x in queryset.filter(test=i)]
+                "attempts_id": [{"id": x.id, "created": Attemption.formatted_datetime(get_object_or_404(Attemption, pk=x.id))} for x in queryset.filter(test=i)]
             })
         return Response(data, status=status.HTTP_200_OK)
 
@@ -168,22 +168,23 @@ class AttemptListViewSet(ViewSet):
         for i in queryset:
             data.append({
                 "id": i.pk,
-                "date": i.created.strftime("%d")+"."+i.created.strftime("%m")+"."+i.created.strftime("%Y")
+                "date": Attemption.formatted_datetime(i)
             })
         return Response(data, status=status.HTTP_200_OK)
 
 
 class AttemptViewSet(ViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [ViewTestNonDraft]
     schema = AttemptSchema()
 
     @action(detail=False, methods=['post'])
     def create_attempt(self, request):
         if 'attempt' not in request.data:
-
-            request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
-                                              7:], SECRET_KEY, algorithms=["HS256"])['user_id']
-
+            if 'HTTP_AUTHORIZATION' in request.META:
+                request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                                                7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+            else:
+                pass
             serializer = AttemptSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()

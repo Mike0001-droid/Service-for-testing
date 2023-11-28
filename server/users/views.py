@@ -43,6 +43,17 @@ class MyUserViewSet(ViewSet):
         user.set_password(password)
         user.save(update_fields=['password'])
         return Response({'detail': 'Пароль успешно изменен'}, status=status.HTTP_200_OK)
+    
+    """ action(detail=False, methods=['post'])
+    def update_user(self, request):
+        if 'email' in request.data:
+            del request.data['email']
+        if 'password' in request.data:
+            request.data['password'] = make_password(request.data['password'])
+        serializer = MyUserSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data) """
         
     @action(detail=False, methods=['post'])
     def create_user(self, request):

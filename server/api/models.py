@@ -243,7 +243,10 @@ class Attemption (models.Model):
                              on_delete=models.CASCADE, blank=True)
     answers = models.ManyToManyField(
         Answer, verbose_name='Ответы теста', blank=True, related_name='answer')
-
+    
+    def formatted_datetime(self):
+        return self.created.strftime("%d.%m.%Y")
+    
     def __str__(self):
         return f"{self.pk}"
 
