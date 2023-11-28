@@ -37,7 +37,7 @@ if DEBUG:
     STATIC_DIR = os.path.join(BASE_DIR, 'static')
     STATICFILES_DIRS = [
         STATIC_DIR,
-        #'/var/www/Service-for-testing/static/',
+        # '/var/www/Service-for-testing/static/',
     ]
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
@@ -73,7 +73,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -108,6 +108,8 @@ TIME_ZONE = 'Asia/Yekaterinburg'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = False
+
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASES = {
@@ -115,7 +117,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}  
+}
 
 """ DATABASES = {
     'default': {
@@ -179,7 +181,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        
+
     ),
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': [
@@ -217,5 +219,3 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
-
-

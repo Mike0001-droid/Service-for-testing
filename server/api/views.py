@@ -99,19 +99,20 @@ class AttemptListViewSet(ViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request):
-        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                            7:], SECRET_KEY, algorithms=["HS256"])['user_id']
         queryset = Attemption.objects.filter(user=decode)
         data = []
         for i in set(queryset.values_list("test", flat=True)):
-           
+
             data.append({
                 "test_id": i,
                 "test": get_object_or_404(Test, pk=i).name,
                 "count": len(queryset.filter(test=i)),
-                "attempts_id": [{"id": x.id, "created":get_object_or_404(Attemption, pk=x.id).created} for x in queryset.filter(test=i)]
+                "attempts_id": [{"id": x.id, "created": get_object_or_404(Attemption, pk=x.id).created} for x in queryset.filter(test=i)]
             })
         return Response(data, status=status.HTTP_200_OK)
-        
+
     def retrieve(self, request, pk=None):
         queryset = Attemption.objects.filter(test=pk)
         serializer = AttemptSerializer(queryset, many=True)
@@ -135,17 +136,16 @@ class AttemptListViewSet(ViewSet):
 
         scales_json = [{"title": i.name}
                        for i in Scale.objects.filter(id__in=scales_pk)]
-
         for i in range(len(scales_json)):
             scores_id = AnswerScale.objects.filter(scale=scales_pk[i]).values_list(
                 "score", flat=True)
             scores = list(Score.objects.filter(
                 id__in=scores_id).values_list("score", flat=True))
-
             if len(scores) > 1:
                 fin_score = sum(scores)
             else:
                 fin_score = sum(scores)*len(scores_id)
+
             scales_json[i].update({"fin_scores": fin_score})
             scales_json[i].update({"interpretations": inter_name[i]})
             scales_json[i].update({"s_f_cores": s_f_scores[i]})
@@ -153,7 +153,7 @@ class AttemptListViewSet(ViewSet):
         for i in range(len(scales_json)):
             otvet["data"].append(scales_json[i])
         return Response(otvet, status=status.HTTP_200_OK)
-    
+
     @action(
         detail=False,
         methods=['get'],
@@ -161,16 +161,16 @@ class AttemptListViewSet(ViewSet):
         url_name='user-attempt-by-id',
     )
     def userattempt_by_id(self, request, id):
-        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                            7:], SECRET_KEY, algorithms=["HS256"])['user_id']
         queryset = Attemption.objects.filter(user=decode, test=id)
-        test_name = get_object_or_404(Test, pk=id).name
-        attempt_id = {
-            "test_name": test_name,
-            "attempt_count": len(queryset),
-            "attempt_id": queryset.values_list("id", flat=True),
-        }  
-        return Response(attempt_id, status=status.HTTP_200_OK)
-        
+        data = []
+        for i in queryset:
+            data.append({
+                "id": i.pk,
+                "date": i.created.strftime("%d")+"."+i.created.strftime("%m")+"."+i.created.strftime("%Y")
+            })
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class AttemptViewSet(ViewSet):
@@ -181,12 +181,13 @@ class AttemptViewSet(ViewSet):
     def create_attempt(self, request):
         if 'attempt' not in request.data:
 
-            request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[7:], SECRET_KEY, algorithms=["HS256"])['user_id']
-            
+            request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                                              7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+
             serializer = AttemptSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-            
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
