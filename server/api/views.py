@@ -70,9 +70,15 @@ class SubTestViewSet(ViewSet):
         serializer = SubTestSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class QuestionAnswerViewSet(ViewSet):
+    def list(self, request):
+        queryset = QuestionAnswer.objects.all()
+        serializer = QuestionAnswerSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 class QuestionViewSet(ViewSet):
     def list(self, request):
+
         queryset = Question.objects.filter(status='Опубликовано')
         serializer = QuestionSerializer(queryset, many=True)
         return Response(serializer.data)
@@ -109,7 +115,6 @@ class AttemptListViewSet(ViewSet):
                 "test_id": i,
                 "test": get_object_or_404(Test, pk=i).name,
                 "count": len(queryset.filter(test=i)),
-                "attempts_id": [{"id": x.id, "created": Attemption.formatted_datetime(get_object_or_404(Attemption, pk=x.id))} for x in queryset.filter(test=i)]
             })
         return Response(data, status=status.HTTP_200_OK)
 
@@ -128,19 +133,18 @@ class AttemptListViewSet(ViewSet):
         attempt_id = get_object_or_404(Attemption, pk=id)
         scales_pk = list(set(attempt_id.answers.values_list(
             "scale_answer", flat=True)))
+
         s_f_scores = [list(Interpretation.objects.filter(scale=k).values_list(
             "start_score", "finish_score")) for k in scales_pk]
 
         inter_name = [list(Interpretation.objects.filter(
             scale=k).values_list("name", flat=True)) for k in scales_pk]
 
-        scales_json = [{"title": i.name}
-                       for i in Scale.objects.filter(id__in=scales_pk)]
+        scales_json = [{"title": i.name} for i in Scale.objects.filter(id__in=scales_pk)]
         for i in range(len(scales_json)):
-            scores_id = AnswerScale.objects.filter(scale=scales_pk[i]).values_list(
-                "score", flat=True)
-            scores = list(Score.objects.filter(
-                id__in=scores_id).values_list("score", flat=True))
+            scores_id = AnswerScale.objects.filter(scale=scales_pk[i]).values_list("score", flat=True)
+            scores = list(Score.objects.filter(id__in=scores_id).values_list("score", flat=True))
+            print(Answer.objects.all().values_list("sc", flat=True))
             if len(scores) > 1:
                 fin_score = sum(scores)
             else:

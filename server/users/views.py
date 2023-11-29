@@ -19,8 +19,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
     serializer_class = MyTokenObtainPairSerializer
     
-
-
 class MyUserViewSet(ViewSet):
     """
     list:
@@ -36,25 +34,19 @@ class MyUserViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     
-    """ @action(detail=False, methods=['post'])
-    def update_user(self, request):
-        user_id = request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
-                                                7:], SECRET_KEY, algorithms=["HS256"])['user_id']
-        user = MyUser.objects.get(pk = user_id)
-        request.data['password'] = request.data.get('new_password')
-        
-        
-        return Response({'detail': 'Пароль успешно изменен'}, status=status.HTTP_200_OK) """
-    
     @action(detail=False, methods=['post'])
     def update_user(self, request):
         if 'email' in request.data:
             del request.data['email']
         if 'password' in request.data:
             request.data['password'] = make_password(request.data['password'])
+        print(type(request.data['age']))
+        
         serializer = MyUserSerializer(request.user, data=request.data, partial=True)
+        
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        
         return Response(serializer.data) 
         
     @action(detail=False, methods=['post'])
