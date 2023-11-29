@@ -9,6 +9,8 @@ from django.contrib.auth.hashers import make_password
 from users.serializers import MyUserSerializer, MyTokenObtainPairSerializer
 from users.models import MyUser
 from users.schemas import UserSchema
+import jwt
+from drf.settings import SECRET_KEY
 PermissionClass = IsAuthenticated  # if not settings.DEBUG else AllowAny
 
 
@@ -30,21 +32,21 @@ class MyUserViewSet(ViewSet):
     """
     schema = UserSchema()
     def list(self, request):
-        print(request.user)
         serializer = MyUserSerializer(request.user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     
-    @action(detail=False, methods=['post'])
+    """ @action(detail=False, methods=['post'])
     def update_user(self, request):
-        email = request.data.get('email')
-        user = MyUser.objects.get(email=email)
-        password = request.data.get('new_password')
-        user.set_password(password)
-        user.save(update_fields=['password'])
-        return Response({'detail': 'Пароль успешно изменен'}, status=status.HTTP_200_OK)
+        user_id = request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                                                7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+        user = MyUser.objects.get(pk = user_id)
+        request.data['password'] = request.data.get('new_password')
+        
+        
+        return Response({'detail': 'Пароль успешно изменен'}, status=status.HTTP_200_OK) """
     
-    """ action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'])
     def update_user(self, request):
         if 'email' in request.data:
             del request.data['email']
@@ -53,7 +55,7 @@ class MyUserViewSet(ViewSet):
         serializer = MyUserSerializer(request.user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data) """
+        return Response(serializer.data) 
         
     @action(detail=False, methods=['post'])
     def create_user(self, request):
