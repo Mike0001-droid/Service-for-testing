@@ -102,6 +102,7 @@ class AttemptListViewSet(ViewSet):
         decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
                             7:], SECRET_KEY, algorithms=["HS256"])['user_id']
         queryset = Attemption.objects.filter(user=decode)
+        print(queryset)
         data = []
         for i in set(queryset.values_list("test", flat=True)):
 
@@ -124,34 +125,49 @@ class AttemptListViewSet(ViewSet):
         url_path='by_attempt_id/(?P<id>[a-zA-Z0-9_]+)',
         url_name='by-attempt',
     )
+    #[{"id":1,"answers": [1]},{"id":2,"answers": [1]}]
     def attemptbyid(self, request, id):
         attempt_id = get_object_or_404(Attemption, pk=id)
-        scales_pk = list(set(attempt_id.answers.values_list(
-            "scale_answer", flat=True)))
+        answers_pk = []
+        for i in attempt_id.answers:
+            for x in i['answers']:
+                answers_pk.append(x)
+             
+        
+        
+        scales = set()
+        for i in answers_pk:
+            scales.add(list(Answer.objects.filter(id=i).values_list("scale_answer", flat=True))[0])
+        scales_pk = list(scales)
+        
         s_f_scores = [list(Interpretation.objects.filter(scale=k).values_list(
             "start_score", "finish_score")) for k in scales_pk]
-
+        
         inter_name = [list(Interpretation.objects.filter(
             scale=k).values_list("name", flat=True)) for k in scales_pk]
 
         scales_json = [{"title": i.name}
                        for i in Scale.objects.filter(id__in=scales_pk)]
+    
         for i in range(len(scales_json)):
             scores_id = AnswerScale.objects.filter(scale=scales_pk[i]).values_list(
                 "score", flat=True)
+            print(scores_id)
             scores = list(Score.objects.filter(
                 id__in=scores_id).values_list("score", flat=True))
+            fin_score = sum(scores)
+            
             if len(scores) > 1:
                 fin_score = sum(scores)
             else:
-                fin_score = sum(scores)*len(scores_id)
-
+                fin_score = sum(scores)*len(scores_id) 
+            
             scales_json[i].update({"fin_scores": fin_score})
             scales_json[i].update({"interpretations": inter_name[i]})
             scales_json[i].update({"s_f_cores": s_f_scores[i]})
         otvet = {"url": f"http://tests.flexidev.ru/#/attempt/{id}", "data": []}
         for i in range(len(scales_json)):
-            otvet["data"].append(scales_json[i])
+            otvet["data"].append(scales_json[i]) 
         return Response(otvet, status=status.HTTP_200_OK)
 
     @action(
@@ -179,6 +195,7 @@ class AttemptViewSet(ViewSet):
 
     @action(detail=False, methods=['post'])
     def create_attempt(self, request):
+        print(request.data)
         if 'attempt' not in request.data:
             if 'HTTP_AUTHORIZATION' in request.META:
                 request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[

@@ -30,7 +30,7 @@ class MyUserViewSet(ViewSet):
     """
     schema = UserSchema()
     def list(self, request):
-        print(request.user)
+
         serializer = MyUserSerializer(request.user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

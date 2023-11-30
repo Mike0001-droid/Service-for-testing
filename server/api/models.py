@@ -241,9 +241,8 @@ class Attemption (models.Model):
                              on_delete=models.CASCADE, blank=True, null=True)
     test = models.ForeignKey(Test, verbose_name='Тест',
                              on_delete=models.CASCADE, blank=True)
-    answers = models.ManyToManyField(
-        Answer, verbose_name='Ответы теста', blank=True, related_name='answer')
-    
+    answers = models.JSONField('Ответы теста', help_text='JSON формат', null=True, blank=True)
+ 
     def formatted_datetime(self):
         return self.created.strftime("%d.%m.%Y")
     
