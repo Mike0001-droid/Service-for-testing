@@ -246,7 +246,6 @@ class SubtestQuestion(models.Model):
 
     class Meta:
         unique_together = ('subtest', 'question')
-<<<<<<< HEAD
 
 
 class Attemption (models.Model):
@@ -265,5 +264,3 @@ class Attemption (models.Model):
 
     class Meta:
         verbose_name_plural = 'Попытки'
-=======
->>>>>>> f3728ec6f6e7bff8603a8847fe9e3c02bb32d93a
