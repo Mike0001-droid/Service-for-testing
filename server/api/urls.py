@@ -11,7 +11,7 @@ router.register(r'attempt_list', views.AttemptListViewSet, basename='attempt_lis
 router.register(r'scale', views.ScaleListViewSet, basename='scale')
 router.register(r'score', views.ScoreListViewSet, basename='score')
 router.register(r'answer', views.AnsListViewSet, basename='answer')
-router.register(r'interpretation',
-                views.InterpretationListViewSet, basename='interpretation')
+router.register(r'interpretation',views.InterpretationListViewSet, basename='interpretation')
+router.register(r'questionanswer',views.QuestionAnswerViewSet, basename='questionanswer')
 app_name = 'api'
 urlpatterns = router.urls

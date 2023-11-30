@@ -53,6 +53,10 @@ class QuestionSerializer(ModelSerializer):
             instance.answer, many=True).data
         return rep
 
+class QuestionAnswerSerializer(ModelSerializer):
+    class Meta:
+        model = QuestionAnswer
+        fields = '__all__'
 
 class AttemptSerializer(ModelSerializer):
     class Meta:

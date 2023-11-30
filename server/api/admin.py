@@ -126,14 +126,13 @@ class SubtestAdmin(admin.ModelAdmin):
     inlines = (SubtestQuestionInline, )
 
 
-""" @admin.register(Question)
+@admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = (
         'queue',
         'name',
         'subtest',
         'type_question',
-        'answer',
         'obligatory',
         'status',
         'answers'
@@ -145,7 +144,6 @@ class QuestionAdmin(admin.ModelAdmin):
             'name',
             'question_img',
             'type_question',
-            'answer',
             'subtest',
             'obligatory',
             'queue',
@@ -156,7 +154,7 @@ class QuestionAdmin(admin.ModelAdmin):
 
     def answers(self, obj):
         return obj.answer.count()
-    answers.short_description = 'Количество ответов' """
+    answers.short_description = 'Количество ответов' 
 
 
 @admin.register(Answer)
@@ -247,8 +245,5 @@ class InterpretationAdmin(admin.ModelAdmin):
 class AttemptionsAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Question)
-class QuestionsAdmin(admin.ModelAdmin):
-    pass
 
 

@@ -70,9 +70,15 @@ class SubTestViewSet(ViewSet):
         serializer = SubTestSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class QuestionAnswerViewSet(ViewSet):
+    def list(self, request):
+        queryset = QuestionAnswer.objects.all()
+        serializer = QuestionAnswerSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 class QuestionViewSet(ViewSet):
     def list(self, request):
+
         queryset = Question.objects.filter(status='Опубликовано')
         serializer = QuestionSerializer(queryset, many=True)
         return Response(serializer.data)
@@ -110,7 +116,6 @@ class AttemptListViewSet(ViewSet):
                 "test_id": i,
                 "test": get_object_or_404(Test, pk=i).name,
                 "count": len(queryset.filter(test=i)),
-                "attempts_id": [{"id": x.id, "created": Attemption.formatted_datetime(get_object_or_404(Attemption, pk=x.id))} for x in queryset.filter(test=i)]
             })
         return Response(data, status=status.HTTP_200_OK)
 
