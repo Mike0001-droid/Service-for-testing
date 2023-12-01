@@ -167,10 +167,12 @@ class Interpretation (models.Model):
 
 class Attemption (models.Model):
     created = models.DateTimeField('Создано', auto_now_add=True)
-    user = models.ForeignKey(MyUser, verbose_name='Пользователь', on_delete=models.CASCADE, blank=True, null=True)
-    test = models.ForeignKey(Test, verbose_name='Тест', on_delete=models.CASCADE, blank=True)
-    
-
+    user = models.ForeignKey(MyUser, verbose_name='Пользователь',
+                             on_delete=models.CASCADE, blank=True, null=True)
+    test = models.ForeignKey(Test, verbose_name='Тест',
+                             on_delete=models.CASCADE, blank=True)
+    answers = models.JSONField('Ответы теста', help_text='JSON формат', null=True, blank=True)
+ 
     def formatted_datetime(self):
         return self.created.strftime("%d.%m.%Y")
     
@@ -246,21 +248,3 @@ class SubtestQuestion(models.Model):
 
     class Meta:
         unique_together = ('subtest', 'question')
-
-
-class Attemption (models.Model):
-    created = models.DateTimeField('Создано', auto_now_add=True)
-    user = models.ForeignKey(MyUser, verbose_name='Пользователь',
-                             on_delete=models.CASCADE, blank=True, null=True)
-    test = models.ForeignKey(Test, verbose_name='Тест',
-                             on_delete=models.CASCADE, blank=True)
-    answers = models.JSONField('Ответы теста', help_text='JSON формат', null=True, blank=True)
- 
-    def formatted_datetime(self):
-        return self.created.strftime("%d.%m.%Y")
-    
-    def __str__(self):
-        return f"{self.pk}"
-
-    class Meta:
-        verbose_name_plural = 'Попытки'
