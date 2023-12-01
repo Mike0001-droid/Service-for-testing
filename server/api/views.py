@@ -138,13 +138,12 @@ class AttemptListViewSet(ViewSet):
             for x in i['answers']:
                 answers_pk.append(x)
         
-        scales = set()
-        shkaly = set()
-        for i in answers_pk:
-            print(list(Answer.objects.filter(id=i).values_list("scale_answer", flat=True)))
         
-        print(shkaly)
-        scales_pk = list(scales)
+        scales_pk = []
+        for i in answers_pk:
+            scales_pk = (list(Answer.objects.filter(id=i).values_list("scale_answer", flat=True)))
+            break
+        
 
 
 
@@ -169,7 +168,6 @@ class AttemptListViewSet(ViewSet):
                 fin_score = sum(scores)
             else:
                 fin_score = sum(scores)*len(scores_id) 
-            
             scales_json[i].update({"fin_scores": fin_score})
             scales_json[i].update({"interpretations": inter_name[i]})
             scales_json[i].update({"s_f_cores": s_f_scores[i]})
