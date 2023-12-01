@@ -137,14 +137,17 @@ class AttemptListViewSet(ViewSet):
         for i in attempt_id.answers:
             for x in i['answers']:
                 answers_pk.append(x)
-             
-        
         
         scales = set()
+        shkaly = set()
         for i in answers_pk:
-            scales.add(list(Answer.objects.filter(id=i).values_list("scale_answer", flat=True))[0])
-        scales_pk = list(scales)
+            print(list(Answer.objects.filter(id=i).values_list("scale_answer", flat=True)))
         
+        print(shkaly)
+        scales_pk = list(scales)
+
+
+
         s_f_scores = [list(Interpretation.objects.filter(scale=k).values_list(
             "start_score", "finish_score")) for k in scales_pk]
         
@@ -157,7 +160,7 @@ class AttemptListViewSet(ViewSet):
         for i in range(len(scales_json)):
             scores_id = AnswerScale.objects.filter(scale=scales_pk[i]).values_list(
                 "score", flat=True)
-            print(scores_id)
+            
             scores = list(Score.objects.filter(
                 id__in=scores_id).values_list("score", flat=True))
             fin_score = sum(scores)
@@ -200,7 +203,7 @@ class AttemptViewSet(ViewSet):
 
     @action(detail=False, methods=['post'])
     def create_attempt(self, request):
-        print(request.data)
+        
         if 'attempt' not in request.data:
             if 'HTTP_AUTHORIZATION' in request.META:
                 request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
@@ -218,10 +221,15 @@ class AttemptViewSet(ViewSet):
         elif 'attempt' in request.data:
             pk = request.data['attempt']
             attempt = get_object_or_404(Attemption, pk=request.data['attempt'])
-            answers_id = Answer.objects.filter(id__in=request.data['answers'])
-            thing = [i.pk for i in list(
-                chain(attempt.answers.all(), answers_id))]
-            request.data['answers'] = thing
+
+            answers_pk = []
+            for i in request.data['answers']:
+                for x in i['answers']:
+                    
+                    answers_pk.append(x)
+            
+            answers_id = list(Answer.objects.filter(id__in=answers_pk).values_list("id", flat=True))
+            request.data['answers'] = answers_id
             try:
                 instance = Attemption.objects.get(pk=pk)
             except:
