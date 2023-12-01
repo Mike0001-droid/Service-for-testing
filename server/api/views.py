@@ -221,15 +221,7 @@ class AttemptViewSet(ViewSet):
         elif 'attempt' in request.data:
             pk = request.data['attempt']
             attempt = get_object_or_404(Attemption, pk=request.data['attempt'])
-
-            answers_pk = []
-            for i in request.data['answers']:
-                for x in i['answers']:
-                    
-                    answers_pk.append(x)
-            
-            answers_id = list(Answer.objects.filter(id__in=answers_pk).values_list("id", flat=True))
-            request.data['answers'] = answers_id
+        
             try:
                 instance = Attemption.objects.get(pk=pk)
             except:
