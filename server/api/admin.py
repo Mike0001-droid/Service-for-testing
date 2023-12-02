@@ -132,6 +132,7 @@ class QuestionAdmin(admin.ModelAdmin):
         'queue',
         'name',
         'subtest',
+        
         'type_question',
         'obligatory',
         'status',
@@ -145,6 +146,7 @@ class QuestionAdmin(admin.ModelAdmin):
             'question_img',
             'type_question',
             'subtest',
+            'answer',
             'obligatory',
             'queue',
             'status',

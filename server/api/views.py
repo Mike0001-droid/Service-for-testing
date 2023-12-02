@@ -138,42 +138,38 @@ class AttemptListViewSet(ViewSet):
             for x in i['answers']:
                 answers_pk.append(x)
         
+        scales_pk = set()
+        ans_scales_pk = list(AnswerScale.objects.filter(answer_id__in=answers_pk))
+        for x in ans_scales_pk:
+            scales_pk.add(x.scale.pk)
+        scales_pk = list(scales_pk)
+        inter_f_obj = [list(Interpretation.objects.filter(scale=k).values_list("finish_score", flat=True)) for k in scales_pk]
+        sum_scores = list()
+        for i in scales_pk:
+            sum_scores.append(sum([i.score.score for i in AnswerScale.objects.filter(scale_id=i)]))
         
-        scales_pk = []
-        for i in answers_pk:
-            scales_pk = (list(Answer.objects.filter(id=i).values_list("scale_answer", flat=True)))
-            break
-        
+        need_interp = []
+        for x in range(len(inter_f_obj)):
+            need_interp.append([i for i in inter_f_obj[x] if sum_scores[x]>=i])
 
-
-
-        s_f_scores = [list(Interpretation.objects.filter(scale=k).values_list(
-            "start_score", "finish_score")) for k in scales_pk]
-        
-        inter_name = [list(Interpretation.objects.filter(
-            scale=k).values_list("name", flat=True)) for k in scales_pk]
-
-        scales_json = [{"title": i.name}
-                       for i in Scale.objects.filter(id__in=scales_pk)]
-    
-        for i in range(len(scales_json)):
-            scores_id = AnswerScale.objects.filter(scale=scales_pk[i]).values_list(
-                "score", flat=True)
-            
-            scores = list(Score.objects.filter(
-                id__in=scores_id).values_list("score", flat=True))
-            fin_score = sum(scores)
-            
-            if len(scores) > 1:
-                fin_score = sum(scores)
+        super_interp_f_pk = []
+        for i in need_interp:
+            if len(i)>1:
+                super_interp_f_pk.append(i[-1])
             else:
-                fin_score = sum(scores)*len(scores_id) 
-            scales_json[i].update({"fin_scores": fin_score})
+                super_interp_f_pk.append(i[0])
+        print(super_interp_f_pk)
+        inter_name = [list(Interpretation.objects.filter(scale=scales_pk[k], finish_score=super_interp_f_pk[k]).values_list("name", flat=True)) for k in range(len(scales_pk))]
+
+        scales_json = [{"title": i.name} for i in Scale.objects.filter(id__in=scales_pk)]
+        for i in range(len(scales_pk)):
+
+            scales_json[i].update({"fin_scores": sum_scores[i]})
             scales_json[i].update({"interpretations": inter_name[i]})
-            scales_json[i].update({"s_f_cores": s_f_scores[i]})
+            #scales_json[i].update({"f_cores": super_interp_f_pk[i]})
         otvet = {"url": f"http://tests.flexidev.ru/#/attempt/{id}", "data": []}
         for i in range(len(scales_json)):
-            otvet["data"].append(scales_json[i]) 
+            otvet["data"].append(scales_json[i])
         return Response(otvet, status=status.HTTP_200_OK)
 
     @action(

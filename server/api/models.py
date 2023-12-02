@@ -84,12 +84,7 @@ class Question (models.Model):
     question_img = models.ImageField(null=True, blank=True, verbose_name='Картинка', upload_to="images/")
     type_question = models.BooleanField('Тип вопроса (Ед.выб/Мн.выб : 1/0)', default=True)
     obligatory = models.BooleanField('Обязательный ?')
-    answer = models.ManyToManyField(
-        'Answer', 
-        verbose_name='Ответ', 
-        related_name='question_answer', 
-        through='QuestionAnswer'
-    ) 
+    answer = models.ManyToManyField('Answer', verbose_name='Ответы вопроса', blank=True, related_name='answer')
     status = models.CharField('Статус вопроса', choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1], max_length=12)
     subtest = models.ForeignKey(
         Subtest, on_delete=models.CASCADE, related_name='questions', verbose_name='Субтест')
