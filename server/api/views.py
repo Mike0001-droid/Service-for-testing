@@ -150,15 +150,22 @@ class AttemptListViewSet(ViewSet):
         
         need_interp = []
         for x in range(len(inter_f_obj)):
-            need_interp.append([i for i in inter_f_obj[x] if sum_scores[x]>=i])
-
+            for i in inter_f_obj[x]:
+                if sum_scores[x]>=i:
+                    need_interp.append(i)
+                else:
+                    need_interp.append(i)
+                    break
         super_interp_f_pk = []
         for i in need_interp:
-            if len(i)>1:
-                super_interp_f_pk.append(i[-1])
+            if isinstance(i, list):
+                if len(i)>1:
+                    super_interp_f_pk.append(i[-1])
+                else:
+                    super_interp_f_pk.append(i[0])
             else:
-                super_interp_f_pk.append(i[0])
-        print(super_interp_f_pk)
+                super_interp_f_pk.append(i)
+        
         inter_name = [list(Interpretation.objects.filter(scale=scales_pk[k], finish_score=super_interp_f_pk[k]).values_list("name", flat=True)) for k in range(len(scales_pk))]
 
         scales_json = [{"title": i.name} for i in Scale.objects.filter(id__in=scales_pk)]
