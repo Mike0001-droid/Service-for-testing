@@ -4,10 +4,11 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
 from django.contrib.auth.models import AbstractUser
+from drf import settings
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, name, surname, age, gender, password=None):
+    def create_user(self, email, name, surname, birthday, gender, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -20,7 +21,7 @@ class MyUserManager(BaseUserManager):
             email=self.normalize_email(email),
             name=name,
             surname=surname,
-            age=age,
+            birthday=birthday,
             gender=gender
         )
         user.set_password(password)
@@ -53,7 +54,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     name = models.CharField('Имя', max_length=150, blank=True)
     surname = models.CharField('Фамилия', max_length=150, blank=True)
     gender = models.CharField('Пол', max_length=7, default='Мужской')
-    age = models.DateField('Дата рождения', max_length=8, null=True)
+    birthday = models.DateField('Дата рождения', max_length=8, null=True)
     is_active = models.BooleanField('Активный', help_text='Отметьте, если пользователь должен считаться активным. ''Уберите эту отметку вместо удаления учётной записи.', default=True)
     is_staff = models.BooleanField('Статус персонала', help_text='Отметьте, если пользователь может входить в ''административную часть сайта.', default=False)
 
@@ -67,7 +68,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-
+    
     def full_name(self):
         return f'{self.name} {self.surname}' if self.name and self.surname else self.email
 

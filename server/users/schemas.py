@@ -25,7 +25,7 @@ class UserSchema(AutoSchema):
                     schema=coreschema.String(description='Пол пользователя')
                 ),
                 coreapi.Field(
-                    name='age',
+                    name='birthday',
                     location='form',
                     required=False,
                     schema=coreschema.String(description='Возраст пользователя')

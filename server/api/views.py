@@ -130,14 +130,12 @@ class AttemptListViewSet(ViewSet):
         url_path='by_attempt_id/(?P<id>[a-zA-Z0-9_]+)',
         url_name='by-attempt',
     )
-    #[{"id":1,"answers": [1]},{"id":2,"answers": [1]}]
     def attemptbyid(self, request, id):
         attempt_id = get_object_or_404(Attemption, pk=id)
         answers_pk = []
         for i in attempt_id.answers:
             for x in i['answers']:
                 answers_pk.append(x)
-        
         scales_pk = set()
         ans_scales_pk = list(AnswerScale.objects.filter(answer_id__in=answers_pk))
         for x in ans_scales_pk:
@@ -147,7 +145,6 @@ class AttemptListViewSet(ViewSet):
         sum_scores = list()
         for i in scales_pk:
             sum_scores.append(sum([i.score.score for i in AnswerScale.objects.filter(scale_id=i)]))
-        
         need_interp = []
         for x in range(len(inter_f_obj)):
             for i in inter_f_obj[x]:
@@ -165,15 +162,15 @@ class AttemptListViewSet(ViewSet):
                     super_interp_f_pk.append(i[0])
             else:
                 super_interp_f_pk.append(i)
-        
         inter_name = [list(Interpretation.objects.filter(scale=scales_pk[k], finish_score=super_interp_f_pk[k]).values_list("name", flat=True)) for k in range(len(scales_pk))]
-
+        inter_desc = [list(Interpretation.objects.filter(scale=scales_pk[k], finish_score=super_interp_f_pk[k]).values_list("text", flat=True)) for k in range(len(scales_pk))]
         scales_json = [{"title": i.name} for i in Scale.objects.filter(id__in=scales_pk)]
         for i in range(len(scales_pk)):
-
             scales_json[i].update({"fin_scores": sum_scores[i]})
-            scales_json[i].update({"interpretations": inter_name[i]})
-            #scales_json[i].update({"f_cores": super_interp_f_pk[i]})
+            scales_json[i].update({"name": inter_name[i][0]})
+            scales_json[i].update({"max_score": super_interp_f_pk[i]})
+            scales_json[i].update({"description": inter_desc[i][0]})
+            
         otvet = {"url": f"http://tests.flexidev.ru/#/attempt/{id}", "data": []}
         for i in range(len(scales_json)):
             otvet["data"].append(scales_json[i])

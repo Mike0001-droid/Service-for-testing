@@ -11,6 +11,7 @@ from users.models import MyUser
 from users.schemas import UserSchema
 import jwt
 from drf.settings import SECRET_KEY
+from datetime import datetime
 PermissionClass = IsAuthenticated  # if not settings.DEBUG else AllowAny
 
 
@@ -40,14 +41,16 @@ class MyUserViewSet(ViewSet):
             del request.data['email']
         if 'password' in request.data:
             request.data['password'] = make_password(request.data['password'])
-        print(type(request.data['age']))
         
         serializer = MyUserSerializer(request.user, data=request.data, partial=True)
         
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        birt = {'birthday':request.data['birthday']}
+        birt.update(serializer.data)
         
-        return Response(serializer.data) 
+        
+        return Response(birt)
         
     @action(detail=False, methods=['post'])
     def create_user(self, request):
