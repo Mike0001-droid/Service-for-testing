@@ -108,7 +108,6 @@ class AttemptListViewSet(ViewSet):
         decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
                             7:], SECRET_KEY, algorithms=["HS256"])['user_id']
         queryset = Attemption.objects.filter(user=decode)
-        print(queryset)
         data = []
         for i in set(queryset.values_list("test", flat=True)):
 
@@ -129,6 +128,7 @@ class AttemptListViewSet(ViewSet):
         methods=['get'],
         url_path='by_attempt_id/(?P<id>[a-zA-Z0-9_]+)',
         url_name='by-attempt',
+        permission_classes = [AllowAny]
     )
     def attemptbyid(self, request, id):
         attempt_id = get_object_or_404(Attemption, pk=id)
