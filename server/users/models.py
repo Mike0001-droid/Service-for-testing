@@ -60,6 +60,9 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
     objects = MyUserManager()
 
+    def formatted_datetime(self):
+        return self.birthday.strftime("%d.%m.%Y")
+    
     USERNAME_FIELD = 'email'
 
     class Meta:

@@ -19,6 +19,11 @@ class MyUserSerializer(ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+            
+        rep["birthday"] = MyUser.formatted_datetime(instance)
+        return rep
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

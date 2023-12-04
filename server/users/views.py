@@ -46,11 +46,7 @@ class MyUserViewSet(ViewSet):
         
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        birt = {'birthday':request.data['birthday']}
-        birt.update(serializer.data)
-        
-        
-        return Response(birt)
+        return Response(serializer.data)
         
     @action(detail=False, methods=['post'])
     def create_user(self, request):
