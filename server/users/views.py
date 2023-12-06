@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import make_password
 from users.serializers import MyUserSerializer, MyTokenObtainPairSerializer
 from users.models import MyUser
 from users.schemas import UserSchema
+from django.shortcuts import get_object_or_404
 import jwt
 from drf.settings import SECRET_KEY
 from datetime import datetime
@@ -37,16 +38,18 @@ class MyUserViewSet(ViewSet):
     
     @action(detail=False, methods=['post'])
     def update_user(self, request):
-        if 'email' in request.data:
-            del request.data['email']
-        if 'password' in request.data:
-            request.data['password'] = make_password(request.data['password'])
-        
-        serializer = MyUserSerializer(request.user, data=request.data, partial=True)
-        
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        user = MyUser.objects.get(pk=request.user.pk)
+        if 'old_password' in request.data:
+            if user.check_password(request.data['old_password']):
+                if 'password' in request.data:
+                    request.data['password'] = make_password(request.data['password'])
+                serializer = MyUserSerializer(request.user, data=request.data, partial=True)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response({"error": "Неправильный старый пароль"})
+        return Response({"error": "Введите старый пароль"})
         
     @action(detail=False, methods=['post'])
     def create_user(self, request):
@@ -55,13 +58,11 @@ class MyUserViewSet(ViewSet):
             serializer.save()
         else:
             text_error = ''
-            error_dict = {}
             for error in serializer.errors:
                 elm_error = serializer.errors.get(error)
                 if len(elm_error) > 0:
-                    text_error += "{} \n".format(elm_error[0])
-                    error_dict.update({error: elm_error[0]})
-            return Response({"detail": text_error, "error": error_dict}, status=status.HTTP_400_BAD_REQUEST)
+                    text_error += "{}".format(elm_error[0])
+            return Response({"detail": text_error}, status=status.HTTP_400_BAD_REQUEST)
         token_data = {
             "email": request.data["email"],
             "password": request.data["password"]

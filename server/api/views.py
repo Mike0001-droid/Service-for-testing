@@ -102,15 +102,12 @@ class QuestionViewSet(ViewSet):
 
 
 class AttemptListViewSet(ViewSet):
-    permission_classes = [IsAuthenticated]
-
     def list(self, request):
         decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
                             7:], SECRET_KEY, algorithms=["HS256"])['user_id']
         queryset = Attemption.objects.filter(user=decode)
         data = []
         for i in set(queryset.values_list("test", flat=True)):
-
             data.append({
                 "test_id": i,
                 "test": get_object_or_404(Test, pk=i).name,
@@ -119,16 +116,18 @@ class AttemptListViewSet(ViewSet):
         return Response(data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
-        queryset = Attemption.objects.filter(test=pk)
-        serializer = AttemptSerializer(queryset, many=True)
+        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                            7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+        obj = Attemption.objects.filter(pk=pk).update(user=decode)
+        queryset = get_object_or_404(Attemption, pk=pk)  
+        serializer = AttemptSerializer(queryset)
         return Response(serializer.data)
-
+    
     @action(
         detail=False,
         methods=['get'],
         url_path='by_attempt_id/(?P<id>[a-zA-Z0-9_]+)',
         url_name='by-attempt',
-        permission_classes = [AllowAny]
     )
     def attemptbyid(self, request, id):
         attempt_id = get_object_or_404(Attemption, pk=id)
@@ -198,10 +197,8 @@ class AttemptListViewSet(ViewSet):
 class AttemptViewSet(ViewSet):
     permission_classes = [ViewTestNonDraft]
     schema = AttemptSchema()
-
     @action(detail=False, methods=['post'])
     def create_attempt(self, request):
-        
         if 'attempt' not in request.data:
             if 'HTTP_AUTHORIZATION' in request.META:
                 request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
@@ -215,11 +212,8 @@ class AttemptViewSet(ViewSet):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
         elif 'attempt' in request.data:
             pk = request.data['attempt']
-            attempt = get_object_or_404(Attemption, pk=request.data['attempt'])
-        
             try:
                 instance = Attemption.objects.get(pk=pk)
             except:
