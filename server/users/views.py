@@ -48,7 +48,7 @@ class MyUserViewSet(ViewSet):
                 serializer.save()
                 return Response(serializer.data)
             else:
-                return Response({"error": "Неправильный старый пароль"})
+                return Response({"error": "Неправильный старый пароль"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"error": "Введите старый пароль"})
         
     @action(detail=False, methods=['post'])

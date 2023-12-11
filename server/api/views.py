@@ -135,6 +135,7 @@ class AttemptListViewSet(ViewSet):
         for i in attempt_id.answers:
             for x in i['answers']:
                 answers_pk.append(x)
+        print(answers_pk)
         scales_pk = set()
         ans_scales_pk = list(AnswerScale.objects.filter(answer_id__in=answers_pk))
         for x in ans_scales_pk:
@@ -143,7 +144,9 @@ class AttemptListViewSet(ViewSet):
         inter_f_obj = [list(Interpretation.objects.filter(scale=k).values_list("finish_score", flat=True)) for k in scales_pk]
         sum_scores = list()
         for i in scales_pk:
-            sum_scores.append(sum([i.score.score for i in AnswerScale.objects.filter(scale_id=i)]))
+            print([i.score.score for i in AnswerScale.objects.filter(scale_id=i, answer_id__in = answers_pk)])
+            sum_scores.append(sum([i.score.score for i in AnswerScale.objects.filter(scale_id=i, answer_id__in = answers_pk)]))
+
         need_interp = []
         for x in range(len(inter_f_obj)):
             for i in inter_f_obj[x]:
@@ -170,7 +173,7 @@ class AttemptListViewSet(ViewSet):
             scales_json[i].update({"max_score": super_interp_f_pk[i]})
             scales_json[i].update({"description": inter_desc[i][0]})
             
-        otvet = {"url": f"http://tests.flexidev.ru/#/attempt/{id}", "data": []}
+        otvet = {"url": f"https://tests.flexidev.ru/#/attempt/{id}", "data": []}
         for i in range(len(scales_json)):
             otvet["data"].append(scales_json[i])
         return Response(otvet, status=status.HTTP_200_OK)

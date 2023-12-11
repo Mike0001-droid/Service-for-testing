@@ -34,17 +34,13 @@ class Test (models.Model):
     queue = models.IntegerField('Порядок')
     sdescription = models.TextField('Описание до', null=True, blank=True)
     fdescription = models.TextField('Описание после', null=True, blank=True)
-    comment = models.TextField(
-        'Комментарий для преподавателя', null=True, blank=True)
+    comment = models.TextField('Комментарий для преподавателя', null=True, blank=True)
     time_for_solution = models.BooleanField('Записывать время прохождения?')
     necessary_time = models.IntegerField('Необходимое для решения время')
     mix_question = models.BooleanField('Перемешивать вопросы?')
-    subtest = models.ManyToManyField(
-        'SubTest', verbose_name='СубТест', related_name='test_subtest', through='TestSubtest')
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name='category', verbose_name='Категория')
-    status = models.CharField('Статус теста', max_length=12,
-                              choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
+    subtest = models.ManyToManyField('SubTest', verbose_name='СубТест', related_name='test_subtest', through='TestSubtest')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', verbose_name='Категория')
+    status = models.CharField('Статус теста', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
 
     def __str__(self):
         return f"{self.pk}-{self.name}"
