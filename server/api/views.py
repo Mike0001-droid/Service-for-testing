@@ -118,7 +118,7 @@ class AttemptListViewSet(ViewSet):
     def retrieve(self, request, pk=None):
         decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
                             7:], SECRET_KEY, algorithms=["HS256"])['user_id']
-        obj = Attemption.objects.filter(pk=pk).update(user=decode)
+
         queryset = get_object_or_404(Attemption, pk=pk)  
         serializer = AttemptSerializer(queryset)
         return Response(serializer.data)
@@ -199,8 +199,9 @@ class AttemptListViewSet(ViewSet):
 
 class AttemptViewSet(ViewSet):
     permission_classes = [ViewTestNonDraft]
-    schema = AttemptSchema()
-    @action(detail=False, methods=['post'])
+
+        
+    @action(detail=False, methods=['post'], schema=AttemptSchema())
     def create_attempt(self, request):
         if 'attempt' not in request.data:
             if 'HTTP_AUTHORIZATION' in request.META:
@@ -228,6 +229,8 @@ class AttemptViewSet(ViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    
 
 
 class ScaleListViewSet(ViewSet):
