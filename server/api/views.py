@@ -173,7 +173,7 @@ class AttemptListViewSet(ViewSet):
             scales_json[i].update({"max_score": super_interp_f_pk[i]})
             scales_json[i].update({"description": inter_desc[i][0]})
             
-        otvet = {"url": f"https://tests.flexidev.ru/#/attempt/{id}", "data": []}
+        otvet = {"url": f"https://tests.flexidev.ru/attempt/{id}", "data": []}
         for i in range(len(scales_json)):
             otvet["data"].append(scales_json[i])
         return Response(otvet, status=status.HTTP_200_OK)
