@@ -50,12 +50,16 @@ class TestViewSet(ViewSet):
     @action(
         detail=False,
         methods=['get'],
-        url_path='big_test',
+        url_path='big_test/limit=(?P<limit>[a-zA-Z0-9_]+)/offset=(?P<offset>[a-zA-Z0-9_]+)',
         url_name='big-test',
     )
-    def BigTest(self, request):
-        obj = Test.objects.all()
-        data = []
+    def BigTest(self, request, limit, offset):
+        offset = int(offset)
+        limit = int(limit)
+        offs = int(offset)-1
+        lim = int(limit) + int(offset)
+        obj = Test.objects.all()[((offset*limit)-limit):((offs+lim)-1)]
+        data = [f"count_test: {len(obj)}" ]
         for i in obj:
             sub_obj = Subtest.objects.filter(test_id=i.pk).values_list('pk', flat=True)
             ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
@@ -234,7 +238,6 @@ class AttemptViewSet(ViewSet):
             serializer = AttemptSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
