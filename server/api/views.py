@@ -47,6 +47,29 @@ class TestViewSet(ViewSet):
         response.update(serializer.data)
         return Response(response)
 
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='big_test',
+        url_name='big-test',
+    )
+    def BigTest(self, request):
+        obj = Test.objects.all()
+        data = []
+        for i in obj:
+            sub_obj = Subtest.objects.filter(test_id=i.pk).values_list('pk', flat=True)
+            ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
+            count_quest = len(Question.objects.filter(subtest_id__in=sub_obj).values_list('pk', flat=True))
+            count_scale = len(AnswerScale.objects.filter(answer_id__in=ans_pk).values_list('id',flat=True))
+            data.append({
+                "id": i.pk, 
+                "name":i.name, 
+                "count_quest":count_quest, 
+                "count_scale":count_scale, 
+                "status":i.status
+            })
+        return Response(data)
+
 
 class SubTestViewSet(ViewSet):
     def list(self, request):
