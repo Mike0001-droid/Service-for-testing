@@ -173,6 +173,20 @@ class Attemption (models.Model):
     class Meta:
         verbose_name_plural = 'Попытки'
 
+class SeoScheme(models.Model):
+    key = models.SlugField('Ключ', unique=True)
+    name = models.CharField('Описание', max_length=255, help_text='255 символов')
+    title = models.CharField(max_length=255, help_text='255 символов', null=True, blank=True)
+    description = models.CharField(max_length=255, help_text='255 символов', null=True, blank=True)
+    keywords = models.CharField(max_length=255, help_text='255 символов', null=True, blank=True)
+
+    def __str__(self):
+        return self.key
+
+    class Meta:
+        verbose_name = 'Шаблоны для метатегов'
+        verbose_name_plural = 'Шаблоны для метатегов'
+
 
 class AnswerScale(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)

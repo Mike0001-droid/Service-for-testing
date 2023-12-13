@@ -247,5 +247,9 @@ class InterpretationAdmin(admin.ModelAdmin):
 class AttemptionsAdmin(admin.ModelAdmin):
     pass
 
-
-
+@admin.register(SeoScheme)
+class SeoSchemeAdmin(admin.ModelAdmin):
+    list_display = ('key', 'name')
+    list_display_links = ('key', 'name')
+    search_fields = ('key', 'name')
+    

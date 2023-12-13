@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
@@ -136,6 +137,7 @@ class AttemptListViewSet(ViewSet):
             for x in i['answers']:
                 answers_pk.append(x)
         print(answers_pk)
+        print(len(answers_pk))
         scales_pk = set()
         ans_scales_pk = list(AnswerScale.objects.filter(answer_id__in=answers_pk))
         for x in ans_scales_pk:
@@ -144,9 +146,7 @@ class AttemptListViewSet(ViewSet):
         inter_f_obj = [list(Interpretation.objects.filter(scale=k).values_list("finish_score", flat=True)) for k in scales_pk]
         sum_scores = list()
         for i in scales_pk:
-            print([i.score.score for i in AnswerScale.objects.filter(scale_id=i, answer_id__in = answers_pk)])
             sum_scores.append(sum([i.score.score for i in AnswerScale.objects.filter(scale_id=i, answer_id__in = answers_pk)]))
-
         need_interp = []
         for x in range(len(inter_f_obj)):
             for i in inter_f_obj[x]:
@@ -172,7 +172,6 @@ class AttemptListViewSet(ViewSet):
             scales_json[i].update({"name": inter_name[i][0]})
             scales_json[i].update({"max_score": super_interp_f_pk[i]})
             scales_json[i].update({"description": inter_desc[i][0]})
-            
         otvet = {"url": f"https://tests.flexidev.ru/attempt/{id}", "data": []}
         for i in range(len(scales_json)):
             otvet["data"].append(scales_json[i])
@@ -231,7 +230,15 @@ class AttemptViewSet(ViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     
+class SeoSchemeGenericViewSet(GenericViewSet):
+    queryset = SeoScheme.objects.all()
+    serializer_class = SeoSchemeSerializer
+    permission_classes = [AllowAny]
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class ScaleListViewSet(ViewSet):
     def list(self, request):

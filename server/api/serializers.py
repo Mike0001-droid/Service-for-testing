@@ -80,6 +80,10 @@ class AttemptUserSerializer(ModelSerializer):
             instance.test).data
         return rep
 
+class SeoSchemeSerializer(ModelSerializer):
+    class Meta:
+        model = SeoScheme
+        exclude = ('name',)
 
 
 class TestNameSerializer(serializers.ModelSerializer):
