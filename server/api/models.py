@@ -3,8 +3,8 @@ from users.models import MyUser
 from django.db.models import F
 
 STATUS_CHOICES = (
-    ('Черновик', 'Черновик'),
-    ('Опубликовано', 'Опубликовано'),
+    ('черновик', 'черновик'),
+    ('опубликовано', 'опубликовано'),
 )
 
 TYPE_CHOICES = (

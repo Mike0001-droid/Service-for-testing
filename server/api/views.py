@@ -19,12 +19,12 @@ from drf.settings import SECRET_KEY
 
 class CategoryViewSet(ViewSet):
     def list(self, request):
-        queryset = Category.objects.filter(status='Опубликовано')
+        queryset = Category.objects.filter(status='опубликовано')
         serializer = CategorySerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = Category.objects.filter(status='Опубликовано')
+        queryset = Category.objects.filter(status='опубликовано')
         user = get_object_or_404(queryset, pk=pk)
         serializer = CategorySerializer(user)
         return Response(serializer.data)
@@ -32,12 +32,12 @@ class CategoryViewSet(ViewSet):
 
 class TestViewSet(ViewSet):
     def list(self, request):
-        queryset = Test.objects.filter(status='Опубликовано')
+        queryset = Test.objects.filter(status='опубликовано')
         serializer = TestSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = Test.objects.filter(status='Опубликовано')
+        queryset = Test.objects.filter(status='опубликовано')
         user = get_object_or_404(queryset, pk=pk)
         serializer = TestSerializer(user)
         sub_id = [i['id'] for i in serializer.data['subtest']]
@@ -77,12 +77,12 @@ class TestViewSet(ViewSet):
 
 class SubTestViewSet(ViewSet):
     def list(self, request):
-        queryset = Subtest.objects.filter(status='Опубликовано')
+        queryset = Subtest.objects.filter(status='опубликовано')
         serializer = SubTestSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = Subtest.objects.filter(status='Опубликовано')
+        queryset = Subtest.objects.filter(status='опубликовано')
         user = get_object_or_404(queryset, pk=pk)
         serializer = SubTestSerializer(user)
         return Response(serializer.data)
@@ -107,12 +107,12 @@ class QuestionAnswerViewSet(ViewSet):
 class QuestionViewSet(ViewSet):
     def list(self, request):
 
-        queryset = Question.objects.filter(status='Опубликовано')
+        queryset = Question.objects.filter(status='опубликовано')
         serializer = QuestionSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = Question.objects.filter(status='Опубликовано')
+        queryset = Question.objects.filter(status='опубликовано')
         user = get_object_or_404(queryset, pk=pk)
         serializer = QuestionSerializer(user)
         return Response(serializer.data)

@@ -83,7 +83,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'drf.urls'
 CORS_ALLOW_ALL_ORIGINS = True
 CSRF_COOKIE_SECURE = False
-CSRF_TRUSTED_ORIGINS = ['http://tests.flexidev.ru',]
+CSRF_TRUSTED_ORIGINS = ['https://tests.flexidev.ru',]
 
 TEMPLATES = [
     {
@@ -112,14 +112,14 @@ USE_TZ = False
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-"""DATABASES = {
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}"""
+}
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'sft',
@@ -128,7 +128,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '',
     }
-} 
+}"""
 
 
 # Password validation
