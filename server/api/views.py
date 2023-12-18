@@ -50,6 +50,53 @@ class TestViewSet(ViewSet):
     @action(
         detail=False,
         methods=['get'],
+        url_path='full_test/(?P<id>[a-zA-Z0-9_]+)',
+        url_name='full-test',
+    )
+    def full_test(self, request, id):
+        queryset = Test.objects.filter(pk=id)
+        serializer = TestFullSerializer(queryset, many=True)
+        sub_obj = Subtest.objects.filter(test_id=id).values_list('pk', flat=True)
+        ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
+        count_quest = len(Question.objects.filter(subtest_id__in=sub_obj).values_list('pk', flat=True))
+        count_scale = len(set(AnswerScale.objects.filter(answer_id__in=set(ans_pk)).values_list('scale_id',flat=True)))
+        data = {
+            "count_quest": count_quest,
+            "count_scale": count_scale
+        }
+        data.update(serializer.data[0])
+        return Response(data)
+    
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='full_scales/(?P<id>[a-zA-Z0-9_]+)',
+        url_name='full_scales',
+    )
+    def full_scales(self, request, id):
+        sub_obj = Subtest.objects.filter(test_id=id).values_list('pk', flat=True)
+        ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
+        scales_pk = set(AnswerScale.objects.filter(answer_id__in=set(ans_pk)).values_list('scale_id',flat=True))
+        scales_obj = Scale.objects.filter(id__in=scales_pk)
+        data = []
+        for i in scales_obj:
+            interp_data = []
+            for x in Interpretation.objects.filter(scale_id=i):
+                interp_data.append({
+                    "name_interp": x.name,
+                    "start_score": x.start_score,
+                    "finish_score": x.finish_score
+                })
+            data.append({
+                "name": i.name,
+                "interp_data": interp_data,
+            })
+        return Response(data)
+
+
+    @action(
+        detail=False,
+        methods=['get'],
         url_path='big_test/limit=(?P<limit>[a-zA-Z0-9_]+)/offset=(?P<offset>[a-zA-Z0-9_]+)',
         url_name='big-test',
     )
@@ -64,7 +111,7 @@ class TestViewSet(ViewSet):
             sub_obj = Subtest.objects.filter(test_id=i.pk).values_list('pk', flat=True)
             ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
             count_quest = len(Question.objects.filter(subtest_id__in=sub_obj).values_list('pk', flat=True))
-            count_scale = len(AnswerScale.objects.filter(answer_id__in=ans_pk).values_list('id',flat=True))
+            count_scale = len(set(AnswerScale.objects.filter(answer_id__in=set(ans_pk)).values_list('scale_id',flat=True)))
             otvet["data"].append({
                 "id": i.pk,
                 "name": i.name, 

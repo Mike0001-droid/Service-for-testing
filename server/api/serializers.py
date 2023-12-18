@@ -29,6 +29,16 @@ class TestSerializer(serializers.ModelSerializer):
             instance.test, many=True).data
         return rep
 
+class TestFullSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
+        fields = ('id', 'name', 'author', 'sdescription', 'subtest')
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["subtest"] = SubTestSerializer(
+            instance.test, many=True).data
+        return rep
+
 
 class SubTestSerializer(ModelSerializer):
     class Meta:
