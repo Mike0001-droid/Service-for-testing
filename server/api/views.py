@@ -58,9 +58,9 @@ class TestViewSet(ViewSet):
         limit = int(limit)
         offs = int(offset)-1
         lim = int(limit) + int(offset)
-        obj = Test.objects.all()[((offset*limit)-limit):((offs+lim)-1)]
+        obj = Test.objects.all()
         otvet = {"count_test": len(obj), "data": []}
-        for i in obj:
+        for i in obj[((offset*limit)-limit):((offs+lim)-1)]:
             sub_obj = Subtest.objects.filter(test_id=i.pk).values_list('pk', flat=True)
             ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
             count_quest = len(Question.objects.filter(subtest_id__in=sub_obj).values_list('pk', flat=True))
