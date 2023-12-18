@@ -67,7 +67,6 @@ class TestViewSet(ViewSet):
             count_scale = len(AnswerScale.objects.filter(answer_id__in=ans_pk).values_list('id',flat=True))
             otvet["data"].append({
                 "id": i.pk,
-                "count_test": len(obj),
                 "name": i.name, 
                 "count_quest":count_quest, 
                 "count_scale":count_scale, 
