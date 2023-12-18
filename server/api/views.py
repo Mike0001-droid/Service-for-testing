@@ -54,19 +54,34 @@ class TestViewSet(ViewSet):
         url_name='full-test',
     )
     def full_test(self, request, id):
+        obj = get_object_or_404(Test, pk=id).id
+        queryset = Subtest.objects.filter(test_id=obj)
+        serializer = SubTestSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='full_description_test/(?P<id>[a-zA-Z0-9_]+)',
+        url_name='full_description_test',
+    )
+    def full_description_test(self, request, id):
         queryset = Test.objects.filter(pk=id)
-        serializer = TestFullSerializer(queryset, many=True)
+        serializer = TestFullNameSerializer(queryset, many=True)
         sub_obj = Subtest.objects.filter(test_id=id).values_list('pk', flat=True)
+        sub_time = sum(Subtest.objects.filter(test_id=id).values_list('necessary_time', flat=True))
         ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
         count_quest = len(Question.objects.filter(subtest_id__in=sub_obj).values_list('pk', flat=True))
         count_scale = len(set(AnswerScale.objects.filter(answer_id__in=set(ans_pk)).values_list('scale_id',flat=True)))
         data = {
             "count_quest": count_quest,
+            "test_time": sub_time,
             "count_scale": count_scale
         }
         data.update(serializer.data[0])
         return Response(data)
-    
+        
+
     @action(
         detail=False,
         methods=['get'],
