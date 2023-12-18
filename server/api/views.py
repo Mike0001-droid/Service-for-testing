@@ -53,26 +53,27 @@ class TestViewSet(ViewSet):
         url_path='big_test/limit=(?P<limit>[a-zA-Z0-9_]+)/offset=(?P<offset>[a-zA-Z0-9_]+)',
         url_name='big-test',
     )
-    def BigTest(self, request, limit, offset):
+    def bigtest(self, request, limit, offset):
         offset = int(offset)
         limit = int(limit)
         offs = int(offset)-1
         lim = int(limit) + int(offset)
         obj = Test.objects.all()[((offset*limit)-limit):((offs+lim)-1)]
-        data = [f"count_test: {len(obj)}" ]
+        otvet = {"count_test": len(obj), "data": []}
         for i in obj:
             sub_obj = Subtest.objects.filter(test_id=i.pk).values_list('pk', flat=True)
             ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
             count_quest = len(Question.objects.filter(subtest_id__in=sub_obj).values_list('pk', flat=True))
             count_scale = len(AnswerScale.objects.filter(answer_id__in=ans_pk).values_list('id',flat=True))
-            data.append({
-                "id": i.pk, 
-                "name":i.name, 
+            otvet["data"].append({
+                "id": i.pk,
+                "count_test": len(obj),
+                "name": i.name, 
                 "count_quest":count_quest, 
                 "count_scale":count_scale, 
                 "status":i.status
             })
-        return Response(data)
+        return Response(otvet)
 
 
 class SubTestViewSet(ViewSet):
