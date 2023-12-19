@@ -58,7 +58,7 @@ class TestViewSet(ViewSet):
         queryset = Subtest.objects.filter(test_id=obj)
         serializer = SubTestSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+
     @action(
         detail=False,
         methods=['get'],
@@ -68,11 +68,16 @@ class TestViewSet(ViewSet):
     def full_description_test(self, request, id):
         queryset = Test.objects.filter(pk=id)
         serializer = TestFullNameSerializer(queryset, many=True)
-        sub_obj = Subtest.objects.filter(test_id=id).values_list('pk', flat=True)
-        sub_time = sum(Subtest.objects.filter(test_id=id).values_list('necessary_time', flat=True))
-        ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
-        count_quest = len(Question.objects.filter(subtest_id__in=sub_obj).values_list('pk', flat=True))
-        count_scale = len(set(AnswerScale.objects.filter(answer_id__in=set(ans_pk)).values_list('scale_id',flat=True)))
+        sub_obj = Subtest.objects.filter(
+            test_id=id).values_list('pk', flat=True)
+        sub_time = sum(Subtest.objects.filter(
+            test_id=id).values_list('necessary_time', flat=True))
+        ans_pk = Question.objects.filter(
+            subtest_id__in=sub_obj).values_list('answer', flat=True)
+        count_quest = len(Question.objects.filter(
+            subtest_id__in=sub_obj).values_list('pk', flat=True))
+        count_scale = len(set(AnswerScale.objects.filter(
+            answer_id__in=set(ans_pk)).values_list('scale_id', flat=True)))
         data = {
             "count_quest": count_quest,
             "test_time": sub_time,
@@ -80,7 +85,37 @@ class TestViewSet(ViewSet):
         }
         data.update(serializer.data[0])
         return Response(data)
-        
+
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='question_answer/(?P<id>[a-zA-Z0-9_]+)',
+        url_name='question_answer',
+    )
+    def question_answer(self, request, id):
+        sub_obj = Subtest.objects.filter(
+            test_id=id).values_list('pk', flat=True)
+        ans_pk = Question.objects.filter(
+            subtest_id__in=sub_obj).values_list('answer', flat=True)
+        scales_pk = set(AnswerScale.objects.filter(
+            answer_id__in=set(ans_pk)).values_list('scale_id', flat=True))
+        scales_obj = Scale.objects.filter(id__in=scales_pk)
+        data = []
+        for i in scales_obj:
+            keys = []
+            for x in AnswerScale.objects.filter(scale_id=i.pk):
+                keys.append({
+
+                    "quest_id": (Question.objects.filter(
+                        answer=x.answer.pk).values_list('id', flat=True))[0],
+                    "answer_id": x.answer.pk,
+                    "answer_score": x.score.score
+                })
+            data.append({
+                "scale_name": i.name,
+                "keys": keys
+            })
+        return Response(data)
 
     @action(
         detail=False,
@@ -89,9 +124,12 @@ class TestViewSet(ViewSet):
         url_name='full_scales',
     )
     def full_scales(self, request, id):
-        sub_obj = Subtest.objects.filter(test_id=id).values_list('pk', flat=True)
-        ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
-        scales_pk = set(AnswerScale.objects.filter(answer_id__in=set(ans_pk)).values_list('scale_id',flat=True))
+        sub_obj = Subtest.objects.filter(
+            test_id=id).values_list('pk', flat=True)
+        ans_pk = Question.objects.filter(
+            subtest_id__in=sub_obj).values_list('answer', flat=True)
+        scales_pk = set(AnswerScale.objects.filter(
+            answer_id__in=set(ans_pk)).values_list('scale_id', flat=True))
         scales_obj = Scale.objects.filter(id__in=scales_pk)
         data = []
         for i in scales_obj:
@@ -108,7 +146,6 @@ class TestViewSet(ViewSet):
             })
         return Response(data)
 
-
     @action(
         detail=False,
         methods=['get'],
@@ -123,16 +160,20 @@ class TestViewSet(ViewSet):
         obj = Test.objects.all()
         otvet = {"count_test": len(obj), "data": []}
         for i in obj[((offset*limit)-limit):((offs+lim)-1)]:
-            sub_obj = Subtest.objects.filter(test_id=i.pk).values_list('pk', flat=True)
-            ans_pk = Question.objects.filter(subtest_id__in=sub_obj).values_list('answer', flat=True)
-            count_quest = len(Question.objects.filter(subtest_id__in=sub_obj).values_list('pk', flat=True))
-            count_scale = len(set(AnswerScale.objects.filter(answer_id__in=set(ans_pk)).values_list('scale_id',flat=True)))
+            sub_obj = Subtest.objects.filter(
+                test_id=i.pk).values_list('pk', flat=True)
+            ans_pk = Question.objects.filter(
+                subtest_id__in=sub_obj).values_list('answer', flat=True)
+            count_quest = len(Question.objects.filter(
+                subtest_id__in=sub_obj).values_list('pk', flat=True))
+            count_scale = len(set(AnswerScale.objects.filter(
+                answer_id__in=set(ans_pk)).values_list('scale_id', flat=True)))
             otvet["data"].append({
                 "id": i.pk,
-                "name": i.name, 
-                "count_quest":count_quest, 
-                "count_scale":count_scale, 
-                "status":i.status
+                "name": i.name,
+                "count_quest": count_quest,
+                "count_scale": count_scale,
+                "status": i.status
             })
         return Response(otvet)
 
@@ -160,11 +201,13 @@ class SubTestViewSet(ViewSet):
         serializer = SubTestSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class QuestionAnswerViewSet(ViewSet):
     def list(self, request):
         queryset = QuestionAnswer.objects.all()
         serializer = QuestionAnswerSerializer(queryset, many=True)
         return Response(serializer.data)
+
 
 class QuestionViewSet(ViewSet):
     def list(self, request):
@@ -209,10 +252,10 @@ class AttemptListViewSet(ViewSet):
         decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
                             7:], SECRET_KEY, algorithms=["HS256"])['user_id']
 
-        queryset = get_object_or_404(Attemption, pk=pk)  
+        queryset = get_object_or_404(Attemption, pk=pk)
         serializer = AttemptSerializer(queryset)
         return Response(serializer.data)
-    
+
     @action(
         detail=False,
         methods=['get'],
@@ -228,18 +271,21 @@ class AttemptListViewSet(ViewSet):
         print(answers_pk)
         print(len(answers_pk))
         scales_pk = set()
-        ans_scales_pk = list(AnswerScale.objects.filter(answer_id__in=answers_pk))
+        ans_scales_pk = list(
+            AnswerScale.objects.filter(answer_id__in=answers_pk))
         for x in ans_scales_pk:
             scales_pk.add(x.scale.pk)
         scales_pk = list(scales_pk)
-        inter_f_obj = [list(Interpretation.objects.filter(scale=k).values_list("finish_score", flat=True)) for k in scales_pk]
+        inter_f_obj = [list(Interpretation.objects.filter(scale=k).values_list(
+            "finish_score", flat=True)) for k in scales_pk]
         sum_scores = list()
         for i in scales_pk:
-            sum_scores.append(sum([i.score.score for i in AnswerScale.objects.filter(scale_id=i, answer_id__in = answers_pk)]))
+            sum_scores.append(sum([i.score.score for i in AnswerScale.objects.filter(
+                scale_id=i, answer_id__in=answers_pk)]))
         need_interp = []
         for x in range(len(inter_f_obj)):
             for i in inter_f_obj[x]:
-                if sum_scores[x]>=i:
+                if sum_scores[x] >= i:
                     need_interp.append(i)
                 else:
                     need_interp.append(i)
@@ -247,15 +293,18 @@ class AttemptListViewSet(ViewSet):
         super_interp_f_pk = []
         for i in need_interp:
             if isinstance(i, list):
-                if len(i)>1:
+                if len(i) > 1:
                     super_interp_f_pk.append(i[-1])
                 else:
                     super_interp_f_pk.append(i[0])
             else:
                 super_interp_f_pk.append(i)
-        inter_name = [list(Interpretation.objects.filter(scale=scales_pk[k], finish_score=super_interp_f_pk[k]).values_list("name", flat=True)) for k in range(len(scales_pk))]
-        inter_desc = [list(Interpretation.objects.filter(scale=scales_pk[k], finish_score=super_interp_f_pk[k]).values_list("text", flat=True)) for k in range(len(scales_pk))]
-        scales_json = [{"title": i.name} for i in Scale.objects.filter(id__in=scales_pk)]
+        inter_name = [list(Interpretation.objects.filter(scale=scales_pk[k], finish_score=super_interp_f_pk[k]).values_list(
+            "name", flat=True)) for k in range(len(scales_pk))]
+        inter_desc = [list(Interpretation.objects.filter(scale=scales_pk[k], finish_score=super_interp_f_pk[k]).values_list(
+            "text", flat=True)) for k in range(len(scales_pk))]
+        scales_json = [{"title": i.name}
+                       for i in Scale.objects.filter(id__in=scales_pk)]
         for i in range(len(scales_pk)):
             scales_json[i].update({"fin_scores": sum_scores[i]})
             scales_json[i].update({"name": inter_name[i][0]})
@@ -288,13 +337,12 @@ class AttemptListViewSet(ViewSet):
 class AttemptViewSet(ViewSet):
     permission_classes = [ViewTestNonDraft]
 
-        
     @action(detail=False, methods=['post'], schema=AttemptSchema())
     def create_attempt(self, request):
         if 'attempt' not in request.data:
             if 'HTTP_AUTHORIZATION' in request.META:
                 request.data['user'] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
-                                                7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+                    7:], SECRET_KEY, algorithms=["HS256"])['user_id']
             else:
                 pass
             serializer = AttemptSerializer(data=request.data, partial=True)
@@ -316,8 +364,8 @@ class AttemptViewSet(ViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    
+
+
 class SeoSchemeGenericViewSet(GenericViewSet):
     queryset = SeoScheme.objects.all()
     serializer_class = SeoSchemeSerializer
@@ -327,6 +375,7 @@ class SeoSchemeGenericViewSet(GenericViewSet):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
 
 class ScaleListViewSet(ViewSet):
     def list(self, request):
