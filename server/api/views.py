@@ -30,6 +30,32 @@ class CategoryViewSet(ViewSet):
         return Response(serializer.data)
 
 
+class AuthorViewSet(ViewSet):
+    def list(self, request):
+        queryset = Author.objects.all()
+        serializer = AuthorSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Author.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = AuthorSerializer(user)
+        return Response(serializer.data)
+
+
+class TopicViewSet(ViewSet):
+    def list(self, request):
+        queryset = Topic.objects.all()
+        serializer = TopicSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Topic.objects.filter(status='опубликовано')
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = TopicSerializer(user)
+        return Response(serializer.data)
+
+
 class TestViewSet(ViewSet):
     def list(self, request):
         queryset = Test.objects.filter(status='опубликовано')
@@ -46,6 +72,18 @@ class TestViewSet(ViewSet):
         response = {'count': len(quest_id)}
         response.update(serializer.data)
         return Response(response)
+
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='author_test/(?P<author_name>[a-zA-Z0-9_]+)',
+        url_name='author-test',
+    )
+    def author_test(self, request, author_name):
+        queryset = Test.objects.filter(author=author_name)
+        serializer = TestSerializer(queryset, many=True)
+        print(Test.objects.filter(author='Спилбергер'))
+        return Response(serializer.data)
 
     @action(
         detail=False,
@@ -105,9 +143,7 @@ class TestViewSet(ViewSet):
             keys = []
             for x in AnswerScale.objects.filter(scale_id=i.pk):
                 keys.append({
-
-                    "quest_id": (Question.objects.filter(
-                        answer=x.answer.pk).values_list('id', flat=True))[0],
+                    "quest_id": (Question.objects.filter(answer=x.answer.pk).values_list('id', flat=True))[0],
                     "answer_id": x.answer.pk,
                     "answer_score": x.score.score
                 })

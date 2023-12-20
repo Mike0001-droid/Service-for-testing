@@ -17,6 +17,30 @@ class CategorySerializer(ModelSerializer):
         return rep
 
 
+class TopicSerializer(ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = ('id', 'name',)
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["test"] = TestNameSerializer(
+            instance.topic, many=True).data
+        return rep
+
+
+class AuthorSerializer(ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ('id', 'name',)
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["test"] = TestNameSerializer(
+            instance.author, many=True).data
+        return rep
+
+
 class TestSerializer(serializers.ModelSerializer):
     # category_name = serializers.CharField(source='category.name')
     class Meta:
@@ -28,7 +52,8 @@ class TestSerializer(serializers.ModelSerializer):
         rep["subtest"] = SubTestNameSerializer(
             instance.test, many=True).data
         return rep
-    
+
+
 class TestFullNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
@@ -39,6 +64,7 @@ class TestFullSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
         fields = ('subtest',)
+
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["subtest"] = SubTestSerializer(
@@ -69,21 +95,24 @@ class QuestionSerializer(ModelSerializer):
             instance.answer, many=True).data
         return rep
 
+
 class QuestionAnswerSerializer(ModelSerializer):
     class Meta:
         model = QuestionAnswer
         fields = '__all__'
 
+
 class AttemptSerializer(ModelSerializer):
     class Meta:
         model = Attemption
         fields = '__all__'
-        
+
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        
+
         rep["created"] = Attemption.formatted_datetime(instance)
         return rep
+
 
 class AttemptUserSerializer(ModelSerializer):
     class Meta:
@@ -95,6 +124,7 @@ class AttemptUserSerializer(ModelSerializer):
         rep["test"] = TestNameSerializer(
             instance.test).data
         return rep
+
 
 class SeoSchemeSerializer(ModelSerializer):
     class Meta:

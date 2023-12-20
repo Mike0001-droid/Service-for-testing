@@ -63,6 +63,7 @@ class TestAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'author',
+        'topic',
         'queue',
         'category',
         'sdescription',
@@ -79,6 +80,7 @@ class TestAdmin(admin.ModelAdmin):
         (None, {'fields': (
             'name',
             'author',
+            'topic',
             'queue',
             'sdescription',
             'fdescription',
@@ -88,7 +90,7 @@ class TestAdmin(admin.ModelAdmin):
             'mix_question',
             'status',
             'category'
-            )}),
+        )}),
     )
     inlines = (TestSubtestInline,)
 
@@ -132,7 +134,7 @@ class QuestionAdmin(admin.ModelAdmin):
         'queue',
         'name',
         'subtest',
-        
+
         'type_question',
         'obligatory',
         'status',
@@ -156,7 +158,7 @@ class QuestionAdmin(admin.ModelAdmin):
 
     def answers(self, obj):
         return obj.answer.count()
-    answers.short_description = 'Количество ответов' 
+    answers.short_description = 'Количество ответов'
 
 
 @admin.register(Answer)
@@ -164,17 +166,17 @@ class AnswerAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'queue',
-        #'question',
+        # 'question',
         'scales',
         'status'
     )
     search_fields = ('name', )
-    #list_filter = ('question__name', )
+    # list_filter = ('question__name', )
     fieldsets = (
         (None, {'fields': (
             'name',
             'answer_img',
-            #'question',
+            # 'question',
             'queue',
             'status'
         )}),
@@ -247,9 +249,19 @@ class InterpretationAdmin(admin.ModelAdmin):
 class AttemptionsAdmin(admin.ModelAdmin):
     pass
 
+
+@admin.register(Author)
+class AuthorsAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Topic)
+class TopicAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(SeoScheme)
 class SeoSchemeAdmin(admin.ModelAdmin):
     list_display = ('key', 'name')
     list_display_links = ('key', 'name')
     search_fields = ('key', 'name')
-    
