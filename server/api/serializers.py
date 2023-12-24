@@ -42,10 +42,11 @@ class AuthorSerializer(ModelSerializer):
 
 
 class TestSerializer(serializers.ModelSerializer):
-    # category_name = serializers.CharField(source='category.name')
+    #category_name = serializers.CharField(source='category.name')
+    author_name = serializers.CharField(source='author.name')
     class Meta:
         model = Test
-        fields = ('id', 'name', 'author', 'sdescription', 'subtest')
+        fields = ('id', 'name', 'author_name', 'sdescription', 'subtest')
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
