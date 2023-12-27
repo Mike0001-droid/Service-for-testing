@@ -2,6 +2,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from .func import *
@@ -56,11 +57,25 @@ class TopicViewSet(ViewSet):
         return Response(serializer.data)
 
 
-class TestViewSet(ViewSet):
+class TestViewSet(GenericViewSet):
+
+    queryset = Test.objects.filter(status='опубликовано')
+    serializer_class = TestSerializer(queryset, many=True)
+    permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
+
+    
+    
     def list(self, request):
         queryset = Test.objects.filter(status='опубликовано')
         serializer = TestSerializer(queryset, many=True)
-        return Response(serializer.data)
+        
+        data = []
+        for i in serializer.data:
+            data.append({'id': i['id'], 'name': i['name']})
+            
+        return Response(data)
 
     def retrieve(self, request, pk=None):
         queryset = Test.objects.filter(status='опубликовано')
@@ -406,7 +421,8 @@ class SeoSchemeGenericViewSet(GenericViewSet):
     queryset = SeoScheme.objects.all()
     serializer_class = SeoSchemeSerializer
     permission_classes = [AllowAny]
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
