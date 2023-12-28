@@ -90,24 +90,11 @@ class TestViewSet(GenericViewSet):
         response.update(serializer.data)
         return Response(response)
 
-    @action(
-        detail=False,
-        methods=['get'],
-        url_path='search/(?P<name>[a-zA-Z0-9_]+)',
-        url_name='search',
-    )
-    def search(self, request, name):
-        queryset = Test.objects.filter(status='опубликовано')
-        print(name)
-        if name is not None:
-            queryset = queryset.filter(name__icontains=name)
-        serializer = TestSerializer(queryset, many=True)
-        return Response(serializer.data)
-
 
     @action(
         detail=False,
         methods=['get'],
+        permission_classes=[IsAuthAndAdmin],
         url_path='author_test/(?P<author_name>[a-zA-Z0-9_]+)',
         url_name='author-test',
     )
@@ -119,6 +106,7 @@ class TestViewSet(GenericViewSet):
     @action(
         detail=False,
         methods=['get'],
+        permission_classes=[IsAuthAndAdmin],
         url_path='full_test/(?P<id>[a-zA-Z0-9_]+)',
         url_name='full-test',
     )
@@ -131,6 +119,7 @@ class TestViewSet(GenericViewSet):
     @action(
         detail=False,
         methods=['get'],
+        permission_classes=[IsAuthAndAdmin],
         url_path='full_description_test/(?P<id>[a-zA-Z0-9_]+)',
         url_name='full_description_test',
     )
@@ -158,6 +147,7 @@ class TestViewSet(GenericViewSet):
     @action(
         detail=False,
         methods=['get'],
+        permission_classes=[IsAuthAndAdmin],
         url_path='question_answer/(?P<id>[a-zA-Z0-9_]+)',
         url_name='question_answer',
     )
@@ -187,6 +177,7 @@ class TestViewSet(GenericViewSet):
     @action(
         detail=False,
         methods=['get'],
+        permission_classes=[IsAuthAndAdmin],
         url_path='full_scales/(?P<id>[a-zA-Z0-9_]+)',
         url_name='full_scales',
     )
@@ -216,6 +207,7 @@ class TestViewSet(GenericViewSet):
     @action(
         detail=False,
         methods=['get'],
+        permission_classes=[IsAuthAndAdmin],
         url_path='big_test/limit=(?P<limit>[a-zA-Z0-9_]+)/offset=(?P<offset>[a-zA-Z0-9_]+)',
         url_name='big-test',
     )

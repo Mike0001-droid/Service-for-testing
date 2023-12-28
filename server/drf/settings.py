@@ -47,7 +47,7 @@ else:
     )
 
 LOGIN_REDIRECT_URL = '/tests/'
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'https://tests.flexidev.ru/auth'
 SESSION_COOKIE_SECURE = False
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 # Application definition
