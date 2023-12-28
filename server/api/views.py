@@ -18,6 +18,7 @@ import jwt
 from drf.settings import SECRET_KEY
 
 
+
 class CategoryViewSet(ViewSet):
     def list(self, request):
         queryset = Category.objects.filter(status='опубликовано')
@@ -57,25 +58,23 @@ class TopicViewSet(ViewSet):
         return Response(serializer.data)
 
 
-class TestViewSet(GenericViewSet):
 
+class TestViewSet(GenericViewSet):
     queryset = Test.objects.filter(status='опубликовано')
-    serializer_class = TestSerializer(queryset, many=True)
+    serializer_class = TestSerializer
     permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
 
-    
-    
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         queryset = Test.objects.filter(status='опубликовано')
-        serializer = TestSerializer(queryset, many=True)
-        
-        data = []
-        for i in serializer.data:
-            data.append({'id': i['id'], 'name': i['name']})
-            
-        return Response(data)
+        name = self.request.query_params.get('name')
+        print(name)
+        if name is not None:
+            queryset = queryset.filter(name__iregex=name)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = Test.objects.filter(status='опубликовано')
@@ -91,13 +90,27 @@ class TestViewSet(GenericViewSet):
     @action(
         detail=False,
         methods=['get'],
+        url_path='search/(?P<name>[a-zA-Z0-9_]+)',
+        url_name='search',
+    )
+    def search(self, request, name):
+        queryset = Test.objects.filter(status='опубликовано')
+        print(name)
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+        serializer = TestSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+    @action(
+        detail=False,
+        methods=['get'],
         url_path='author_test/(?P<author_name>[a-zA-Z0-9_]+)',
         url_name='author-test',
     )
     def author_test(self, request, author_name):
         queryset = Test.objects.filter(author=author_name)
         serializer = TestSerializer(queryset, many=True)
-        print(Test.objects.filter(author='Спилбергер'))
         return Response(serializer.data)
 
     @action(
