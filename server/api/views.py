@@ -69,12 +69,15 @@ class TestViewSet(GenericViewSet):
     def list(self, request, *args, **kwargs):
         queryset = Test.objects.filter(status='опубликовано')
         name = self.request.query_params.get('name')
-        print(name)
         if name is not None:
             queryset = queryset.filter(name__iregex=name)
-
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        data = []
+        for i in serializer.data:
+            data.append({'id': i['id'], 'name': i['name']})
+
+        return Response(data)
+       
 
     def retrieve(self, request, pk=None):
         queryset = Test.objects.filter(status='опубликовано')
