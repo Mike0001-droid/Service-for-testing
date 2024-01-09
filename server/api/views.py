@@ -20,15 +20,19 @@ from drf.settings import SECRET_KEY
 
 
 class CategoryViewSet(ViewSet):
-    def list(self, request):
+    def list(self, request): 
         queryset = Category.objects.filter(status='опубликовано')
         serializer = CategorySerializer(queryset, many=True)
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
-                for x in i['test']:
-                    if x['status'] != 'черновик':
-                        response.append(i)
+                response.append(i)
+        for x in response:
+            for t in x['test']:
+                if t['status'] == 'черновик':
+                    x['test'].remove(t)
+                    if len(x['test']) == 0:
+                        response.remove(x)
         return Response(response)
 
     def retrieve(self, request, pk=None):
@@ -38,10 +42,15 @@ class CategoryViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
+                response.append(i)
                 for x in i['test']:
-                    if x['status'] != 'черновик':
-                        response.append(i) 
-        return Response(response)
+                    if x['status'] == 'черновик':
+                        i['test'].remove(x)  
+        response_1 = []
+        for l in response:
+            for t in l['test']:
+                response_1.append(l)
+        return Response(response_1)
 
 class AuthorViewSet(ViewSet):
     def list(self, request):
@@ -50,10 +59,15 @@ class AuthorViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
+                response.append(i)
                 for x in i['test']:
-                    if x['status'] != 'черновик':
-                        response.append(i)  
-        return Response(response)
+                    if x['status'] == 'черновик':
+                        i['test'].remove(x)  
+        response_1 = []
+        for l in response:
+            for t in l['test']:
+                response_1.append(l)
+        return Response(response_1)
 
     def retrieve(self, request, pk=None):
         queryset = Author.objects.all()
@@ -62,10 +76,15 @@ class AuthorViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
+                response.append(i)
                 for x in i['test']:
-                    if x['status'] != 'черновик':
-                        response.append(i) 
-        return Response(response)
+                    if x['status'] == 'черновик':
+                        i['test'].remove(x)  
+        response_1 = []
+        for l in response:
+            for t in l['test']:
+                response_1.append(l)
+        return Response(response_1)
 
 class TopicViewSet(ViewSet):
     def list(self, request):
@@ -74,10 +93,15 @@ class TopicViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
+                response.append(i)
                 for x in i['test']:
-                    if x['status'] != 'черновик':
-                        response.append(i)
-        return Response(response)
+                    if x['status'] == 'черновик':
+                        i['test'].remove(x)  
+        response_1 = []
+        for l in response:
+            for t in l['test']:
+                response_1.append(l)
+        return Response(response_1)
 
     def retrieve(self, request, pk=None):
         queryset = Topic.objects.filter(status='опубликовано')
@@ -86,10 +110,15 @@ class TopicViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
+                response.append(i)
                 for x in i['test']:
-                    if x['status'] != 'черновик':
-                        response.append(i) 
-        return Response(response)
+                    if x['status'] == 'черновик':
+                        i['test'].remove(x)  
+        response_1 = []
+        for l in response:
+            for t in l['test']:
+                response_1.append(l)
+        return Response(response_1)
 
 
 
@@ -111,7 +140,6 @@ class TestViewSet(GenericViewSet):
             data.append({'id': i['id'], 'name': i['name']})
         return Response(data)
        
-
     def retrieve(self, request, pk=None):
         queryset = Test.objects.filter(status='опубликовано')
         user = get_object_or_404(queryset, pk=pk)
