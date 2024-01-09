@@ -136,7 +136,7 @@ class SeoSchemeSerializer(ModelSerializer):
 class TestNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Test
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'status')
 
 
 class SubTestNameSerializer(serializers.ModelSerializer):

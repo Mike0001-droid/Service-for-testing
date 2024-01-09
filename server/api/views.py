@@ -23,38 +23,60 @@ class CategoryViewSet(ViewSet):
     def list(self, request):
         queryset = Category.objects.filter(status='опубликовано')
         serializer = CategorySerializer(queryset, many=True)
+        for i in serializer.data:
+            for x in i['test']:
+                if x['status'] == 'черновик':
+                    i['test'].remove(x)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = Category.objects.filter(status='опубликовано')
         user = get_object_or_404(queryset, pk=pk)
         serializer = CategorySerializer(user)
+        for i in serializer.data:
+            for x in i['test']:
+                if x['status'] == 'черновик':
+                    i['test'].remove(x)
         return Response(serializer.data)
-
 
 class AuthorViewSet(ViewSet):
     def list(self, request):
         queryset = Author.objects.all()
         serializer = AuthorSerializer(queryset, many=True)
+        for i in serializer.data:
+            for x in i['test']:
+                if x['status'] == 'черновик':
+                    i['test'].remove(x)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = Author.objects.all()
         user = get_object_or_404(queryset, pk=pk)
         serializer = AuthorSerializer(user)
+        for i in serializer.data:
+            for x in i['test']:
+                if x['status'] == 'черновик':
+                    i['test'].remove(x)
         return Response(serializer.data)
-
 
 class TopicViewSet(ViewSet):
     def list(self, request):
         queryset = Topic.objects.all()
         serializer = TopicSerializer(queryset, many=True)
+        for i in serializer.data:
+            for x in i['test']:
+                if x['status'] == 'черновик':
+                    i['test'].remove(x)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = Topic.objects.filter(status='опубликовано')
         user = get_object_or_404(queryset, pk=pk)
         serializer = TopicSerializer(user)
+        for i in serializer.data:
+            for x in i['test']:
+                if x['status'] == 'черновик':
+                    i['test'].remove(x)
         return Response(serializer.data)
 
 
@@ -75,7 +97,6 @@ class TestViewSet(GenericViewSet):
         data = []
         for i in serializer.data:
             data.append({'id': i['id'], 'name': i['name']})
-
         return Response(data)
        
 
