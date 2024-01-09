@@ -26,10 +26,9 @@ class CategoryViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
-                response.append(i)
                 for x in i['test']:
-                    if x['status'] == 'черновик':
-                        i['test'].remove(x)  
+                    if x['status'] != 'черновик':
+                        response.append(i)
         return Response(response)
 
     def retrieve(self, request, pk=None):
@@ -39,10 +38,9 @@ class CategoryViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
-                response.append(i)
                 for x in i['test']:
-                    if x['status'] == 'черновик':
-                        i['test'].remove(x)  
+                    if x['status'] != 'черновик':
+                        response.append(i) 
         return Response(response)
 
 class AuthorViewSet(ViewSet):
@@ -52,10 +50,9 @@ class AuthorViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
-                response.append(i)
                 for x in i['test']:
-                    if x['status'] == 'черновик':
-                        i['test'].remove(x)  
+                    if x['status'] != 'черновик':
+                        response.append(i)  
         return Response(response)
 
     def retrieve(self, request, pk=None):
@@ -65,10 +62,9 @@ class AuthorViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
-                response.append(i)
                 for x in i['test']:
-                    if x['status'] == 'черновик':
-                        i['test'].remove(x)  
+                    if x['status'] != 'черновик':
+                        response.append(i) 
         return Response(response)
 
 class TopicViewSet(ViewSet):
@@ -78,10 +74,9 @@ class TopicViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
-                response.append(i)
                 for x in i['test']:
-                    if x['status'] == 'черновик':
-                        i['test'].remove(x)  
+                    if x['status'] != 'черновик':
+                        response.append(i)
         return Response(response)
 
     def retrieve(self, request, pk=None):
@@ -91,10 +86,9 @@ class TopicViewSet(ViewSet):
         response = []
         for i in serializer.data:
             if len(i['test']) != 0:
-                response.append(i)
                 for x in i['test']:
-                    if x['status'] == 'черновик':
-                        i['test'].remove(x)  
+                    if x['status'] != 'черновик':
+                        response.append(i) 
         return Response(response)
 
 
