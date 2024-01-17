@@ -13,11 +13,42 @@ from .permissions import *
 from .schemas import AttemptSchema
 from itertools import chain
 from django.middleware.csrf import get_token
+from django.template.loader import get_template
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import jwt
+import pdfkit
 from drf.settings import SECRET_KEY
 
 
+class OplataViewSet(ViewSet):
+
+    def list(self, request):
+        queryset = Category.objects.filter(status='опубликовано')
+        serializer = CategorySerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def retrieve(self, request, pk):
+        queryset = Category.objects.filter(status='опубликовано')
+        serializer = CategorySerializer(queryset, many=True)
+        template = get_template('api/blank.html')
+        wkhtml_path = pdfkit.configuration(wkhtmltopdf = "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
+        context = {
+            "bank_name": 'bank',
+            "bank_bik": 'bik',
+            "acc_bank": 'acc_bank',
+            "inn": 'inn',
+            "kpp": 'kpp',
+            "acc_org": 'acc_org',
+            "organization_name": 'organization_name',
+            "order_id": 'id',
+            "adress": 'adress',
+            "price": "PRICE",
+            "summ": 'summ'
+        }
+        html  = template.render(context)
+        pdfkit.from_string(html, 'dogovor.pdf', configuration = wkhtml_path)
+        return Response(f'http://l-direct.flexidev.ru/media/dogovora/dogovor{pk}.pdf', status=status.HTTP_200_OK)
+    
 
 class CategoryViewSet(ViewSet):
     def list(self, request): 
@@ -331,7 +362,6 @@ class QuestionAnswerViewSet(ViewSet):
 
 class QuestionViewSet(ViewSet):
     def list(self, request):
-
         queryset = Question.objects.filter(status='опубликовано')
         serializer = QuestionSerializer(queryset, many=True)
         return Response(serializer.data)

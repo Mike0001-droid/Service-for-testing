@@ -179,3 +179,9 @@ class InterpretationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interpretation
         fields = '__all__'
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fiels = '__all__'

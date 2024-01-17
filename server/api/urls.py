@@ -16,5 +16,6 @@ router.register(r'answer', views.AnsListViewSet, basename='answer')
 router.register(r'interpretation',views.InterpretationListViewSet, basename='interpretation')
 router.register(r'questionanswer', views.QuestionAnswerViewSet,basename='questionanswer')
 router.register(r'seo_scheme', views.SeoSchemeGenericViewSet,basename='seo_scheme')
+router.register(r'oplata', views.OplataViewSet,basename='oplata')
 app_name = 'api'
 urlpatterns = router.urls
