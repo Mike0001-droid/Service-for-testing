@@ -1,0 +1,32 @@
+$font-size-base: 1rem;
+$h1-fz: $font-size-base * 3.375;
+$h2-fz: $font-size-base * 1.5;
+$h3-fz: $font-size-base * 1.25;
+$h4-fz: $font-size-base * 1.125;
+$h5-fz: $font-size-base;
+$h6-fz: $font-size-base *0.75;
+
+:root {
+  --bs-primary-rgb: 129, 108, 193;
+  --bs-secondary-rgb: 71, 71, 71;
+  --bs-success-rgb: 120, 120, 120;
+  --bs-info-rgb: 141, 110, 239;
+  --bs-light-rgb: 245, 243, 255;
+  --bs-dark-rgb: 0, 0, 0, 1;
+}
+
+$font-family-base: 'Inter', sans-seri;
+$fonts-size-base: 16px;
+$b-radius: 10px;
+$b-radius-more: 30px;
+$box-shadow-soft: 0 2px 4px 0 rgba(29, 33, 45, 0.08), 0 0 2px 0 rgba(29, 33, 45, 0.08), 0 0 1px 0 rgba(29, 33, 45, 0.20);
+$box-shadow-inside: -5px -5px 10px 0px #FFF inset, 5px 5px 10px 0px rgba(170, 170, 204, 0.50) inset, 2px 2px 4px 0px rgba(170, 170, 204, 0.25) inset, -2px -2px 4px 0px rgba(255, 255, 255, 0.50) inset;
+$box-shadow-volume: -10px -10px 20px 0px #FFF, 10px 10px 20px 0px rgba(170, 170, 204, 0.50), 5px 5px 10px 0px rgba(170, 170, 204, 0.25), -5px -5px 10px 0px rgba(255, 255, 255, 0.50);
+$grid-breakpoints: (
+        xs: 0,
+        sm: 576px,
+        md: 768px,
+        lg: 992px,
+        xl: 1200px,
+        xxl: 1400px
+) !default;
