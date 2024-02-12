@@ -34,18 +34,10 @@ class CategoryViewSet(ViewSet):
         queryset = Category.objects.filter(status='опубликовано')
         user = get_object_or_404(queryset, pk=pk)
         serializer = CategorySerializer(user)
-        response = []
-        for i in serializer.data:
-            if len(i['test']) != 0:
-                response.append(i)
-                for x in i['test']:
-                    if x['status'] == 'черновик':
-                        i['test'].remove(x)  
-        response_1 = []
-        for l in response:
-            for t in l['test']:
-                response_1.append(l)
-        return Response(response_1)
+        for x in serializer.data['test']:
+            if x['status'] == 'черновик':
+                serializer.data['test'].remove(x)  
+        return Response(serializer.data)
 
 class AuthorViewSet(ViewSet):
     def list(self, request):
