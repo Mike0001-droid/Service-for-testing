@@ -16,19 +16,6 @@ import jwt
 
 
 
-class PatternAnswerViewSet(ViewSet):
-    schema = AttemptSchema()
-    def list(self, request): 
-        queryset = PatternAnswer.objects.filter(status='опубликовано')
-        serializer = PatternAnswerSerializer(queryset, many=True)
-        return Response(serializer.data)
-    
-    @action(detail=False, methods=['post'], schema=AttemptSchema())
-    def return_list(self, requset):
-        queryset = PatternAnswer.objects.filter(status='опубликовано')
-        serializer = PatternAnswerSerializer(queryset, many=True)
-        return Response(serializer.data)
-    
 class AnswerViewSet(ViewSet):
     @action(detail=False, methods=['post'], schema=AttemptSchema())
     def return_answer(self, request):
@@ -47,10 +34,30 @@ class AnswerViewSet(ViewSet):
         return Response(serializer1.data)
 
 class SummScoreViewSet(ViewSet):
-    def list(self, request): 
-        queryset = AnswerForQuestion.objects.all()
+    def retrieve(self, request, pk): 
+        queryset = AnswerForQuestion.objects.filter(answer_id__test = pk) 
         serializer = FullAnswerForQuestionSerializer(queryset, many=True)
-        return Response(serializer.data)
+        all_scales = set()
+        for i in serializer.data:
+            all_scales.add(i['answer']['scale'])
+        scores_summ = []
+        for k in all_scales:
+            summ_score = sum(list(Answer.objects.filter(scale_id = k).values_list('score', flat=True)))
+            scores_summ.append({'scale_id': k, 'scores': summ_score})
+
+        response = []
+        for k in scores_summ:
+            interp_obj = Interpretation.objects.filter(scale_id = k['scale_id']).values("start_score", "finish_score", "description")
+            
+            for j in interp_obj:
+                if (j['start_score'] <= k['scores'] <= j['finish_score']) or (j['start_score'] <= k['scores'] >= j['finish_score']):
+                    response.append({
+                        "Сумма баллов": k['scores'],
+                        "Текст": j['description'],
+                        "Шкала": k['scale_id']
+                    })  
+            
+        return Response(response)
 
 
 

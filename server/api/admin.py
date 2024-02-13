@@ -40,3 +40,7 @@ class AnswerAdmin(admin.ModelAdmin):
 @admin.register(AnswerForQuestion)
 class AnswerForQuestionAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(Interpretation)
+class InterpretationAdmin(admin.ModelAdmin):
+    pass

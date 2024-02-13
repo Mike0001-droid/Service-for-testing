@@ -86,7 +86,7 @@ class PatternAnswer (models.Model):
     queue = models.IntegerField('Порядок')
     status = models.CharField('Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
     def __str__(self):
-        return f"{self.pk}) {self.name}"
+        return f" {self.name} (id = {self.pk})"
     class Meta:
         verbose_name_plural = '[6] Шаблоны ответов'
 
@@ -105,7 +105,7 @@ class Answer (models.Model):
     scale = models.ForeignKey(Scale, on_delete=models.CASCADE, related_name='answerScale', verbose_name='Шкала')
     score = models.IntegerField('Количество баллов')
     def __str__(self):
-        return f"{self.pk}){self.patternAnswer}"
+        return f"{self.pk} {self.patternAnswer} ({self.score} бал.)"
     class Meta:
         verbose_name_plural = '[8] Ответы'
 
@@ -117,6 +117,20 @@ class AnswerForQuestion (models.Model):
         return f"{self.answer}"
     class Meta:
         verbose_name_plural = '[9] Ответы на вопросы'
+
+class Interpretation (models.Model):
+    name = models.CharField('Название', max_length=255, null=True)
+    scale = models.ForeignKey(Scale, on_delete=models.CASCADE, related_name='interpretationScale', verbose_name='Шкала')
+    start_score = models.IntegerField('Кол-во баллов от')
+    finish_score = models.IntegerField('Кол-во баллов до')
+    description = models.TextField('Текст интерпретации', null=True)
+    queue = models.IntegerField('Порядок')
+    status = models.CharField('Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
+    
+    def __str__(self):
+        return f"{self.pk}) {self.scale.name}"
+    class Meta:
+        verbose_name_plural = '[10] Интерпретации'
 
 
 
