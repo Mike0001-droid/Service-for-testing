@@ -105,9 +105,19 @@ class Answer (models.Model):
     scale = models.ForeignKey(Scale, on_delete=models.CASCADE, related_name='answerScale', verbose_name='Шкала')
     score = models.IntegerField('Количество баллов')
     def __str__(self):
-        return f"{self.patternAnswer}"
+        return f"{self.pk}){self.patternAnswer}"
     class Meta:
         verbose_name_plural = '[8] Ответы'
+
+class AnswerForQuestion (models.Model):
+    user = models.ForeignKey(MyUser, verbose_name='Пользователь', on_delete=models.CASCADE, blank=True, null=True)
+    answer = models.ForeignKey(Answer, verbose_name='Ответ', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.answer}"
+    class Meta:
+        verbose_name_plural = '[9] Ответы на вопросы'
+
 
 
 

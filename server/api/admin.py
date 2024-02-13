@@ -36,3 +36,7 @@ class ScaleAdmin(admin.ModelAdmin):
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(AnswerForQuestion)
+class AnswerForQuestionAdmin(admin.ModelAdmin):
+    pass

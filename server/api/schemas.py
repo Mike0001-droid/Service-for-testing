@@ -6,32 +6,38 @@ class AttemptSchema(AutoSchema):
     def get_serializer_fields(self, path, method):
         return [
                 coreapi.Field(
-                    name='attempt',
+                    name='patternAnswer',
                     location='form',
                     required=False,
-                    schema=coreschema.String(description='ID Попытки')
+                    schema=coreschema.String(description='ID шаблона')
                 ),
                 coreapi.Field(
                     name='test',
                     location='form',
                     required=False,
-                    schema=coreschema.Number(description='ID Теста')
+                    schema=coreschema.Number(description='ID теста')
                 ),
                 coreapi.Field(
-                    name='answers',
+                    name='question',
                     location='form',
                     required=False,
-                    schema=coreschema.Array(description='ID Ответа')
-                )
+                    schema=coreschema.String(description='ID вопроса')
+                ),
         ]
     
 class ScoreSchema(AutoSchema):
     def get_serializer_fields(self, path, method):
         return [
                 coreapi.Field(
-                    name='answer',
+                    name='user_id',
                     location='form',
                     required=False,
-                    schema=coreschema.Array(description='ID ответа')
+                    schema=coreschema.Integer(description='ID юзера')
+                ),
+                coreapi.Field(
+                    name='answer_id',
+                    location='form',
+                    required=False,
+                    schema=coreschema.Integer(description='ID ответа')
                 )
         ]
