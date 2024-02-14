@@ -4,10 +4,6 @@ from users.models import MyUser
 from .models import *
 from rest_framework.renderers import JSONRenderer
 
-class PatternAnswerSerializer(ModelSerializer):
-    class Meta:
-        model = PatternAnswer
-        fields = '__all__'
 
 class AnswerSerializer(ModelSerializer):
     class Meta:

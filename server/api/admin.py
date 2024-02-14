@@ -44,3 +44,7 @@ class AnswerForQuestionAdmin(admin.ModelAdmin):
 @admin.register(Interpretation)
 class InterpretationAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(Attemption)
+class AttemptionAdmin(admin.ModelAdmin):
+    pass
