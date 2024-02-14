@@ -17,15 +17,22 @@ import jwt
 class AnswerViewSet(ViewSet):
     @action(detail=False, methods=['post'], schema=AttemptSchema())
     def return_answer(self, request):
-        queryset = Answer.objects.filter(
-            patternAnswer_id=request.data['patternAnswer'],
-            question_id=request.data['question'],
-            test_id=request.data['test']
-        )
-        serializer = AnswerSerializer(queryset, many=True)
-        for x in serializer.data:
-            x['answer'] = x.pop('id')
-            x.update(user=1)
+        test_id=request.data['test']
+        patternAnswer_id=request.data['patternAnswer'],
+        question_id=request.data['question'],
+        if 'attempt' not in request.data:
+            data = {}
+            serializer = AttemptionSerializer()
+            queryset = Answer.objects.filter(
+                patternAnswer_id = patternAnswer_id,
+                question_id = question_id,
+                test_id = test_id
+            )
+            serializer = AnswerSerializer(queryset, many=True)
+            for x in serializer.data:
+                x['answer'] = x.pop('id')
+                x.update(user=1)
+        
         return Response(serializer.data)
 
 

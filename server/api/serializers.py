@@ -20,6 +20,11 @@ class FullAnswerSerializer(ModelSerializer):
         model = Answer
         fields = '__all__'
 
+class AttemptionSerializer(ModelSerializer):
+    class Meta:
+        model = Attemption
+        fields = '__all__'
+
 class FullAnswerForQuestionSerializer(ModelSerializer):
     class Meta:
         model = AnswerForQuestion
