@@ -25,6 +25,7 @@ class AttemptionSerializer(ModelSerializer):
         model = Attemption
         fields = '__all__'
 
+
 class FullAnswerForQuestionSerializer(ModelSerializer):
     class Meta:
         model = AnswerForQuestion

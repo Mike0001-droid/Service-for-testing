@@ -6,7 +6,7 @@ class AttemptSchema(AutoSchema):
     def get_serializer_fields(self, path, method):
         return [
                 coreapi.Field(
-                    name='attemptID',
+                    name='attempt',
                     location='form',
                     required=False,
                     schema=coreschema.Integer(description='ID попытки')
