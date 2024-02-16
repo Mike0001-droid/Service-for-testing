@@ -4,7 +4,21 @@ from users.models import MyUser
 from .models import *
 from rest_framework.renderers import JSONRenderer
 
+class QuestionSerializer(ModelSerializer):
+    class Meta:
+        model = Question
+        fields = '__all__'
 
+class SubtestSerializer(ModelSerializer):
+    class Meta:
+        model = Subtest
+        fields = '__all__'
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["question"] = QuestionSerializer(
+            instance.questions, many=True).data
+        return rep
+    
 class AnswerSerializer(ModelSerializer):
     class Meta:
         model = Answer

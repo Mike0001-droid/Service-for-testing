@@ -69,9 +69,9 @@ class Subtest (models.Model):
     record_time = models.BooleanField('Запись времени прохождения')
     time_for_solution = models.IntegerField('Время для прохождения')
     mix_question = models.BooleanField('Перемешивать вопросы?')
+    question = models.ManyToManyField('Question', verbose_name='Вопрос', related_name='subtest_question', through='SubtestQuestion')
     queue = models.IntegerField('Порядок')
-    status = models.CharField(
-        'Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
+    status = models.CharField('Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
 
     def __str__(self):
         return f"{self.pk}) {self.name}"
@@ -81,7 +81,7 @@ class Subtest (models.Model):
 
 
 class Question (models.Model):
-    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, related_name='questionSubtest', verbose_name='Субтест')
+    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, related_name='questions', verbose_name='Субтест')
     name = models.CharField('Название вопроса', max_length=255)
     question_img = models.ImageField(null=True, blank=True, verbose_name='Картинка', upload_to="images/")
     type_question = models.BooleanField('Тип вопроса (Ед.выб/Мн.выб : 1/0)', default=True)
@@ -172,3 +172,14 @@ class Attemption (models.Model):
         return f"{self.pk}) {self.user} {self.test.name}"
     class Meta:
         verbose_name_plural = '[11] Попытки'
+
+
+class SubtestQuestion(models.Model):
+    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.subtest} : {self.question}'
+
+    class Meta:
+        unique_together = ('subtest', 'question')

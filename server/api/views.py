@@ -14,7 +14,12 @@ from .schemas import AttemptSchema
 import itertools
 import jwt
 
-
+class SubtestViewSet(ViewSet):
+    def list(self, request):
+        queryset = Subtest.objects.all()
+        serializer = SubtestSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
 class AnswerViewSet(ViewSet):
     @action(detail=False, methods=['post'], schema=AttemptSchema())
     def return_answer(self, request):
