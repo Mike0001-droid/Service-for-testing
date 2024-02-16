@@ -63,8 +63,7 @@ class Test (models.Model):
 class Subtest (models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='subtestTest', verbose_name='Тест')
     name = models.CharField('Название субтеста',null=True, blank=True, max_length=255)
-    description_1 = models.CharField('Описание до прохождения', null=True, blank=True, max_length=255)
-    description_2 = models.CharField('Описание после прохождения', null=True, blank=True, max_length=255)
+    description = models.CharField('Описание до прохождения', null=True, blank=True, max_length=255)
     comment = models.CharField('Комментарий преподавателя', null=True, blank=True, max_length=255)
     record_time = models.BooleanField('Запись времени прохождения')
     time_for_solution = models.IntegerField('Время для прохождения')

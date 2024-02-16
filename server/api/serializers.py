@@ -7,12 +7,12 @@ from rest_framework.renderers import JSONRenderer
 class QuestionSerializer(ModelSerializer):
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = ('id', 'name', 'question_img', 'type_question', 'obligatory', 'answer')
 
 class SubtestSerializer(ModelSerializer):
     class Meta:
         model = Subtest
-        fields = '__all__'
+        fields = ('id', 'name', 'time_for_solution', 'description', 'question') 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["question"] = QuestionSerializer(
