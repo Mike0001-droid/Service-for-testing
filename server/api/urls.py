@@ -7,6 +7,7 @@ router.register(r'author', views.AuthorViewSet, basename='author')
 router.register(r'topic', views.TopicViewSet, basename='topic')
 router.register(r'test', views.TestViewSet, basename='test')
 router.register(r'subtest', views.SubtestViewSet, basename='subtest')
+"""
 router.register(r'question', views.QuestionViewSet, basename='question')
 router.register(r'attempt', views.AttemptViewSet, basename='attempt')
 router.register(r'attempt_list', views.AttemptListViewSet,basename='attempt_list')
@@ -16,7 +17,7 @@ router.register(r'answer', views.AnsListViewSet, basename='answer')
 router.register(r'interpretation',views.InterpretationListViewSet, basename='interpretation')
 router.register(r'questionanswer', views.QuestionAnswerViewSet,basename='questionanswer')
 router.register(r'seo_scheme', views.SeoSchemeGenericViewSet,basename='seo_scheme')
-
+ """
 app_name = 'api'
 urlpatterns = router.urls
 

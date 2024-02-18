@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
 from .func import *
 from rest_framework.permissions import *
 from .serializers import *
@@ -29,7 +30,102 @@ class CategoryViewSet(ViewSet):
                         response.remove(x)
         return Response(response)
 
+class AuthorViewSet(ViewSet):
+    def list(self, request):
+        queryset = Author.objects.all()
+        serializer = AuthorSerializer(queryset, many=True)
+        response = []
+        for i in serializer.data:
+            if len(i['test']) != 0:
+                response.append(i)
+                for x in i['test']:
+                    if x['status'] == 'черновик':
+                        i['test'].remove(x)  
+        response_1 = []
+        for l in response:
+            for t in l['test']:
+                response_1.append(l)
+        return Response(response_1)
 
+    def retrieve(self, request, pk=None):
+        queryset = Author.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = AuthorSerializer(user)
+        response = []
+        for i in serializer.data:
+            if len(i['test']) != 0:
+                response.append(i)
+                for x in i['test']:
+                    if x['status'] == 'черновик':
+                        i['test'].remove(x)  
+        response_1 = []
+        for l in response:
+            for t in l['test']:
+                response_1.append(l)
+        return Response(response_1)
+    
+class TopicViewSet(ViewSet):
+    def list(self, request):
+        queryset = Topic.objects.all()
+        serializer = TopicSerializer(queryset, many=True)
+        response = []
+        for i in serializer.data:
+            if len(i['test']) != 0:
+                response.append(i)
+                for x in i['test']:
+                    if x['status'] == 'черновик':
+                        i['test'].remove(x)  
+        response_1 = []
+        for l in response:
+            for t in l['test']:
+                response_1.append(l)
+        return Response(response_1)
+
+    def retrieve(self, request, pk=None):
+        queryset = Topic.objects.filter(status='опубликовано')
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = TopicSerializer(user)
+        response = []
+        for i in serializer.data:
+            if len(i['test']) != 0:
+                response.append(i)
+                for x in i['test']:
+                    if x['status'] == 'черновик':
+                        i['test'].remove(x)  
+        response_1 = []
+        for l in response:
+            for t in l['test']:
+                response_1.append(l)
+        return Response(response_1)
+
+class TestViewSet(GenericViewSet):
+    queryset = Test.objects.filter(status='опубликовано')
+    serializer_class = TestSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
+
+    def list(self, request, *args, **kwargs):
+        queryset = Test.objects.filter(status='опубликовано')
+        name = self.request.query_params.get('name')
+        if name is not None:
+            queryset = queryset.filter(name__iregex=name)
+        serializer = self.get_serializer(queryset, many=True)
+        data = []
+        for i in serializer.data:
+            data.append({'id': i['id'], 'name': i['name']})
+        return Response(data)
+    
+    def retrieve(self, request, pk=None):
+        queryset = Test.objects.filter(status='опубликовано')
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = TestSerializer(user)
+        sub_id = [i['id'] for i in serializer.data['subtest']]
+        quest_id = list(filter(None, list(Subtest.objects.filter(
+            id__in=sub_id).values_list('questions', flat=True))))
+        response = {'count': len(quest_id)}
+        response.update(serializer.data)
+        return Response(response)
 
 class SubtestViewSet(ViewSet):
     def list(self, request):

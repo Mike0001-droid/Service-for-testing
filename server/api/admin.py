@@ -48,3 +48,8 @@ class InterpretationAdmin(admin.ModelAdmin):
 @admin.register(Attemption)
 class AttemptionAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    pass

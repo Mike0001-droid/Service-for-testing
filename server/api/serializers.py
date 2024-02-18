@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from .models import *
 
 class TestNameSerializer(ModelSerializer):
@@ -6,6 +7,17 @@ class TestNameSerializer(ModelSerializer):
         model = Test
         fields = ('id', 'name', 'status')
 
+class AuthorSerializer(ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ('id', 'name',)
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["test"] = TestNameSerializer(
+            instance.author, many=True).data
+        return rep
+    
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
@@ -16,7 +28,35 @@ class CategorySerializer(ModelSerializer):
         rep["test"] = TestNameSerializer(
             instance.category, many=True).data
         return rep
+    
+class TopicSerializer(ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = ('id', 'name',)
 
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["test"] = TestNameSerializer(
+            instance.topic, many=True).data
+        return rep
+
+class SubTestNameSerializer(ModelSerializer):
+    class Meta:
+        model = Subtest
+        fields = ('id', 'name')
+
+class TestSerializer(ModelSerializer):
+    author_name = serializers.CharField(source='author.name')
+    class Meta:
+        model = Test
+        fields = ('id', 'name', 'author_name', 'description_1')
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["subtest"] = SubTestNameSerializer(
+            instance.subtest, many=True).data
+        return rep
+    
 class PatternAnswerSerializer(ModelSerializer):
     class Meta:
         model = PatternAnswer

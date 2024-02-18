@@ -25,7 +25,6 @@ class Category (models.Model):
     class Meta:
         verbose_name_plural = '[1] Категории'
 
-
 class Topic (models.Model):
     name = models.CharField('Название темы', null=True, blank=True, max_length=255)
     description = models.CharField('Описание темы', null=True, blank=True, max_length=255)
@@ -38,11 +37,19 @@ class Topic (models.Model):
     class Meta:
         verbose_name_plural = '[2] Темы'
 
+class Author (models.Model):
+    name = models.CharField('Имя автора', null=True, blank=True, max_length=100)
+    last_name = models.CharField('Фамилия автора', null=True, blank=True, max_length=100)
+    def __str__(self):
+        return f"{self.pk}-{self.name}"
+
+    class Meta:
+        verbose_name_plural = '[12] Авторы'
 
 class Test (models.Model):
     name = models.CharField('Название теста', null=True, blank=True, max_length=255)
-    author = models.CharField('Автор теста', null=True, blank=True, max_length=100)
-    topic = models.ManyToManyField(Topic)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author', verbose_name='Автор', blank=True, null=True)
+    topic = models.ManyToManyField(Topic, related_name='topic')
     category = models.ManyToManyField(Category, related_name='category')
     description_1 = models.CharField('Описание до прохождения', null=True, blank=True, max_length=255)
     description_2 = models.CharField('Описание после прохождения', null=True, blank=True, max_length=255)
@@ -50,8 +57,8 @@ class Test (models.Model):
     record_time = models.BooleanField('Запись времени прохождения')
     time_for_solution = models.IntegerField('Время для прохождения')
     queue = models.IntegerField('Порядок')
-    status = models.CharField(
-        'Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
+    status = models.CharField('Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
+    subtest = models.ManyToManyField('SubTest', verbose_name='СубТест', related_name='test_subtest', through='TestSubtest')
 
     def __str__(self):
         return f"{self.pk}) {self.name}"
@@ -61,7 +68,7 @@ class Test (models.Model):
 
 
 class Subtest (models.Model):
-    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='subtestTest', verbose_name='Тест')
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='test', verbose_name='Тест')
     name = models.CharField('Название субтеста',null=True, blank=True, max_length=255)
     description = models.CharField('Описание до прохождения', null=True, blank=True, max_length=255)
     comment = models.CharField('Комментарий преподавателя', null=True, blank=True, max_length=255)
@@ -71,6 +78,7 @@ class Subtest (models.Model):
     question = models.ManyToManyField('Question', verbose_name='Вопрос', related_name='subtest_question', through='SubtestQuestion')
     queue = models.IntegerField('Порядок')
     status = models.CharField('Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
+    
 
     def __str__(self):
         return f"{self.pk}) {self.name}"
@@ -171,13 +179,20 @@ class Attemption (models.Model):
     class Meta:
         verbose_name_plural = '[11] Попытки'
 
-
 class SubtestQuestion(models.Model):
     subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-
     def __str__(self):
         return f'{self.subtest} : {self.question}'
-
     class Meta:
         unique_together = ('subtest', 'question')
+
+class TestSubtest(models.Model):
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.test} : {self.subtest}'
+
+    class Meta:
+        unique_together = ('test', 'subtest')
