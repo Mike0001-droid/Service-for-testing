@@ -43,7 +43,7 @@ class Test (models.Model):
     name = models.CharField('Название теста', null=True, blank=True, max_length=255)
     author = models.CharField('Автор теста', null=True, blank=True, max_length=100)
     topic = models.ManyToManyField(Topic)
-    category = models.ManyToManyField(Category)
+    category = models.ManyToManyField(Category, related_name='category')
     description_1 = models.CharField('Описание до прохождения', null=True, blank=True, max_length=255)
     description_2 = models.CharField('Описание после прохождения', null=True, blank=True, max_length=255)
     comment = models.CharField('Комментарий преподавателя', null=True, blank=True, max_length=255)
@@ -87,8 +87,7 @@ class Question (models.Model):
     answer = models.ManyToManyField('PatternAnswer')
     obligatory = models.BooleanField('Обязательный ?')
     queue = models.IntegerField('Порядок')
-    status = models.CharField(
-        'Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
+    status = models.CharField('Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
 
     def __str__(self):
         return f"{self.pk}) {self.name}"

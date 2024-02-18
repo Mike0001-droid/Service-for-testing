@@ -12,14 +12,42 @@ from .permissions import *
 from drf.settings import SECRET_KEY
 from .schemas import AttemptSchema
 import itertools
-import jwt
+
+class CategoryViewSet(ViewSet):
+    def list(self, request): 
+        queryset = Category.objects.filter(status='опубликовано')
+        serializer = CategorySerializer(queryset, many=True)
+        response = []
+        for i in serializer.data:
+            if len(i['test']) != 0:
+                response.append(i)
+        for x in response:
+            for t in x['test']:
+                if t['status'] == 'черновик':
+                    x['test'].remove(t)
+                    if len(x['test']) == 0:
+                        response.remove(x)
+        return Response(response)
+
+
 
 class SubtestViewSet(ViewSet):
     def list(self, request):
-        queryset = Subtest.objects.all()
+        queryset = Subtest.objects.filter(status='опубликовано')
         serializer = SubtestSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+
+    @action(
+            detail=False,
+            methods=['get'],
+            url_path='by_test/(?P<id>[a-zA-Z0-9_]+)',
+            url_name='by-test',
+        )
+    def subtest_by_test(self, request, id):
+        queryset = Subtest.objects.filter(test_id=id)
+        serializer = SubtestSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class AttemptViewSet(ViewSet):
     @action(detail=False, methods=['post'], schema=AttemptSchema())
     def create_attempt(self, request):

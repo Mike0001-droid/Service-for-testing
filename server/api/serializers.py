@@ -1,13 +1,37 @@
 from rest_framework.serializers import ModelSerializer
-from rest_framework import serializers
-from users.models import MyUser
 from .models import *
-from rest_framework.renderers import JSONRenderer
+
+class TestNameSerializer(ModelSerializer):
+    class Meta:
+        model = Test
+        fields = ('id', 'name', 'status')
+
+class CategorySerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('id', 'name',)
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["test"] = TestNameSerializer(
+            instance.category, many=True).data
+        return rep
+
+class PatternAnswerSerializer(ModelSerializer):
+    class Meta:
+        model = PatternAnswer
+        fields = ('id', 'name', 'answer_img')
 
 class QuestionSerializer(ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'name', 'question_img', 'type_question', 'obligatory', 'answer')
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["answer"] = PatternAnswerSerializer(
+            instance.answer, many=True).data
+        return rep
 
 class SubtestSerializer(ModelSerializer):
     class Meta:
