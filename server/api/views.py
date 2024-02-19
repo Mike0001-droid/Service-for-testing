@@ -81,7 +81,13 @@ class SubtestViewSet(ViewSet):
         queryset = Subtest.objects.filter(status='опубликовано')
         serializer = SubtestSerializer(queryset, many=True)
         return Response(serializer.data)
-
+    
+    def retrieve(self, request, pk=None):
+        queryset = Subtest.objects.filter(status='опубликовано')
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = SubtestSerializer(user)
+        return Response(serializer.data)
+    
     @action(
             detail=False,
             methods=['get'],
