@@ -58,7 +58,6 @@ class Test (models.Model):
     time_for_solution = models.IntegerField('Время для прохождения')
     queue = models.IntegerField('Порядок')
     status = models.CharField('Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
-    subtest = models.ManyToManyField('SubTest', verbose_name='СубТест', related_name='test_subtest', through='TestSubtest')
 
     def __str__(self):
         return f"{self.pk}) {self.name}"
@@ -68,7 +67,6 @@ class Test (models.Model):
 
 
 class Subtest (models.Model):
-    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='test', verbose_name='Тест')
     name = models.CharField('Название субтеста',null=True, blank=True, max_length=255)
     description = models.CharField('Описание до прохождения', null=True, blank=True, max_length=255)
     comment = models.CharField('Комментарий преподавателя', null=True, blank=True, max_length=255)
@@ -78,7 +76,7 @@ class Subtest (models.Model):
     question = models.ManyToManyField('Question', verbose_name='Вопрос', related_name='subtest_question', through='SubtestQuestion')
     queue = models.IntegerField('Порядок')
     status = models.CharField('Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
-    
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='test', verbose_name='Тест')
 
     def __str__(self):
         return f"{self.pk}) {self.name}"

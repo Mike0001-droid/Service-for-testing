@@ -2,10 +2,16 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from .models import *
 
+class FilteredListSerializer(serializers.ListSerializer):
+    def to_representation(self, data):
+        data = data.filter(status='опубликовано')
+        return super(FilteredListSerializer, self).to_representation(data)
+    
 class TestNameSerializer(ModelSerializer):
     class Meta:
+        list_serializer_class = FilteredListSerializer
         model = Test
-        fields = ('id', 'name', 'status')
+        fields = ('id', 'name')
 
 class AuthorSerializer(ModelSerializer):
     class Meta:
@@ -43,6 +49,7 @@ class TopicSerializer(ModelSerializer):
 class SubTestNameSerializer(ModelSerializer):
     class Meta:
         model = Subtest
+        list_serializer_class = FilteredListSerializer
         fields = ('id', 'name')
 
 class TestSerializer(ModelSerializer):
@@ -54,7 +61,7 @@ class TestSerializer(ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["subtest"] = SubTestNameSerializer(
-            instance.subtest, many=True).data
+            instance.test, many=True).data
         return rep
     
 class PatternAnswerSerializer(ModelSerializer):
