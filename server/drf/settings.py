@@ -13,7 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
-
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -45,6 +46,15 @@ else:
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     )
+
+sentry_sdk.init(
+    dsn="http://5d4aa2d90ab34ac2a05754a1ca0da4d7@94.228.112.174//1",
+    integrations=[DjangoIntegration()],
+    auto_session_tracking=False,
+    traces_sample_rate=0.01,
+    release="1.0.0",
+    environment="drf",
+)
 
 LOGIN_REDIRECT_URL = '/tests/'
 LOGOUT_REDIRECT_URL = 'https://tests.flexidev.ru/auth'
@@ -129,8 +139,6 @@ DATABASES = {
         'PORT': '',
     }
 }"""
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
