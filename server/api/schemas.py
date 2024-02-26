@@ -15,7 +15,7 @@ class AttemptSchema(AutoSchema):
                     name='patternAnswer',
                     location='form',
                     required=False,
-                    schema=coreschema.String(description='ID шаблона')
+                    schema=coreschema.Array(description='ID шаблона')
                 ),
                 coreapi.Field(
                     name='test',

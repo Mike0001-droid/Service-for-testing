@@ -100,25 +100,31 @@ class SubtestViewSet(ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class AttemptViewSet(ViewSet):
+    def list(self, request):
+        queryset = Attemption.objects.all()
+        serializer = AttemptionSerializer(queryset, many=True)
+        for i in serializer.data:
+            print(i['answers'])
+        return Response(serializer.data)
+
+
     @action(detail=False, methods=['post'], schema=AttemptSchema())
     def create_attempt(self, request):
         test_id=request.data['test']
-        patternAnswer_id=request.data['patternAnswer'],
         question_id=request.data['question'],
         answers = {}
         answers['answers'] = (list(Answer.objects.filter(
-            patternAnswer_id = patternAnswer_id,
+            patternAnswer_id__in = list(request.data['patternAnswer']),
             question_id = question_id,
             test_id = test_id
         ).values_list('id', flat=True)))
         data = {
-            "answer": answers,
+            "answers": answers,
             "test": test_id,
             "user": 1,    
         }
         if 'attempt' not in request.data: 
             serializer = AttemptionSerializer(data=data)
-            
             if serializer.is_valid():
                 serializer.save()        
                 return Response(serializer.data)
@@ -129,8 +135,8 @@ class AttemptViewSet(ViewSet):
                 instance = Attemption.objects.get(pk=pk)
             except:
                 return Response({"error": "Object does not exists"})
-            data['answer']['answers'] = instance.answer['answers'] + \
-                                        data['answer']['answers']
+            data['answers']['answers'] = instance.answer['answers'] + \
+                                        data['answers']['answers']
             serializer = AttemptionSerializer(data=data, instance=instance)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()

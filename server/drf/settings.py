@@ -53,7 +53,7 @@ sentry_sdk.init(
     auto_session_tracking=False,
     traces_sample_rate=0.01,
     release="1.0.0",
-    environment="drf",
+    environment="development",
 )
 
 LOGIN_REDIRECT_URL = '/tests/'

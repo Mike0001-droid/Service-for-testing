@@ -7,6 +7,7 @@ router.register(r'author', views.AuthorViewSet, basename='author')
 router.register(r'topic', views.TopicViewSet, basename='topic')
 router.register(r'test', views.TestViewSet, basename='test')
 router.register(r'subtest', views.SubtestViewSet, basename='subtest')
+router.register(r'attempt', views.AttemptViewSet, basename='attempt')
 """
 router.register(r'question', views.QuestionViewSet, basename='question')
 router.register(r'attempt', views.AttemptViewSet, basename='attempt')

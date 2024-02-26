@@ -106,9 +106,10 @@ class FullAnswerSerializer(ModelSerializer):
         fields = '__all__'
 
 class AttemptionSerializer(ModelSerializer):
+    answers = serializers.CharField(source='answer')
     class Meta:
         model = Attemption
-        fields = '__all__'
+        fields = ('test', 'user', 'answers')
 
 
 class FullAnswerForQuestionSerializer(ModelSerializer):
