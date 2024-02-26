@@ -112,8 +112,7 @@ class AttemptViewSet(ViewSet):
     def create_attempt(self, request):
         test_id=request.data['test']
         question_id=request.data['question'],
-        answers = {}
-        answers['answers'] = (list(Answer.objects.filter(
+        answers = (list(Answer.objects.filter(
             patternAnswer_id__in = list(request.data['patternAnswer']),
             question_id = question_id,
             test_id = test_id
@@ -122,27 +121,27 @@ class AttemptViewSet(ViewSet):
             "answers": answers,
             "test": test_id,
             "user": 1,    
-        }
+        } 
         if 'attempt' not in request.data: 
             serializer = AttemptionSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()        
-                return Response(serializer.data)
-            
+                return Response(serializer.data)   
+
         elif 'attempt' in request.data:
             pk = request.data['attempt']
             try:
                 instance = Attemption.objects.get(pk=pk)
             except:
                 return Response({"error": "Object does not exists"})
-            data['answers']['answers'] = instance.answer['answers'] + \
-                                        data['answers']['answers']
+            
+            data['answers'] = instance.answers + data['answers']
             serializer = AttemptionSerializer(data=data, instance=instance)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED) 
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
         
     @action(
         detail=False,

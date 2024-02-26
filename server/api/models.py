@@ -170,7 +170,7 @@ class Interpretation (models.Model):
 class Attemption (models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='attemptTest', verbose_name='Тест')
     user = models.ForeignKey(MyUser, verbose_name='Пользователь', on_delete=models.CASCADE, blank=True, null=True)
-    answer = models.JSONField('Ответы пользователя', null=True)
+    answers = models.JSONField('Ответы пользователя', null=True)
     
     def __str__(self):
         return f"{self.pk}) {self.user} {self.test.name}"
