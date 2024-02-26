@@ -6,6 +6,11 @@ class FilteredListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         data = data.filter(status='опубликовано')
         return super(FilteredListSerializer, self).to_representation(data)
+
+class SeoSchemeSerializer(ModelSerializer):
+    class Meta:
+        model = SeoScheme
+        exclude = ('name',)
     
 class TestNameSerializer(ModelSerializer):
     class Meta:

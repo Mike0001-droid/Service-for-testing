@@ -17,6 +17,10 @@ class TopicAdmin(admin.ModelAdmin):
 class TestAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(SeoScheme)
+class SeoSchemeAdmin(admin.ModelAdmin):
+    pass
+
 @admin.register(Subtest)
 class SubtestAdmin(admin.ModelAdmin):
     pass

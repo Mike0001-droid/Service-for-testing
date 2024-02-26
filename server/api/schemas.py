@@ -15,19 +15,19 @@ class AttemptSchema(AutoSchema):
                     name='patternAnswer',
                     location='form',
                     required=False,
-                    schema=coreschema.String(description='ID шаблона')
+                    schema=coreschema.Array(description='Массив id шаблонов')
                 ),
                 coreapi.Field(
                     name='test',
                     location='form',
                     required=False,
-                    schema=coreschema.Number(description='ID теста')
+                    schema=coreschema.Integer(description='ID теста')
                 ),
                 coreapi.Field(
                     name='question',
                     location='form',
                     required=False,
-                    schema=coreschema.String(description='ID вопроса')
+                    schema=coreschema.Integer(description='ID вопроса')
                 ),
         ]
     

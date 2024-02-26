@@ -14,6 +14,18 @@ from drf.settings import SECRET_KEY
 from .schemas import AttemptSchema
 import itertools
 
+class SeoSchemeGenericViewSet(GenericViewSet):
+    queryset = SeoScheme.objects.all()
+    serializer_class = SeoSchemeSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 class CategoryViewSet(ViewSet):
     def list(self, request): 
         queryset = Category.objects.filter(status='опубликовано')
@@ -103,33 +115,30 @@ class AttemptViewSet(ViewSet):
     @action(detail=False, methods=['post'], schema=AttemptSchema())
     def create_attempt(self, request):
         test_id=request.data['test']
-        patternAnswer_id=request.data['patternAnswer'],
         question_id=request.data['question'],
         answers = {}
         answers['answers'] = (list(Answer.objects.filter(
-            patternAnswer_id = patternAnswer_id,
+            patternAnswer_id__in = list(request.data['patternAnswer']),
             question_id = question_id,
             test_id = test_id
         ).values_list('id', flat=True)))
         data = {
-            "answer": answers,
+            "answers": answers,
             "test": test_id,
             "user": 1,    
         }
         if 'attempt' not in request.data: 
             serializer = AttemptionSerializer(data=data)
-            
             if serializer.is_valid():
                 serializer.save()        
                 return Response(serializer.data)
-            
         elif 'attempt' in request.data:
             pk = request.data['attempt']
             try:
                 instance = Attemption.objects.get(pk=pk)
             except:
                 return Response({"error": "Object does not exists"})
-            data['answer']['answers'] = instance.answer['answers'] + \
+            data['answers']['answers'] = instance.answer['answers'] + \
                                         data['answer']['answers']
             serializer = AttemptionSerializer(data=data, instance=instance)
             if serializer.is_valid(raise_exception=True):
