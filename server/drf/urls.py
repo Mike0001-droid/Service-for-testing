@@ -17,7 +17,7 @@ urlpatterns = [
     path('api/user/', include('users.urls', namespace='user')),
     path('api/token/create/', MyTokenObtainPairView.as_view(), name='token_auth'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('glitchtip-debug/', trigger_error),
+    path('api/glitchtip-debug/', trigger_error),
 ]
 
 if settings.DEBUG:

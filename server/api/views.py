@@ -14,6 +14,18 @@ from drf.settings import SECRET_KEY
 from .schemas import AttemptSchema
 import itertools
 
+class SeoSchemeGenericViewSet(GenericViewSet):
+    queryset = SeoScheme.objects.all()
+    serializer_class = SeoSchemeSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 class CategoryViewSet(ViewSet):
     def list(self, request): 
         queryset = Category.objects.filter(status='опубликовано')
@@ -112,7 +124,12 @@ class AttemptViewSet(ViewSet):
     def create_attempt(self, request):
         test_id=request.data['test']
         question_id=request.data['question'],
+<<<<<<< HEAD
         answers = (list(Answer.objects.filter(
+=======
+        answers = {}
+        answers['answers'] = (list(Answer.objects.filter(
+>>>>>>> 5db0b68ea04143c6b94df432f1bbc0d5b8b1e35d
             patternAnswer_id__in = list(request.data['patternAnswer']),
             question_id = question_id,
             test_id = test_id
@@ -126,16 +143,25 @@ class AttemptViewSet(ViewSet):
             serializer = AttemptionSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()        
+<<<<<<< HEAD
                 return Response(serializer.data)   
 
+=======
+                return Response(serializer.data)
+>>>>>>> 5db0b68ea04143c6b94df432f1bbc0d5b8b1e35d
         elif 'attempt' in request.data:
             pk = request.data['attempt']
             try:
                 instance = Attemption.objects.get(pk=pk)
             except:
                 return Response({"error": "Object does not exists"})
+<<<<<<< HEAD
             
             data['answers'] = instance.answers + data['answers']
+=======
+            data['answers']['answers'] = instance.answer['answers'] + \
+                                        data['answer']['answers']
+>>>>>>> 5db0b68ea04143c6b94df432f1bbc0d5b8b1e35d
             serializer = AttemptionSerializer(data=data, instance=instance)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()

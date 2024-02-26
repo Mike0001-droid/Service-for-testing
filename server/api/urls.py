@@ -7,6 +7,10 @@ router.register(r'author', views.AuthorViewSet, basename='author')
 router.register(r'topic', views.TopicViewSet, basename='topic')
 router.register(r'test', views.TestViewSet, basename='test')
 router.register(r'subtest', views.SubtestViewSet, basename='subtest')
+<<<<<<< HEAD
+=======
+router.register(r'seo_scheme', views.SeoSchemeGenericViewSet,basename='seo_scheme')
+>>>>>>> 5db0b68ea04143c6b94df432f1bbc0d5b8b1e35d
 router.register(r'attempt', views.AttemptViewSet, basename='attempt')
 """
 router.register(r'question', views.QuestionViewSet, basename='question')

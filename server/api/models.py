@@ -194,3 +194,18 @@ class TestSubtest(models.Model):
 
     class Meta:
         unique_together = ('test', 'subtest')
+
+
+class SeoScheme(models.Model):
+    key = models.SlugField('Ключ', unique=True)
+    name = models.CharField('Описание', max_length=255, help_text='255 символов')
+    title = models.CharField(max_length=255, help_text='255 символов', null=True, blank=True)
+    description = models.CharField(max_length=255, help_text='255 символов', null=True, blank=True)
+    keywords = models.CharField(max_length=255, help_text='255 символов', null=True, blank=True)
+
+    def __str__(self):
+        return self.key
+
+    class Meta:
+        verbose_name_plural = '[13] Шаблоны для метатегов'
+
