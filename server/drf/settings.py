@@ -46,7 +46,6 @@ else:
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     )
 
-<<<<<<< HEAD
 sentry_sdk.init(
     dsn="http://5d4aa2d90ab34ac2a05754a1ca0da4d7@94.228.112.174//1",
     integrations=[DjangoIntegration()],
@@ -56,8 +55,6 @@ sentry_sdk.init(
     environment="development",
 )
 
-=======
->>>>>>> 5db0b68ea04143c6b94df432f1bbc0d5b8b1e35d
 LOGIN_REDIRECT_URL = '/tests/'
 LOGOUT_REDIRECT_URL = 'https://tests.flexidev.ru/auth'
 SESSION_COOKIE_SECURE = False

@@ -125,7 +125,7 @@ class AttemptViewSet(ViewSet):
         test_id=request.data['test']
         question_id=request.data['question'],
         answers = (list(Answer.objects.filter(
-            patternAnswer_id__in = list(request.data['patternAnswer']),
+            patternAnswer_id__in = list(request.data['answers']),
             question_id = question_id,
             test_id = test_id
         ).values_list('id', flat=True)))
@@ -163,7 +163,7 @@ class AttemptViewSet(ViewSet):
         #Создаём массив со всеми шкалами теста
         queryset = Attemption.objects.get(id=pk)
         all_scales = []
-        for i in queryset.answer['answers']:
+        for i in queryset.answers:
             answer_obj = Answer.objects.get(id=i)
             all_scales.append({
                 'scale_id': answer_obj.scale.id,
@@ -175,14 +175,13 @@ class AttemptViewSet(ViewSet):
         for k in all_scales:
             summ_score = sum(list(Answer.objects.filter(id=k['answer'], scale_id=k['scale_id']).values_list('score', flat=True)))
             scales_answer.append({'scale_id': k['scale_id'], 'scores': summ_score})
-
         #Суммируем баллы относительно одинаковых шкал, данные храним так же в виде массива словарей
         key = lambda x: x['scale_id']
         scores_summ = [
             {'scale_id': k, 'scores': sum(x['scores'] for x in g)} 
             for k, g in itertools.groupby(sorted(scales_answer, key=key), key=key)
         ]
-
+        
         #Достаем объекты интерпретаций, относительно шкал и делаем выборку относительно суммы баллов по данной шкале
         #Записи добавляем в массив "response" и отдаем пользователю в качестве результатов пройденного теста
         response = []
@@ -192,8 +191,10 @@ class AttemptViewSet(ViewSet):
                 if (j['start_score'] <= k['scores'] <= j['finish_score']) or \
                    (j['start_score'] <= k['scores'] >= j['finish_score']):
                     response.append({
-                        "Сумма баллов": k['scores'],
-                        "Текст": j['description'],
-                        "Шкала": k['scale_id']
+                        "scores_summ": k['scores'],
+                        "text_interpret": j['description'],
+                        "scale": k['scale_id']
                     })  
-        return Response(response)
+        otvet = {"url": f"https://tests.flexidev.ru/attempt/{pk}", "data": response}
+        print(response)
+        return Response(otvet)
