@@ -130,7 +130,7 @@ class AttemptViewSet(ViewSet):
             test_id = test_id
         ).values_list('id', flat=True)))
         data = {
-            "answers": answers,
+            "answer": answers,
             "test": test_id,
             "user": 1,    
         } 
@@ -145,7 +145,7 @@ class AttemptViewSet(ViewSet):
                 instance = Attemption.objects.get(pk=pk)
             except:
                 return Response({"error": "Object does not exists"})
-            data['answers'] = instance.answers + data['answers']
+            data['answer'] = instance.answers + data['answer']
             serializer = AttemptionSerializer(data=data, instance=instance)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()

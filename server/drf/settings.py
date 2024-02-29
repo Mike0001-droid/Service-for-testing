@@ -131,11 +131,11 @@ DATABASES = {
 """DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sft',
-        'USER': 'adm',
-        'PASSWORD': 'admadm',
+        'NAME': 'testovaya',
+        'USER': 'postgres',
+        'PASSWORD': '55667788',
         'HOST': '127.0.0.1',
-        'PORT': '',
+        'PORT': '5432',
     }
 }"""
 # Password validation
