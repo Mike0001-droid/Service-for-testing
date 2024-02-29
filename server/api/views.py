@@ -125,7 +125,7 @@ class AttemptViewSet(ViewSet):
         test_id=request.data['test']
         question_id=request.data['question'],
         answers = (list(Answer.objects.filter(
-            patternAnswer_id__in = list(request.data['answers']),
+            patternAnswer_id__in = list(request.data['answer']),
             question_id = question_id,
             test_id = test_id
         ).values_list('id', flat=True)))
