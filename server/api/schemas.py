@@ -12,7 +12,7 @@ class AttemptSchema(AutoSchema):
                     schema=coreschema.Integer(description='ID попытки')
                 ),
                 coreapi.Field(
-                    name='answers',
+                    name='answer',
                     location='form',
                     required=False,
                     schema=coreschema.Array(description='ID шаблона')
