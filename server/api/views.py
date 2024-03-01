@@ -186,15 +186,16 @@ class AttemptViewSet(ViewSet):
         #Записи добавляем в массив "response" и отдаем пользователю в качестве результатов пройденного теста
         response = []
         for k in scores_summ:
-            interp_obj = Interpretation.objects.filter(scale_id=k['scale_id']).values("start_score", "finish_score", "description")
+            interp_obj = Interpretation.objects.filter(scale_id=k['scale_id']).values("name","start_score", "finish_score", "description")
             for j in interp_obj:
                 if (j['start_score'] <= k['scores'] <= j['finish_score']) or \
                    (j['start_score'] <= k['scores'] >= j['finish_score']):
                     response.append({
                         "scores_summ": k['scores'],
+                        "max_score": j['finish_score'],
+                        "name": j['name'],
                         "text_interpret": j['description'],
                         "scale": k['scale_id']
                     })  
         otvet = {"url": f"https://tests.flexidev.ru/attempt/{pk}", "data": response}
-        print(response)
         return Response(otvet)

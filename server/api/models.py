@@ -141,18 +141,6 @@ class Answer (models.Model):
     class Meta:
         verbose_name_plural = '[8] Ответы'
 
-
-class AnswerForQuestion (models.Model):
-    user = models.ForeignKey(MyUser, verbose_name='Пользователь', on_delete=models.CASCADE, blank=True, null=True)
-    answer = models.ForeignKey(Answer, verbose_name='Ответ', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.answer.test.name}-{self.answer.question.name}-{self.answer.scale.name}-{self.answer.patternAnswer.name}"
-
-    class Meta:
-        verbose_name_plural = '[9] Ответы на вопросы'
-
-
 class Interpretation (models.Model):
     name = models.CharField('Название', max_length=255, null=True)
     scale = models.ForeignKey(Scale, on_delete=models.CASCADE, related_name='interpretationScale', verbose_name='Шкала')
@@ -164,7 +152,7 @@ class Interpretation (models.Model):
     def __str__(self):
         return f"{self.pk}) {self.scale.name}"
     class Meta:
-        verbose_name_plural = '[10] Интерпретации'
+        verbose_name_plural = '[9] Интерпретации'
 
 
 class Attemption (models.Model):
@@ -175,7 +163,7 @@ class Attemption (models.Model):
     def __str__(self):
         return f"{self.pk}) {self.user} {self.test.name}"
     class Meta:
-        verbose_name_plural = '[11] Попытки'
+        verbose_name_plural = '[10] Попытки'
 
 class SubtestQuestion(models.Model):
     subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE)
@@ -188,10 +176,8 @@ class SubtestQuestion(models.Model):
 class TestSubtest(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE)
-
     def __str__(self):
         return f'{self.test} : {self.subtest}'
-
     class Meta:
         unique_together = ('test', 'subtest')
 
@@ -202,10 +188,8 @@ class SeoScheme(models.Model):
     title = models.CharField(max_length=255, help_text='255 символов', null=True, blank=True)
     description = models.CharField(max_length=255, help_text='255 символов', null=True, blank=True)
     keywords = models.CharField(max_length=255, help_text='255 символов', null=True, blank=True)
-
     def __str__(self):
         return self.key
-
     class Meta:
-        verbose_name_plural = '[13] Шаблоны для метатегов'
+        verbose_name_plural = '[11] Шаблоны для метатегов'
 

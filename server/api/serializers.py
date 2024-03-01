@@ -100,11 +100,6 @@ class AnswerSerializer(ModelSerializer):
         model = Answer
         fields = ('id',)
 
-class AnswerForQuestionSerializer(ModelSerializer):
-    class Meta:
-        model = AnswerForQuestion
-        fields = '__all__'
-
 class FullAnswerSerializer(ModelSerializer):
     class Meta:
         model = Answer
@@ -115,13 +110,3 @@ class AttemptionSerializer(ModelSerializer):
         model = Attemption
         fields = '__all__'
 
-
-class FullAnswerForQuestionSerializer(ModelSerializer):
-    class Meta:
-        model = AnswerForQuestion
-        fields = '__all__'
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        rep["answer"] = FullAnswerSerializer(
-            instance.answer).data
-        return rep
