@@ -13,6 +13,7 @@ from .permissions import *
 from drf.settings import SECRET_KEY
 from .schemas import AttemptSchema
 import itertools
+import json
 
 class SeoSchemeGenericViewSet(GenericViewSet):
     queryset = SeoScheme.objects.all()
@@ -134,18 +135,19 @@ class AttemptViewSet(ViewSet):
             "test": test_id,
             "user": 1,    
         } 
-        if request.data['attempt'] == 'null': 
+        if 'attempt' not in request.data:
+            request.data['attempt'] = json.dumps(None) 
             serializer = AttemptionSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()        
                 return Response(serializer.data)   
-        elif request.data['attempt'] != 'null':
+        elif request.data['attempt'] != json.dumps(None):
             pk = request.data['attempt']
             try:
                 instance = Attemption.objects.get(pk=pk)
             except:
                 return Response({"error": "Object does not exists"})
-            data['answer'] = instance.answers + data['answer']
+            data['answer'] = instance.answer + data['answer']
             serializer = AttemptionSerializer(data=data, instance=instance)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
