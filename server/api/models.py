@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import MyUser
 from django.db.models import F
+import datetime
 
 STATUS_CHOICES = (
     ('черновик', 'черновик'),
@@ -159,6 +160,10 @@ class Attemption (models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='attemptTest', verbose_name='Тест')
     user = models.ForeignKey(MyUser, verbose_name='Пользователь', on_delete=models.CASCADE, blank=True, null=True)
     answer = models.JSONField('Ответы пользователя', null=True)
+    created = models.DateTimeField('Создано', auto_now_add=True)
+
+    def formatted_datetime(self):
+        return self.created.strftime("%d.%m.%Y")
     
     def __str__(self):
         return f"{self.pk}) {self.user} {self.test.name}"
@@ -180,7 +185,6 @@ class TestSubtest(models.Model):
         return f'{self.test} : {self.subtest}'
     class Meta:
         unique_together = ('test', 'subtest')
-
 
 class SeoScheme(models.Model):
     key = models.SlugField('Ключ', unique=True)

@@ -5,7 +5,6 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
-from .func import *
 from rest_framework.permissions import *
 from .serializers import *
 from .models import *
@@ -14,6 +13,7 @@ from drf.settings import SECRET_KEY
 from .schemas import AttemptSchema
 import itertools
 import json
+import jwt
 
 class SeoSchemeGenericViewSet(GenericViewSet):
     queryset = SeoScheme.objects.all()
@@ -114,11 +114,17 @@ class SubtestViewSet(ViewSet):
 
 class AttemptViewSet(ViewSet):
     def list(self, request):
-        queryset = Attemption.objects.all()
-        serializer = AttemptionSerializer(queryset, many=True)
-        for i in serializer.data:
-            print(i['answers'])
-        return Response(serializer.data)
+        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                            7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+        queryset = Attemption.objects.filter(user=decode)
+        data = []
+        for i in queryset:
+            data.append({
+                "test_id": i.test.pk,
+                "test": get_object_or_404(Test, pk=i.test.pk).name,
+                "count": len(queryset.filter(test=i.test.pk)),
+            })
+        return Response(data, status=status.HTTP_200_OK)
 
 
     @action(detail=False, methods=['post'], schema=AttemptSchema())
@@ -133,7 +139,8 @@ class AttemptViewSet(ViewSet):
         data = {
             "answer": answers,
             "test": test_id,
-            "user": 1,    
+            "user": jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                            7:], SECRET_KEY, algorithms=["HS256"])['user_id'],    
         } 
         if 'attempt' not in request.data:
             request.data['attempt'] = json.dumps(None) 
@@ -201,3 +208,21 @@ class AttemptViewSet(ViewSet):
                     })  
         otvet = {"url": f"https://tests.flexidev.ru/attempt/{pk}", "data": response}
         return Response(otvet)
+    
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='user_attempt_by_id/(?P<id>[a-zA-Z0-9_.]+)',
+        url_name='user-attempt-by-id',
+    )
+    def userattempt_by_id(self, request, id):
+        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                            7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+        queryset = Attemption.objects.filter(user=decode, test=id)
+        data = []
+        for i in queryset:
+            data.append({
+                "id": i.pk,
+                "date": Attemption.formatted_datetime(i)
+            })
+        return Response(data, status=status.HTTP_200_OK)
