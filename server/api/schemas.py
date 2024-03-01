@@ -9,7 +9,7 @@ class AttemptSchema(AutoSchema):
                     name='attempt',
                     location='form',
                     required=False,
-                    schema=coreschema.Integer(description='ID попытки')
+                    schema=coreschema.String(description='ID попытки')
                 ),
                 coreapi.Field(
                     name='answer',

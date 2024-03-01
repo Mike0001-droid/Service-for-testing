@@ -134,12 +134,12 @@ class AttemptViewSet(ViewSet):
             "test": test_id,
             "user": 1,    
         } 
-        if 'attempt' not in request.data: 
+        if request.data['attempt'] == 'null': 
             serializer = AttemptionSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()        
                 return Response(serializer.data)   
-        elif 'attempt' in request.data:
+        elif request.data['attempt'] != 'null':
             pk = request.data['attempt']
             try:
                 instance = Attemption.objects.get(pk=pk)
