@@ -163,7 +163,7 @@ class AttemptViewSet(ViewSet):
         #Создаём массив со всеми шкалами теста
         queryset = Attemption.objects.get(id=pk)
         all_scales = []
-        for i in queryset.answers:
+        for i in queryset.answer:
             answer_obj = Answer.objects.get(id=i)
             all_scales.append({
                 'scale_id': answer_obj.scale.id,
