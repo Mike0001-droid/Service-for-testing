@@ -139,10 +139,14 @@ class AttemptViewSet(ViewSet):
         data = {
             "answer": answers,
             "test": test_id,
-            "user": jwt.decode((request.META['HTTP_AUTHORIZATION'])[
-                            7:], SECRET_KEY, algorithms=["HS256"])['user_id'],    
+            "user": None,    
         } 
         if 'attempt' not in request.data:
+            if 'HTTP_AUTHORIZATION' in request.META:
+                data["user"] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
+                        7:], SECRET_KEY, algorithms=["HS256"])['user_id']
+            else:
+                pass
             request.data['attempt'] = json.dumps(None) 
             serializer = AttemptionSerializer(data=data)
             if serializer.is_valid():

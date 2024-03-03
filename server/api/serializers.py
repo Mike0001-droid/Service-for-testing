@@ -108,5 +108,5 @@ class FullAnswerSerializer(ModelSerializer):
 class AttemptionSerializer(ModelSerializer):
     class Meta:
         model = Attemption
-        fields = ('test', 'user', 'answer')
+        fields = ('id', 'test', 'user', 'answer')
 
