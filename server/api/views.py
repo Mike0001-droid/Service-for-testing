@@ -118,11 +118,11 @@ class AttemptViewSet(ViewSet):
                             7:], SECRET_KEY, algorithms=["HS256"])['user_id']
         queryset = Attemption.objects.filter(user=decode)
         data = []
-        for i in queryset:
+        for i in set(queryset.values_list("test", flat=True)):
             data.append({
-                "test_id": i.test.pk,
-                "test": get_object_or_404(Test, pk=i.test.pk).name,
-                "count": len(queryset.filter(test=i.test.pk)),
+                "test_id": i,
+                "test": get_object_or_404(Test, pk=i).name,
+                "count": len(queryset.filter(test=i)),
             })
         return Response(data, status=status.HTTP_200_OK)
 
