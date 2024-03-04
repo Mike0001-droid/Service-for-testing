@@ -114,9 +114,7 @@ class SubtestViewSet(ViewSet):
 
 class AttemptViewSet(ViewSet):
     def list(self, request):
-        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
-                            7:], SECRET_KEY, algorithms=["HS256"])['user_id']
-        queryset = Attemption.objects.filter(user=decode)
+        queryset = Attemption.objects.filter(user=self.request.user.id)
         data = []
         for i in set(queryset.values_list("test", flat=True)):
             data.append({
@@ -125,7 +123,6 @@ class AttemptViewSet(ViewSet):
                 "count": len(queryset.filter(test=i)),
             })
         return Response(data, status=status.HTTP_200_OK)
-
 
     @action(detail=False, methods=['post'], schema=AttemptSchema())
     def create_attempt(self, request):
@@ -139,14 +136,9 @@ class AttemptViewSet(ViewSet):
         data = {
             "answer": answers,
             "test": test_id,
-            "user": None,    
+            "user": self.request.user.id,    
         } 
         if 'attempt' not in request.data:
-            if 'HTTP_AUTHORIZATION' in request.META:
-                data["user"] = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
-                        7:], SECRET_KEY, algorithms=["HS256"])['user_id']
-            else:
-                pass
             request.data['attempt'] = json.dumps(None) 
             serializer = AttemptionSerializer(data=data)
             if serializer.is_valid():
@@ -220,9 +212,7 @@ class AttemptViewSet(ViewSet):
         url_name='user-attempt-by-id',
     )
     def userattempt_by_id(self, request, id):
-        decode = jwt.decode((request.META['HTTP_AUTHORIZATION'])[
-                            7:], SECRET_KEY, algorithms=["HS256"])['user_id']
-        queryset = Attemption.objects.filter(user=decode, test=id)
+        queryset = Attemption.objects.filter(user=self.request.user.id, test=id)
         data = []
         for i in queryset:
             data.append({
