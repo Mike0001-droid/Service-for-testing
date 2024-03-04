@@ -31,40 +31,40 @@ class CategoryViewSet(ViewSet):
     def list(self, request): 
         queryset = Category.objects.filter(status='опубликовано')
         serializer = CategorySerializer(queryset, many=True)
-        response = [i for i in serializer.data for j in i['test'] if len(i['test'])!=0 and len(j['sub'])!=0]
+        response = [i for i in serializer.data if len(i['test'])!=0]
         return Response(response)
 
 class AuthorViewSet(ViewSet):
     def list(self, request):
         queryset = Author.objects.all()
         serializer = AuthorSerializer(queryset, many=True)
-        response = [i for i in serializer.data for j in i['test'] if len(i['test'])!=0 and len(j['sub'])!=0]
+        response = [i for i in serializer.data if len(i['test'])!=0]
         return Response(response)
 
     def retrieve(self, request, pk=None):
         queryset = Author.objects.all()
         user = get_object_or_404(queryset, pk=pk)
         serializer = AuthorSerializer(user)
-        response = [i for i in serializer.data for j in i['test'] if len(i['test'])!=0 and len(j['sub'])!=0]
+        response = [i for i in serializer.data if len(i['test'])!=0]
         return Response(response)
     
 class TopicViewSet(ViewSet):
     def list(self, request):
         queryset = Topic.objects.filter(status='опубликовано')
         serializer = TopicSerializer(queryset, many=True)
-        response = [i for i in serializer.data for j in i['test'] if len(i['test'])!=0 and len(j['sub'])!=0]
+        response = [i for i in serializer.data if len(i['test'])!=0]
         return Response(response)
 
     def retrieve(self, request, pk=None):
         queryset = Topic.objects.filter(status='опубликовано')
         user = get_object_or_404(queryset, pk=pk)
         serializer = TopicSerializer(user)
-        response = [i for i in serializer.data for j in i['test'] if len(i['test'])!=0 and len(j['sub'])!=0]
+        response = [i for i in serializer.data if len(i['test'])!=0]
         return Response(response)
 
 class TestViewSet(GenericViewSet):
     queryset = Test.objects.filter(status='опубликовано')
-    serializer_class = TestNullSubTestSerializer
+    serializer_class = TestNameSerializer
     permission_classes = [AllowAny]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']

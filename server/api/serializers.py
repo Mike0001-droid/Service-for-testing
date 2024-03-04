@@ -7,17 +7,17 @@ class FilteredListSerializer(serializers.ListSerializer):
         data = data.filter(status='опубликовано')
         return super(FilteredListSerializer, self).to_representation(data)
 
+
 class SeoSchemeSerializer(ModelSerializer):
     class Meta:
         model = SeoScheme
         exclude = ('name',)
     
-class TestNullSubTestSerializer(ModelSerializer):
-    sub = serializers.ListField(source='test.all')
+class TestNameSerializer(ModelSerializer):
     class Meta:
         list_serializer_class = FilteredListSerializer
         model = Test
-        fields = ('id', 'name', 'sub')
+        fields = ('id', 'name')
 
 class AuthorSerializer(ModelSerializer):
     class Meta:
@@ -26,7 +26,7 @@ class AuthorSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["test"] = TestNullSubTestSerializer(
+        rep["test"] = TestNameSerializer(
             instance.author, many=True).data
         return rep
     
@@ -37,7 +37,7 @@ class CategorySerializer(ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["test"] = TestNullSubTestSerializer(
+        rep["test"] = TestNameSerializer(
             instance.category, many=True).data
         return rep
     
@@ -48,7 +48,7 @@ class TopicSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["test"] = TestNullSubTestSerializer(
+        rep["test"] = TestNameSerializer(
             instance.topic, many=True).data
         return rep
 
