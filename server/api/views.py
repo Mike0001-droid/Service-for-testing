@@ -197,8 +197,11 @@ class AttemptViewSet(ViewSet):
             for j in interp_obj:
                 if (j['start_score'] <= k['scores'] <= j['finish_score']) or \
                    (j['start_score'] <= k['scores'] >= j['finish_score']):
+                    summ = k['scores']
+                    if k['scores'] > j['finish_score']:
+                        summ = j['finish_score']
                     response.append({
-                        "scores_summ": k['scores'],
+                        "scores_summ": summ,
                         "max_score": j['finish_score'],
                         "name": j['name'],
                         "text_interpret": j['description'],
