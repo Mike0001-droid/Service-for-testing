@@ -52,8 +52,8 @@ class Test (models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author', verbose_name='Автор', blank=True, null=True)
     topic = models.ManyToManyField(Topic, related_name='topic')
     category = models.ManyToManyField(Category, related_name='category')
-    description_1 = models.CharField('Описание до прохождения', null=True, blank=True, max_length=255)
-    description_2 = models.CharField('Описание после прохождения', null=True, blank=True, max_length=255)
+    description_1 = models.TextField('Описание до прохождения', null=True, blank=True, max_length=255)
+    description_2 = models.TextField('Описание после прохождения', null=True, blank=True, max_length=255)
     comment = models.CharField('Комментарий преподавателя', null=True, blank=True, max_length=255)
     record_time = models.BooleanField('Запись времени прохождения')
     time_for_solution = models.IntegerField('Время для прохождения')
@@ -88,8 +88,8 @@ class Subtest (models.Model):
 
 
 class Question (models.Model):
-    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, related_name='questions', verbose_name='Субтест')
     name = models.CharField('Название вопроса', max_length=255)
+    subtest = models.ForeignKey(Subtest, on_delete=models.CASCADE, related_name='questions', verbose_name='Субтест')
     question_img = models.ImageField(null=True, blank=True, verbose_name='Картинка', upload_to="images/")
     type_question = models.BooleanField('Тип вопроса (Ед.выб/Мн.выб : 1/0)', default=True)
     answer = models.ManyToManyField('PatternAnswer')
