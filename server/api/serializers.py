@@ -5,14 +5,9 @@ from .models import *
 
 class FilteredListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
-        data = data.filter(status='опубликовано')
-        return super(FilteredListSerializer, self).to_representation(data)
-    
-class FilteredNullSubSerializer(serializers.ListSerializer):
-    def to_representation(self, data):
-        data = data.all().annotate(number_of_sub=Count("test"))
+        data = data.all().annotate(number_of_sub=Count("test")).filter(status='опубликовано')
         resp = [i for i in data if i.number_of_sub != 0]
-        return super(FilteredNullSubSerializer, self).to_representation(resp)
+        return super(FilteredListSerializer, self).to_representation(resp)
     
 class SeoSchemeSerializer(ModelSerializer):
     class Meta:
@@ -22,12 +17,6 @@ class SeoSchemeSerializer(ModelSerializer):
 class TestNameSerializer(ModelSerializer):
     class Meta:
         list_serializer_class = FilteredListSerializer
-        model = Test
-        fields = ('id', 'name')
-
-class TestNullSubTestSerializer(ModelSerializer):
-    class Meta:
-        list_serializer_class = FilteredNullSubSerializer
         model = Test
         fields = ('id', 'name')
 
@@ -49,7 +38,7 @@ class CategorySerializer(ModelSerializer):
            
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["test"] = TestNullSubTestSerializer(
+        rep["test"] = TestNameSerializer(
             instance.category, many=True).data
         return rep
     

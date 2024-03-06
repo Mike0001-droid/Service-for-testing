@@ -33,7 +33,6 @@ class CategoryViewSet(ViewSet):
         queryset = Category.objects.filter(status='опубликовано')
         serializer = CategorySerializer(queryset, many=True)
         response = [i for i in serializer.data if len(i['test'])!=0]
-            
         return Response(response)
 
 class AuthorViewSet(ViewSet):
@@ -86,8 +85,10 @@ class TestViewSet(GenericViewSet):
         sub_id = [i['id'] for i in serializer.data['subtest']]
         quest_id = list(filter(None, list(Subtest.objects.filter(
             id__in=sub_id).values_list('questions', flat=True))))  
-        response = {'count': len(quest_id)}
-        response.update(serializer.data)
+        response = {}
+        if len(quest_id)!=0:
+            response = {'count': len(quest_id)}
+            response.update(serializer.data)
         return Response(response)
     
     
@@ -188,7 +189,6 @@ class AttemptViewSet(ViewSet):
             {'scale_id': k, 'scores': sum(x['scores'] for x in g)} 
             for k, g in itertools.groupby(sorted(scales_answer, key=key), key=key)
         ]
-        
         #Достаем объекты интерпретаций, относительно шкал и делаем выборку относительно суммы баллов по данной шкале
         #Записи добавляем в массив "response" и отдаем пользователю в качестве результатов пройденного теста
         response = []
