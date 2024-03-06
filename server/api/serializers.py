@@ -90,7 +90,7 @@ class QuestionSerializer(ModelSerializer):
 class SubtestSerializer(ModelSerializer):
     class Meta:
         model = Subtest
-        fields = ('id', 'name', 'time_for_solution', 'description', 'question') 
+        fields = ('id', 'name', 'time_for_solution', 'description_1', 'question') 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep["question"] = QuestionSerializer(
