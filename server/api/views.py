@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
+from django.db.models.functions import Length
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -32,6 +33,7 @@ class CategoryViewSet(ViewSet):
         queryset = Category.objects.filter(status='опубликовано')
         serializer = CategorySerializer(queryset, many=True)
         response = [i for i in serializer.data if len(i['test'])!=0]
+            
         return Response(response)
 
 class AuthorViewSet(ViewSet):

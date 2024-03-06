@@ -1,13 +1,19 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
+from django.db.models import Count
 from .models import *
 
 class FilteredListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         data = data.filter(status='опубликовано')
         return super(FilteredListSerializer, self).to_representation(data)
-
-
+    
+class FilteredNullSubSerializer(serializers.ListSerializer):
+    def to_representation(self, data):
+        data = data.all().annotate(number_of_sub=Count("test"))
+        resp = [i for i in data if i.number_of_sub != 0]
+        return super(FilteredNullSubSerializer, self).to_representation(resp)
+    
 class SeoSchemeSerializer(ModelSerializer):
     class Meta:
         model = SeoScheme
@@ -16,6 +22,12 @@ class SeoSchemeSerializer(ModelSerializer):
 class TestNameSerializer(ModelSerializer):
     class Meta:
         list_serializer_class = FilteredListSerializer
+        model = Test
+        fields = ('id', 'name')
+
+class TestNullSubTestSerializer(ModelSerializer):
+    class Meta:
+        list_serializer_class = FilteredNullSubSerializer
         model = Test
         fields = ('id', 'name')
 
@@ -33,11 +45,11 @@ class AuthorSerializer(ModelSerializer):
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', 'name',)
-
+        fields = ('id', 'name', )
+           
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep["test"] = TestNameSerializer(
+        rep["test"] = TestNullSubTestSerializer(
             instance.category, many=True).data
         return rep
     

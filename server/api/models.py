@@ -69,7 +69,8 @@ class Test (models.Model):
 
 class Subtest (models.Model):
     name = models.CharField('Название субтеста',null=True, blank=True, max_length=255)
-    description = models.CharField('Описание до прохождения', null=True, blank=True, max_length=255)
+    description_1 = models.TextField('Описание до прохождения', null=True, blank=True, max_length=255)
+    description_2 = models.TextField('Описание после прохождения', null=True, blank=True, max_length=255)
     comment = models.CharField('Комментарий преподавателя', null=True, blank=True, max_length=255)
     record_time = models.BooleanField('Запись времени прохождения')
     time_for_solution = models.IntegerField('Время для прохождения')
