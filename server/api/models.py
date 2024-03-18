@@ -52,8 +52,8 @@ class Test (models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author', verbose_name='Автор', blank=True, null=True)
     topic = models.ManyToManyField(Topic, related_name='topic')
     category = models.ManyToManyField(Category, related_name='category')
-    description_1 = models.TextField('Описание до прохождения', null=True, blank=True, max_length=255)
-    description_2 = models.TextField('Описание после прохождения', null=True, blank=True, max_length=255)
+    description_1 = models.TextField('Описание до прохождения', null=True, blank=True, max_length=755)
+    description_2 = models.TextField('Описание после прохождения', null=True, blank=True, max_length=755)
     comment = models.CharField('Комментарий преподавателя', null=True, blank=True, max_length=255)
     record_time = models.BooleanField('Запись времени прохождения')
     time_for_solution = models.IntegerField('Время для прохождения')
@@ -69,8 +69,8 @@ class Test (models.Model):
 
 class Subtest (models.Model):
     name = models.CharField('Название субтеста',null=True, blank=True, max_length=255)
-    description_1 = models.TextField('Описание до прохождения', null=True, blank=True, max_length=255)
-    description_2 = models.TextField('Описание после прохождения', null=True, blank=True, max_length=255)
+    description_1 = models.TextField('Описание до прохождения', null=True, blank=True, max_length=755)
+    description_2 = models.TextField('Описание после прохождения', null=True, blank=True, max_length=755)
     comment = models.CharField('Комментарий преподавателя', null=True, blank=True, max_length=255)
     record_time = models.BooleanField('Запись времени прохождения')
     time_for_solution = models.IntegerField('Время для прохождения')
@@ -148,7 +148,7 @@ class Interpretation (models.Model):
     scale = models.ForeignKey(Scale, on_delete=models.CASCADE, related_name='interpretationScale', verbose_name='Шкала')
     start_score = models.IntegerField('Кол-во баллов от')
     finish_score = models.IntegerField('Кол-во баллов до')
-    description = models.TextField('Текст интерпретации', null=True)
+    description = models.TextField('Текст интерпретации', null=True, max_length=755)
     queue = models.IntegerField('Порядок')
     status = models.CharField('Статус', max_length=12, choices=STATUS_CHOICES, default=STATUS_CHOICES[1][1])
     def __str__(self):

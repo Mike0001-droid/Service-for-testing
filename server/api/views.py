@@ -53,7 +53,7 @@ class TopicViewSet(ViewSet):
     def list(self, request):
         queryset = Topic.objects.filter(status='опубликовано')
         serializer = TopicSerializer(queryset, many=True)
-        yresponse = [i for i in serializer.data if len(i['test'])!=0]
+        response = [i for i in serializer.data if len(i['test'])!=0]
         return Response(response)
 
     def retrieve(self, request, pk=None):
