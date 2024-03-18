@@ -7,17 +7,12 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenRefreshView
 from users.views import MyTokenObtainPairView
 
-def trigger_error(request):
-    division_by_zero = 1 / 0
-
-
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/test/', include('api.urls', namespace='app')),
     path('api/user/', include('users.urls', namespace='user')),
     path('api/token/create/', MyTokenObtainPairView.as_view(), name='token_auth'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/glitchtip-debug/', trigger_error),
 ]
 
 if settings.DEBUG:

@@ -47,7 +47,7 @@ else:
     )
 
 sentry_sdk.init(
-    dsn="http://5d4aa2d90ab34ac2a05754a1ca0da4d7@94.228.112.174//1",
+    dsn="http://0e039f5f6aab49d18f90c2449a206e12@glitchtip.flexidev.ru/2",
     integrations=[DjangoIntegration()],
     auto_session_tracking=False,
     traces_sample_rate=0.01,
@@ -187,7 +187,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
 
     ),
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',

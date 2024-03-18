@@ -5,7 +5,7 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 
 
 SENTRY_CONFIG = {
-    'dsn': "http://09f66d8b3b964992a5b3f3a6d6cfd4fb@94.228.112.174/3",
+    'dsn': "http://0e039f5f6aab49d18f90c2449a206e12@glitchtip.flexidev.ru/2",
     'integrations': [
          DjangoIntegration(),
          LoggingIntegration(
