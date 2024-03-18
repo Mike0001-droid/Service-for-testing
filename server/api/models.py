@@ -52,7 +52,7 @@ class Test (models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author', verbose_name='Автор', blank=True, null=True)
     topic = models.ManyToManyField(Topic, related_name='topic')
     category = models.ManyToManyField(Category, related_name='category')
-    description_1 = models.TextField('Описание до прохождения', null=True, blank=True, max_length=755)
+    description = models.TextField('Описание до прохождения', null=True, blank=True, max_length=755)
     description_2 = models.TextField('Описание после прохождения', null=True, blank=True, max_length=755)
     comment = models.CharField('Комментарий преподавателя', null=True, blank=True, max_length=255)
     record_time = models.BooleanField('Запись времени прохождения')
